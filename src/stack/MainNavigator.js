@@ -25,6 +25,7 @@ import {DetailKeuangan} from '../pages/pengeluaran';
 import {DetailPenghuni, ListPenghuni} from '../pages/penghuni';
 import {Profile, EditProfil, EditKost} from '../pages/user';
 import {HalamanBayar} from '../pages/transaksi';
+import {KostStatistik} from '../pages/statistik';
 import FirstTimeNavigator from './FirstTimeNavigator';
 
 const BundleStack = createSharedElementStackNavigator();
@@ -36,6 +37,7 @@ const PendaftarStack = createSharedElementStackNavigator();
 const PenghuniStack = createSharedElementStackNavigator();
 const KeuanganStack = createSharedElementStackNavigator();
 const PembayaranStack = createSharedElementStackNavigator();
+const StatistikStack = createSharedElementStackNavigator();
 
 const Drawer = createDrawerNavigator();
 
@@ -52,6 +54,10 @@ const DrawerScreen = () => (
     <Drawer.Screen
       name="PembayaranStackScreen"
       component={PembayaranStackScreen}
+    />
+    <Drawer.Screen
+      name="StatistikStackScreen"
+      component={StatistikStackScreen}
     />
   </Drawer.Navigator>
 );
@@ -300,6 +306,14 @@ const PembayaranStackScreen = ({navigation, route}) => {
         })}
       />
     </PembayaranStack.Navigator>
+  );
+};
+
+const StatistikStackScreen = ({navigation, route}) => {
+  return (
+    <StatistikStack.Navigator headerMode={true}>
+      <StatistikStack.Screen name="KostStatistik" component={KostStatistik} />
+    </StatistikStack.Navigator>
   );
 };
 

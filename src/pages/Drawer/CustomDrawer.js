@@ -182,6 +182,20 @@ const CustomDrawer = (props) => {
                 size={25}
               />
             </MySubMenu>
+            <MySubMenu
+              title="Statistik Kost"
+              onPress={() => {
+                // alert('statistik');
+                props.navigation.navigate('StatistikStackScreen', {
+                  screen: 'KostStatistik',
+                });
+              }}>
+              <Foundation
+                name="graph-trend"
+                color={myColor.grayGoogle}
+                size={25}
+              />
+            </MySubMenu>
           </MyMenu>
 
           {/* Keuangan Section  */}

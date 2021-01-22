@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, Image} from 'react-native';
+import {Text, View, Image, TouchableOpacity} from 'react-native';
 import {screenWidth, myColor, defaultAsset} from '../../../function/MyVar';
 class ModalItemPenghuni extends React.PureComponent {
   render() {
@@ -28,6 +28,7 @@ class ModalItemPenghuni extends React.PureComponent {
             fontSize: 12,
             color: myColor.fbtx,
             textAlign: 'right',
+            maxWidth: 0.4 * screenWidth,
           }}>
           {data.nama_depan} {data.nama_belakang}
         </Text>

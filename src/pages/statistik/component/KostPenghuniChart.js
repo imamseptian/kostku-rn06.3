@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {PieChart} from 'react-native-svg-charts';
 import {myColor, screenWidth} from '../../../function/MyVar';
+import {BoxPieSection} from '../atom';
 
 class KostPenghuniChart extends React.PureComponent {
   render() {
@@ -13,31 +14,6 @@ class KostPenghuniChart extends React.PureComponent {
       selectedPie,
       ...rest
     } = this.props;
-    // const pieData = data
-    //   .filter((item) => item.value > 0)
-    //   .map((item, index) => ({
-    //     value: item.value,
-    //     svg: {
-    //       fill: item.color,
-    //       onPress: () => {
-    //         onPiePress(index);
-    //       },
-    //     },
-    //     key: `pie-${index}`,
-    //   }));
-
-    // const pieData = data
-    //   .filter((item) => item.penghuni.length > 0)
-    //   .map((item, index) => ({
-    //     value: item.penghuni.length,
-    //     svg: {
-    //       fill: colorData[index],
-    //       onPress: () => {
-    //         onPiePress(index);
-    //       },
-    //     },
-    //     key: `pie-${index}`,
-    //   }));
 
     const pieData = data.map((item, index) => ({
       value: item.quantity,

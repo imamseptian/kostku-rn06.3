@@ -275,7 +275,12 @@ const FormKelasKamar = ({navigation}) => {
             placeholder="Kapasitas kamar"
             keyboardType="number-pad"
             onChangeText={(value) => {
-              setForm('kapasitas', parseInt(value));
+              if (value.length < 1) {
+                setForm('kapasitas', 1);
+              } else {
+                setForm('kapasitas', parseInt(value));
+              }
+              //
             }}
             value={kamar.kapasitas.toString()}
             pesanError={errorMsg.kapasitas}

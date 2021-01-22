@@ -18,7 +18,7 @@ import {
 import axios from 'axios';
 import {ModalItemPenghuni} from '../atom';
 
-const ModalProvinsi = ({data, closeModal, ...rest}) => {
+const ModalDaerah = ({data, closeModal, daerah, ...rest}) => {
   const [datapenghuni, setdatapenghuni] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [judul, setjudul] = useState('');
@@ -27,24 +27,23 @@ const ModalProvinsi = ({data, closeModal, ...rest}) => {
     setisLoading(true);
     // alert();
     // console.log(typeof data.provinsi);
-    if (typeof data.provinsi === 'number') {
-      axios
-        .get(
-          'https://dev.farizdotid.com/api/daerahindonesia/provinsi/' +
-            data.provinsi,
-        )
-        .then((res) => {
-          console.log(res.data.nama);
-          setjudul(res.data.nama);
-          // alert(res.data);
-          // alert('asu');
-        });
-
+    if (typeof data[daerah] === 'number') {
+      // axios
+      //   .get(
+      //     `https://dev.farizdotid.com/api/daerahindonesia/${daerah}/${data[daerah]}`,
+      //   )
+      //   .then((res) => {
+      //     console.log(res.data.nama);
+      //     setjudul(res.data.nama);
+      //     // alert(res.data);
+      //     // alert('asu');
+      //   });
+      setjudul('Singular');
       axios
         .post(APIUrl + '/api/filter_penghuni', {
           id_kost: 1,
           // kelamin: data.kelamin,
-          provinsi: data.provinsi,
+          [daerah]: data[daerah],
           multi: false,
         })
         .then((res) => {
@@ -57,16 +56,17 @@ const ModalProvinsi = ({data, closeModal, ...rest}) => {
           // setisLoading(false);
         });
     } else {
-      setjudul('Dan Lain-Lain');
+      setjudul('Daerah Lain');
       axios
         .post(APIUrl + '/api/filter_penghuni', {
           id_kost: 1,
           // kelamin: data.kelamin,
-          provinsi: [12, 16, 19],
+          [daerah]: data[daerah],
           multi: true,
         })
         .then((res) => {
           console.log(res.data);
+          alert(data[daerah]);
           setdatapenghuni(res.data.data);
           setisLoading(false);
           // setdatapenghuni(res.data.data);
@@ -90,7 +90,7 @@ const ModalProvinsi = ({data, closeModal, ...rest}) => {
         elevation: 5,
         paddingHorizontal: 0.03 * screenWidth,
         paddingTop: 5,
-        maxHeight: '70%',
+        maxHeight: '90%',
       }}>
       <View
         style={{
@@ -169,6 +169,6 @@ const ModalProvinsi = ({data, closeModal, ...rest}) => {
   );
 };
 
-export default ModalProvinsi;
+export default ModalDaerah;
 
 const styles = StyleSheet.create({});

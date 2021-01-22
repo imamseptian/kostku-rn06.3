@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, FlatList} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  FlatList,
+  ScrollView,
+} from 'react-native';
 import {
   myColor,
   screenWidth,
@@ -10,10 +17,17 @@ import {
 import axios from 'axios';
 import {myAxios} from '../../../function/MyAxios';
 import {useSelector} from 'react-redux';
+import {AccordionComponent} from '../../CobaDate';
+import {Transition, Transitioning} from 'react-native-reanimated';
+import data from './data';
+import {AccordionPembayaran} from '../atoms';
 
 const ModalPembayaran = (props) => {
   const [total, settotal] = useState(0);
   const dataRedux = useSelector((state) => state.AuthReducer);
+
+  const [currentIndex, setCurrentIndex] = useState(null);
+  const ref = React.useRef();
 
   useEffect(() => {
     let tempTotal = 0;
@@ -25,6 +39,14 @@ const ModalPembayaran = (props) => {
     });
     settotal(tempTotal);
   }, [props.data]);
+
+  const transition = (
+    <Transition.Together>
+      <Transition.In type="fade" durationMs={200} />
+      <Transition.Change />
+      <Transition.Out type="fade" durationMs={200} />
+    </Transition.Together>
+  );
 
   const catatTransaksi = () => {
     let arrBayar = [];
@@ -90,11 +112,13 @@ const ModalPembayaran = (props) => {
     // }
   };
   return (
-    <View
+    <Transitioning.View
+      ref={ref}
+      transition={transition}
       style={{
         backgroundColor: '#f6f6f6',
-        width: 0.8 * screenWidth,
-        maxHeight: 0.75 * screenHeight,
+        width: 0.9 * screenWidth,
+        maxHeight: '90%',
         borderTopLeftRadius: 10,
         borderTopRightRadius: 30,
         borderBottomLeftRadius: 30,
@@ -103,40 +127,24 @@ const ModalPembayaran = (props) => {
         paddingHorizontal: screenWidth * 0.03,
       }}>
       <Text style={styles.modalTitle}>Bayar Tagihan</Text>
-
-      {/* <View style={styles.cardTagihan}>
-        <Text style={styles.titleTagihan}>September 2020</Text>
-        <Text style={styles.titleHarga}>Rp. 200.000</Text>
-      </View>
-      <View style={styles.cardTagihan}>
-        <Text style={styles.titleTagihan}>September 2020</Text>
-        <Text style={styles.titleHarga}>Rp. 200.000</Text>
-      </View>
-      <View style={styles.cardTagihan}>
-        <Text style={styles.titleTagihan}>September 2020</Text>
-        <Text style={styles.titleHarga}>Rp. 200.000</Text>
-      </View> */}
-      <FlatList
-        style={{paddingHorizontal: 3}}
-        data={props.data}
-        keyExtractor={(item) => item.id.toString()}
-        showsVerticalScrollIndicator={false}
-        renderItem={({item, index, separator}) => {
+      <ScrollView>
+        {props.data.map((item, index) => {
           if (item.selected) {
             return (
-              <View style={styles.cardTagihan}>
-                <Text style={styles.titleTagihan}>
-                  {item.bulan} {item.tahun}
-                </Text>
-                <Text style={styles.titleHarga}>
-                  {formatRupiah(item.jumlah.toString(), 'Rp. ')}
-                </Text>
-              </View>
+              <AccordionPembayaran
+                key={index}
+                data={item}
+                index={index}
+                onPress={() => {
+                  ref.current.animateNextTransition();
+                  setCurrentIndex(index === currentIndex ? null : index);
+                }}
+                currentIndex={currentIndex}
+              />
             );
           }
-        }}
-      />
-
+        })}
+      </ScrollView>
       <View style={styles.summaryLine}>
         <Text style={styles.plusSign}>+</Text>
       </View>
@@ -165,7 +173,7 @@ const ModalPembayaran = (props) => {
           <Text style={styles.textButton}>Tutup</Text>
         </View>
       </TouchableOpacity>
-    </View>
+    </Transitioning.View>
   );
 };
 
@@ -178,27 +186,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 10,
   },
-  titleTagihan: {
-    fontFamily: 'OpenSans-Regular',
-    fontSize: 12,
-    color: myColor.fbtx,
-  },
-  titleHarga: {
-    fontFamily: 'OpenSans-SemiBold',
-    fontSize: 12,
-    color: myColor.grayGoogle,
-  },
-  cardTagihan: {
-    backgroundColor: '#ffffff',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: myColor.divider,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-    marginBottom: 10,
-  },
+
   plusSign: {
     fontFamily: 'OpenSans-Bold',
     fontSize: 16,

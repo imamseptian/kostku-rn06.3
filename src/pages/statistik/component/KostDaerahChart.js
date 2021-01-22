@@ -2,15 +2,17 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {PieChart} from 'react-native-svg-charts';
 import {myColor, screenWidth} from '../../../function/MyVar';
+import {BoxPieSection} from '../atom';
 
-class KostProvinsiChart extends React.PureComponent {
+class KostDaerahChart extends React.PureComponent {
   render() {
     const {
       item,
       data,
       colorData,
       onPiePress,
-      selectedPie,
+
+      title,
       ...rest
     } = this.props;
 
@@ -33,7 +35,7 @@ class KostProvinsiChart extends React.PureComponent {
             fontSize: 14,
             fontFamily: 'OpenSans-Bold',
           }}>
-          Statistik Provinsi
+          {title}
         </Text>
         <View
           style={{
@@ -53,26 +55,17 @@ class KostProvinsiChart extends React.PureComponent {
           <View style={{marginLeft: 10}}>
             {data.map((x, i) => {
               return (
-                <View key={i} style={{flexDirection: 'row'}}>
-                  <View
-                    style={[
-                      styles.tagBox,
-                      {backgroundColor: colorData[i]},
-                    ]}></View>
-                  <Text style={{marginLeft: 5}}>
-                    {i === data.length - 1
-                      ? 'dan lain-lain'
-                      : x.provinsi.toString()}
-                  </Text>
-                </View>
+                <BoxPieSection
+                  key={i}
+                  data={x}
+                  keyword={i === data.length - 1 ? 'etc' : this.props.daerah}
+                  color={colorData[i]}
+                  onPress={() => {
+                    onPiePress(i);
+                  }}
+                />
               );
             })}
-
-            {/* <View style={styles.tagBox}></View>
-            <View style={styles.tagBox}></View>
-            <View style={styles.tagBox}></View>
-            <View style={styles.tagBox}></View>
-            <View style={styles.tagBox}></View> */}
           </View>
         </View>
       </View>
@@ -80,7 +73,7 @@ class KostProvinsiChart extends React.PureComponent {
   }
 }
 
-export default KostProvinsiChart;
+export default KostDaerahChart;
 
 const styles = StyleSheet.create({
   tagBox: {

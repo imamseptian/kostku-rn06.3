@@ -6,8 +6,8 @@ import {myColor, APIUrl} from '../../function/MyVar';
 import {
   KostPenghuniChart,
   ModalPenghuni,
-  KostProvinsiChart,
-  ModalProvinsi,
+  KostDaerahChart,
+  ModalDaerah,
 } from './component';
 
 const PieSection = () => {
@@ -19,8 +19,12 @@ const PieSection = () => {
   const [pieProvinsi, setPieProvinsi] = useState([]);
   const [selectedPieProvinsi, setSelectedPieProvinsi] = useState(0);
   const [showModalProvinsi, setshowModalProvinsi] = useState(false);
-
   const [provinsiColor, setprovinsiColor] = useState([]);
+
+  const [pieKota, setPieKota] = useState([]);
+  const [selectedPieKota, setSelectedPieKota] = useState(0);
+  const [showModalKota, setshowModalKota] = useState(false);
+  const [kotaColor, setKotaColor] = useState([]);
 
   //   const [state, setstate] = useState(initialState);
   const randomColor = () =>
@@ -28,43 +32,56 @@ const PieSection = () => {
       0,
       7,
     );
+
+  const setterDaerah = (retData, daerah, callback1, callback2) => {
+    let tempProvColor = [];
+    if (retData.length > 6) {
+      let tempArr = [];
+      let combineArr = [];
+      let tempTotal = 0;
+      retData.forEach((x, i) => {
+        if (i > 4) {
+          combineArr.push(x[daerah]);
+          tempTotal = tempTotal + x.quantity;
+        } else {
+          tempArr.push(x);
+        }
+      });
+      tempArr.push({[daerah]: combineArr, quantity: tempTotal});
+      tempArr.forEach((x, i) => {
+        tempProvColor.push(randomColor());
+      });
+      callback2(tempProvColor);
+      callback1(tempArr);
+    } else {
+      retData.forEach((x, i) => {
+        tempProvColor.push(randomColor());
+      });
+      callback2(tempProvColor);
+      callback1(retData);
+    }
+  };
+
   useEffect(() => {
     axios
       .post(APIUrl + '/api/statistik_pie', {
         id_kost: 1,
       })
       .then((res) => {
-        let tempProvColor = [];
-
-        if (res.data.provinsi.length > 6) {
-          let tempArr = [];
-          let combineArr = [];
-          let tempTotal = 0;
-          res.data.provinsi.forEach((x, i) => {
-            if (i > 4) {
-              combineArr.push(x.provinsi);
-              tempTotal = tempTotal + x.quantity;
-            } else {
-              tempArr.push(x);
-            }
-          });
-          tempArr.push({provinsi: combineArr, quantity: tempTotal});
-          tempArr.forEach((x, i) => {
-            tempProvColor.push(randomColor());
-          });
-          setprovinsiColor(tempProvColor);
-          setPieProvinsi(tempArr);
-        } else {
-          res.data.provinsi.forEach((x, i) => {
-            tempProvColor.push(randomColor());
-          });
-          setprovinsiColor(tempProvColor);
-          setPieProvinsi(res.data.provinsi);
-        }
+        setterDaerah(
+          res.data.provinsi,
+          'provinsi',
+          setPieProvinsi,
+          setprovinsiColor,
+        );
+        setterDaerah(res.data.kota, 'kota', setPieKota, setKotaColor);
 
         setPieDataPenghuni(res.data.penghuni);
 
         // console.log(res.data.provinsi);
+      })
+      .catch((error) => {
+        alert('error pie');
       });
   }, []);
 
@@ -88,9 +105,23 @@ const PieSection = () => {
         transparent={true}
         onRequestClose={() => setshowModalProvinsi(false)}>
         <PureModal>
-          <ModalProvinsi
+          <ModalDaerah
             data={pieProvinsi[selectedPieProvinsi]}
             closeModal={() => setshowModalProvinsi(false)}
+            daerah="provinsi"
+          />
+        </PureModal>
+      </Modal>
+
+      <Modal
+        visible={showModalKota}
+        transparent={true}
+        onRequestClose={() => setshowModalKota(false)}>
+        <PureModal>
+          <ModalDaerah
+            data={pieKota[selectedPieKota]}
+            closeModal={() => setshowModalKota(false)}
+            daerah="kota"
           />
         </PureModal>
       </Modal>
@@ -106,7 +137,33 @@ const PieSection = () => {
         selectedPie={selectedPiePenghuni}
       />
 
-      <KostProvinsiChart
+      <KostDaerahChart
+        data={pieProvinsi}
+        title="Statistik Provinsi"
+        colorData={provinsiColor}
+        onPiePress={(v) => {
+          //   console.log(v);
+          setSelectedPieProvinsi(v);
+          setshowModalProvinsi(true);
+          // alert(v);
+        }}
+        daerah="provinsi"
+      />
+
+      <KostDaerahChart
+        data={pieKota}
+        title="Statistik Kota"
+        colorData={kotaColor}
+        onPiePress={(v) => {
+          //   console.log(v);
+          setSelectedPieKota(v);
+          setshowModalKota(true);
+          // alert(v);
+        }}
+        daerah="kota"
+      />
+
+      {/* <KostDaerahChart
         data={pieProvinsi}
         colorData={provinsiColor}
         onPiePress={(v) => {
@@ -116,11 +173,11 @@ const PieSection = () => {
           // alert(v);
         }}
         selectedPie={selectedPiePenghuni}
-      />
-
+      /> */}
+      <Text>{JSON.stringify(pieKota)}</Text>
       {/* <Text>{JSON.stringify(pieDataPenghuni)}</Text> */}
-      <Text>{JSON.stringify(pieProvinsi)}</Text>
-      <Text>{pieProvinsi.length}</Text>
+      {/* <Text>{JSON.stringify(pieProvinsi)}</Text>
+      <Text>{pieProvinsi.length}</Text> */}
       {/* <Text>{JSON.stringify(provinsiColor)}</Text> */}
       {/* <Text>{JSON.stringify(mapData)}</Text> */}
     </View>

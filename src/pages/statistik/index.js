@@ -8,6 +8,7 @@ import ChartPenghuni from './ChartPenghuni';
 import KostStatistik from './KostStatistik';
 import PieSection from './PieSection';
 import TestPie from './TestPie';
+import GraphSection from './GraphSection';
 
 export {
   MainStatistik,
@@ -20,4 +21,5 @@ export {
   KostStatistik,
   PieSection,
   TestPie,
+  GraphSection,
 };

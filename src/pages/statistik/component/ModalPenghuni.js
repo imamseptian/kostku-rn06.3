@@ -70,7 +70,7 @@ const ModalPenghuni = ({data, closeModal, keyword, ...rest}) => {
         elevation: 5,
         paddingHorizontal: 0.03 * screenWidth,
         paddingTop: 5,
-        maxHeight: '70%',
+        maxHeight: '90%',
       }}>
       <View
         style={{

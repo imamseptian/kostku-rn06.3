@@ -106,8 +106,7 @@ const DetailPendaftar = ({navigation, route}) => {
     const source = axios.CancelToken.source();
     // const ayaya = CancelToken.
 
-    let three =
-      'https://dry-forest-53707.herokuapp.com/api/pendaftar/' + item.id;
+    let three = APIUrl + '/api/pendaftar/' + item.id;
 
     axios
       .put(

@@ -5,8 +5,9 @@ import MyPieChart from './MyPieChart';
 import ModalPenghuni from './ModalPenghuni';
 import MyRandomPieChart from './MyRandomPieChart';
 import KostPenghuniChart from './KostPenghuniChart';
-import KostProvinsiChart from './KostProvinsiChart';
-import ModalProvinsi from './ModalProvinsi';
+import KostDaerahChart from './KostDaerahChart';
+import ModalDaerah from './ModalDaerah';
+import ModalTransaksi from './ModalTransaksi';
 
 export {
   MyLineChart,
@@ -16,6 +17,7 @@ export {
   ModalPenghuni,
   MyRandomPieChart,
   KostPenghuniChart,
-  KostProvinsiChart,
-  ModalProvinsi,
+  KostDaerahChart,
+  ModalDaerah,
+  ModalTransaksi,
 };

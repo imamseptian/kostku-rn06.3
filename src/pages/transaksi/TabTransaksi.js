@@ -9,8 +9,8 @@ import {
   TouchableNativeFeedback,
   View,
   FlatList,
-  Modal,
 } from 'react-native';
+import Modal from 'react-native-translucent-modal';
 import {FlatListTransaksi} from '../../components';
 import {PureModal} from '../../components';
 import {ModalPembayaran} from './components';
@@ -37,7 +37,7 @@ const TabTransaksi = (props) => {
     console.log(props.penghuni);
 
     if (props.penghuni !== undefined) {
-      alert('axios tab transaksi');
+      // alert('axios tab transaksi');
       console.log('tab transaksi start');
       setisLoading(true);
       myAxios.getAxios(

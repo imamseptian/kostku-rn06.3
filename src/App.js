@@ -5,22 +5,23 @@ import {Provider} from 'react-redux';
 import AppNavigator from './AppNavigator';
 import {store} from './store';
 import {MainStatistik, KostStatistik} from './pages/statistik';
-import {MyDatePicker} from './pages/CobaDate';
+import {MyDatePicker, AccordionComponent} from './pages/CobaDate';
 
 const LaporanStack = createSharedElementStackNavigator();
 
 export default function App() {
   return (
     <Provider store={store}>
-      <KostStatistik />
+      {/* <AccordionComponent /> */}
+      {/* <KostStatistik /> */}
       {/* <CobaVictory /> */}
       {/* <MainStatistik /> */}
 
       {/* <MyDatePicker /> */}
 
-      {/* <NavigationContainer>
+      <NavigationContainer>
         <AppNavigator />
-      </NavigationContainer> */}
+      </NavigationContainer>
     </Provider>
   );
 }
