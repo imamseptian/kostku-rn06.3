@@ -8,22 +8,6 @@ import {
 } from '../../../function/MyVar';
 
 const BarangTambahan = ({dataChange, ubahHarga}) => {
-  // const [arrBiaya, setarrBiaya] = useState(() => {
-  //   let tempList = [];
-  //   dataChange.forEach((x, i) => {
-  //     x.total = 0;
-  //     tempList.push(formatRupiah('0', 'Rp. '));
-  //   });
-
-  //   return tempList;
-  // });
-
-  // const handleInputChange = (e, index, inputType) => {
-  //   const list = [...arrBiaya];
-  //   list[index][inputType] = e;
-  //   setpendaftarItem(list);
-  // };
-
   return (
     <View
       style={{

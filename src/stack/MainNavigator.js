@@ -20,7 +20,11 @@ import {
   EditFasilitas,
 } from '../pages/kamar';
 import {PageDL} from '../pages/download';
-import {DetailPendaftar, ListPendaftar} from '../pages/pendaftar';
+import {
+  DetailPendaftar,
+  ListPendaftar,
+  ProfilPendaftar,
+} from '../pages/pendaftar';
 import {DetailKeuangan} from '../pages/pengeluaran';
 import {DetailPenghuni, ListPenghuni} from '../pages/penghuni';
 import {Profile, EditProfil, EditKost} from '../pages/user';
@@ -86,10 +90,10 @@ const HomeStackScreen = ({navigation, route}) => {
       <HomeStack.Screen name="Profil" component={Profile} />
       <HomeStack.Screen name="EditProfil" component={EditProfil} />
       <HomeStack.Screen name="EditKost" component={EditKost} />
-      <PendaftarStack.Screen
+      {/* <PendaftarStack.Screen
         name="DetailPendaftar"
         component={DetailPendaftar}
-      />
+      /> */}
     </HomeStack.Navigator>
   );
 };
@@ -232,44 +236,44 @@ const PendaftarStackScreen = ({navigation, route}) => {
       <PendaftarStack.Screen
         name="ListPendaftar"
         component={ListPendaftar}
-        options={() => ({
-          gestureEnabled: false,
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          transitionSpec: {
-            open: {
-              animation: 'timing',
-              config: {duration: 500, easing: Easing.linear},
-            },
-            close: {
-              animation: 'timing',
-              config: {duration: 500, easing: Easing.linear},
-            },
-          },
-        })}
+        // options={() => ({
+        //   gestureEnabled: false,
+        //   cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        //   transitionSpec: {
+        //     open: {
+        //       animation: 'timing',
+        //       config: {duration: 500, easing: Easing.linear},
+        //     },
+        //     close: {
+        //       animation: 'timing',
+        //       config: {duration: 500, easing: Easing.linear},
+        //     },
+        //   },
+        // })}
       />
       <PendaftarStack.Screen
         name="DetailPendaftar"
-        component={DetailPendaftar}
-        options={() => ({
-          gestureEnabled: false,
-          transitionSpec: {
-            open: {
-              animation: 'timing',
-              config: {duration: 500, easing: Easing.inOut(Easing.ease)},
-            },
-            close: {
-              animation: 'spring',
-              config: {duration: 500, easing: Easing.inOut(Easing.linear)},
-            },
-          },
-          cardStyleInterpolator: ({current: {progress}}) => {
-            return {
-              cardStyle: {
-                opacity: progress,
-              },
-            };
-          },
-        })}
+        component={ProfilPendaftar}
+        // options={() => ({
+        //   gestureEnabled: false,
+        //   transitionSpec: {
+        //     open: {
+        //       animation: 'timing',
+        //       config: {duration: 500, easing: Easing.inOut(Easing.ease)},
+        //     },
+        //     close: {
+        //       animation: 'spring',
+        //       config: {duration: 500, easing: Easing.inOut(Easing.linear)},
+        //     },
+        //   },
+        //   cardStyleInterpolator: ({current: {progress}}) => {
+        //     return {
+        //       cardStyle: {
+        //         opacity: progress,
+        //       },
+        //     };
+        //   },
+        // })}
       />
     </PendaftarStack.Navigator>
   );

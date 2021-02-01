@@ -47,8 +47,8 @@ const ModalTransaksi = (props) => {
     <View
       style={{
         backgroundColor: '#f6f6f6',
-        width: 0.9 * screenWidth,
-        maxHeight: '70%',
+        width: 0.9 * props.lebar,
+        maxHeight: '90%',
         borderTopLeftRadius: 5,
         borderTopRightRadius: 20,
         borderBottomLeftRadius: 20,
@@ -111,7 +111,7 @@ const ModalTransaksi = (props) => {
           // extraData={selectedId}
           showsVerticalScrollIndicator={false}
           renderItem={({item, index, separator}) => {
-            return <ModalItemTransaksi data={item} />;
+            return <ModalItemTransaksi data={item} jenis={props.jenis} />;
           }}
         />
       )}

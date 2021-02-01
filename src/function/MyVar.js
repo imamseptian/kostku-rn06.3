@@ -17,6 +17,7 @@ const screenHeight = Math.round(Dimensions.get('window').height);
 const defaultAsset = {
   kelas_kamar:
     'https://www.harapanrakyat.com/wp-content/uploads/2020/04/Desain-Kamar-Tidur-Nyaman-Hangat-696x464.jpg',
+  foto_profil: 'https://liquipedia.net/commons/images/b/bd/AdmiralBulldog.png',
 };
 
 const myColor = {
@@ -65,7 +66,7 @@ const formatRupiah = (angka, prefix) => {
 
   // tambahkan titik jika yang di input sudah menjadi angka ribuan
   if (ribuan) {
-    separator = sisa ? '.' : '';
+    let separator = sisa ? '.' : '';
     rupiah += separator + ribuan.join('.');
   }
 

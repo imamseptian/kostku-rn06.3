@@ -28,7 +28,10 @@ class KostDaerahChart extends React.PureComponent {
     }));
 
     return (
-      <View>
+      <View
+        style={{
+          paddingHorizontal: 0.05 * screenWidth,
+        }}>
         <Text
           style={{
             textAlign: 'center',
@@ -41,13 +44,15 @@ class KostDaerahChart extends React.PureComponent {
           style={{
             marginTop: 10,
             flexDirection: 'row',
-            // justifyContent: 'center',
+
+            height: 150,
+            flexGrow: 1,
             alignItems: 'center',
             // backgroundColor: 'red',
           }}>
           <PieChart
             style={{
-              width: 180,
+              width: 150,
             }}
             data={pieData}
           />
@@ -58,7 +63,23 @@ class KostDaerahChart extends React.PureComponent {
                 <BoxPieSection
                   key={i}
                   data={x}
-                  keyword={i === data.length - 1 ? 'etc' : this.props.daerah}
+                  // keyword={i === data.length - 1 ? 'etc' : this.props.daerah}
+                  keyword={
+                    data.length < 7
+                      ? this.props.daerah
+                      : [i === data.length - 1 ? 'etc' : this.props.daerah]
+                  }
+                  // keyword={() => {
+                  //   if (data.length < 7) {
+                  //     return this.props.daerah;
+                  //   } else {
+                  //     if (i === data.length - 1) {
+                  //       return 'etc';
+                  //     } else {
+                  //       return this.props.daerah;
+                  //     }
+                  //   }
+                  // }}
                   color={colorData[i]}
                   onPress={() => {
                     onPiePress(i);

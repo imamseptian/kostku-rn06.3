@@ -1,12 +1,26 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, Modal, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Modal,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import {KostPenghuniChart, ModalPenghuni, ModalTransaksi} from './component';
 import axios from 'axios';
-import {myColor, formatRupiah} from '../../function/MyVar';
+import {myColor, formatRupiah, APIUrl} from '../../function/MyVar';
 import {FlatListPendaftar, MiniHeader, PureModal} from '../../components';
 import {PieSection, TestPie, GraphSection} from './';
+import {HeaderTheme} from '../../components';
+import {useSelector} from 'react-redux';
 
-const KostStatistik = () => {
+const screenWidth = Math.round(Dimensions.get('window').width);
+const KostStatistik = ({navigation, route}) => {
+  const dataRedux = useSelector((state) => state.AuthReducer);
+
+  const [isLoading, setisLoading] = useState(false);
+  const [lebar, setlebar] = useState(screenWidth);
   // const dataPendapatan = [3000000, 500000, 5000000, 300000, 7000000];
   const [dataPendapatan, setdataPendapatan] = useState([]);
   const [linePendapatan, setlinePendapatan] = useState([]);
@@ -28,8 +42,9 @@ const KostStatistik = () => {
   };
 
   useEffect(() => {
+    setisLoading(true);
     axios
-      .get('https://dry-forest-53707.herokuapp.com/api/chart_keuangan/1')
+      .get(APIUrl + '/api/chart_keuangan/' + dataRedux.user.kostku)
       .then((res) => {
         setterChart(res.data.pendapatan, setdataPendapatan, setlinePendapatan);
         setterChart(
@@ -37,53 +52,70 @@ const KostStatistik = () => {
           setdataPengeluaran,
           setlinePengeluaran,
         );
+        setisLoading(false);
 
         // setlabelpendapatan(res.data.label);
       })
       .catch((error) => {
         alert('error chart keuangan');
+        setisLoading(false);
       });
   }, []);
 
   return (
-    <View>
-      <ScrollView>
-        <Modal
-          visible={showModalPendapatan}
-          transparent={true}
-          onRequestClose={() => setshowModalPendapatan(false)}>
-          <PureModal>
-            <ModalTransaksi
-              data={dataPendapatan[selectedDotPendapatan]}
-              jenis={1}
-              closeModal={() => {
-                setshowModalPendapatan(false);
-              }}
-            />
-          </PureModal>
-        </Modal>
+    <View
+      onLayout={(event) => {
+        const {x, y, width, height} = event.nativeEvent.layout;
+        // console.log(width, width);
+        setlebar(width);
 
-        <Modal
-          visible={showModalPengeluaran}
-          transparent={true}
-          onRequestClose={() => setshowModalPengeluaran(false)}>
-          <PureModal>
-            <ModalTransaksi
-              data={dataPengeluaran[selectedDotPengeluaran]}
-              jenis={2}
-              closeModal={() => {
-                setshowModalPengeluaran(false);
-              }}
-            />
-          </PureModal>
-        </Modal>
+        // do something here like set your initial animated value for the height
+      }}>
+      <HeaderTheme
+        openDrawer={() => navigation.toggleDrawer()}
+        title="Statistik Kost"
+      />
 
-        {/*         
+      <Modal
+        visible={showModalPendapatan}
+        transparent={true}
+        onRequestClose={() => setshowModalPendapatan(false)}>
+        <PureModal>
+          <ModalTransaksi
+            lebar={lebar}
+            data={dataPendapatan[selectedDotPendapatan]}
+            jenis={1}
+            closeModal={() => {
+              setshowModalPendapatan(false);
+            }}
+          />
+        </PureModal>
+      </Modal>
+
+      <Modal
+        visible={showModalPengeluaran}
+        transparent={true}
+        onRequestClose={() => setshowModalPengeluaran(false)}>
+        <PureModal>
+          <ModalTransaksi
+            lebar={lebar}
+            data={dataPengeluaran[selectedDotPengeluaran]}
+            jenis={2}
+            closeModal={() => {
+              setshowModalPengeluaran(false);
+            }}
+          />
+        </PureModal>
+      </Modal>
+
+      {/*         
         <Text>{JSON.stringify(dataPendapatan)}</Text>
         <Text>{JSON.stringify(linePendapatan)}</Text> */}
-        {/* <PieSection /> */}
-        {/* <GraphSection /> */}
+      {/* <PieSection /> */}
+      {/* <GraphSection /> */}
+      <ScrollView style={{paddingVertical: 10}}>
         <GraphSection
+          isLoading={isLoading}
           data={dataPendapatan}
           // x_axis={labelpendapatan}
           graphLine={linePendapatan}
@@ -100,6 +132,7 @@ const KostStatistik = () => {
         </GraphSection>
 
         <GraphSection
+          isLoading={isLoading}
           data={dataPengeluaran}
           // x_axis={labelpendapatan}
           graphLine={linePengeluaran}
@@ -114,8 +147,11 @@ const KostStatistik = () => {
             Statistik Pengeluaran
           </Text>
         </GraphSection>
+        <PieSection id_kost={dataRedux.user.kostku} />
+
+        <View style={{height: 100}}></View>
+
         {/* <TestPie /> */}
-        <PieSection />
       </ScrollView>
     </View>
   );

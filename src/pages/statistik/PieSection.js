@@ -10,7 +10,7 @@ import {
   ModalDaerah,
 } from './component';
 
-const PieSection = () => {
+const PieSection = (props) => {
   const [pieDataPenghuni, setPieDataPenghuni] = useState([]);
   const pieColor = [myColor.myblue, myColor.colorTheme];
   const [selectedPiePenghuni, setSelectedPiePenghuni] = useState(0);
@@ -65,7 +65,7 @@ const PieSection = () => {
   useEffect(() => {
     axios
       .post(APIUrl + '/api/statistik_pie', {
-        id_kost: 1,
+        id_kost: props.id_kost,
       })
       .then((res) => {
         setterDaerah(
@@ -174,7 +174,7 @@ const PieSection = () => {
         }}
         selectedPie={selectedPiePenghuni}
       /> */}
-      <Text>{JSON.stringify(pieKota)}</Text>
+      {/* <Text>{JSON.stringify(pieKota)}</Text> */}
       {/* <Text>{JSON.stringify(pieDataPenghuni)}</Text> */}
       {/* <Text>{JSON.stringify(pieProvinsi)}</Text>
       <Text>{pieProvinsi.length}</Text> */}

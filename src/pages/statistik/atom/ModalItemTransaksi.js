@@ -24,24 +24,28 @@ class ModalItemTransaksi extends React.PureComponent {
           flexDirection: 'row',
           paddingHorizontal: 5,
           marginBottom: 5,
-          justifyContent: 'space-between',
         }}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        {this.props.jenis === 1 && (
           <Image
             source={{uri: defaultAsset.kelas_kamar}}
             style={{height: 50, width: 50, borderRadius: 50 / 2}}
           />
-          <Text
-            style={{
-              fontFamily: 'OpenSans-SemiBold',
-              fontSize: 12,
-              marginLeft: 5,
-            }}>
-            Imam Septian
-          </Text>
-        </View>
+        )}
 
-        <View>
+        <Text
+          // numberOfLines={2}
+          style={{
+            fontFamily: 'OpenSans-SemiBold',
+            fontSize: 12,
+            marginLeft: 5,
+            maxWidth: 0.3 * screenWidth,
+          }}>
+          {this.props.jenis === 1
+            ? this.props.data.nama_depan + ' ' + this.props.data.nama_belakang
+            : this.props.data.judul}
+        </Text>
+
+        <View style={{flex: 1}}>
           <Text
             style={{
               fontFamily: 'OpenSans-SemiBold',

@@ -6,7 +6,7 @@ import AppNavigator from './AppNavigator';
 import {store} from './store';
 import {MainStatistik, KostStatistik} from './pages/statistik';
 import {MyDatePicker, AccordionComponent} from './pages/CobaDate';
-
+import {ProfilPendaftar} from './pages/pendaftar';
 const LaporanStack = createSharedElementStackNavigator();
 
 export default function App() {
@@ -18,6 +18,7 @@ export default function App() {
       {/* <MainStatistik /> */}
 
       {/* <MyDatePicker /> */}
+      {/* <ProfilPendaftar /> */}
 
       <NavigationContainer>
         <AppNavigator />

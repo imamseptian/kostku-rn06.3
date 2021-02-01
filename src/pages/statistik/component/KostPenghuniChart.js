@@ -38,14 +38,15 @@ class KostPenghuniChart extends React.PureComponent {
         </Text>
         <View
           style={{
+            marginTop: 10,
             flexDirection: 'row',
-            height: 250,
+            height: 150,
             alignItems: 'center',
             paddingHorizontal: 0.05 * screenWidth,
           }}>
           <PieChart
             style={{
-              width: 200,
+              width: 150,
             }}
             data={pieData}
           />

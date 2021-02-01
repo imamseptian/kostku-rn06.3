@@ -6,11 +6,12 @@ const BoxPieSection = (props) => {
   const [namaDaerah, setnamaDaerah] = useState('');
 
   useEffect(() => {
-    if (props.keyword === 'provinsi') {
+    if (props.keyword === 'etc') {
       axios
         .get(
-          'https://dev.farizdotid.com/api/daerahindonesia/provinsi/' +
-            props.data.provinsi,
+          `https://dev.farizdotid.com/api/daerahindonesia/${props.keyword}/${
+            props.keyword === 'provinsi' ? props.data.provinsi : props.data.kota
+          }`,
         )
         .then((res) => {
           setnamaDaerah(res.data.nama);
@@ -28,6 +29,7 @@ const BoxPieSection = (props) => {
         <View style={[styles.tagBox, {backgroundColor: props.color}]}></View>
         <Text style={{marginLeft: 5}}>
           {props.keyword === 'etc' ? 'dan lain-lain' : namaDaerah}
+          {/* {JSON.stringify(props.data)} */}
         </Text>
       </View>
     </TouchableOpacity>

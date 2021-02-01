@@ -13,6 +13,7 @@ import {useSelector} from 'react-redux';
 import {myColor, screenWidth} from '../../function/MyVar';
 import {TabPemasukan, TabPengeluaran} from './';
 import {TabCategory} from './components';
+import {HeaderTheme} from '../../components';
 
 const DetailKeuangan = ({navigation, route}) => {
   const isFocused = useIsFocused();
@@ -110,7 +111,11 @@ const DetailKeuangan = ({navigation, route}) => {
       }}
       style={{flex: 1, backgroundColor: '#f6f6f6'}}>
       <StatusBar translucent backgroundColor="transparent" />
-      <View
+      <HeaderTheme
+        openDrawer={() => navigation.toggleDrawer()}
+        title="Pemasukan dan Pengeluaran Kost"
+      />
+      {/* <View
         style={{
           backgroundColor: myColor.colorTheme,
           alignItems: 'center',
@@ -132,7 +137,7 @@ const DetailKeuangan = ({navigation, route}) => {
           Pemasukan dan Pengeluaran Kost
         </Text>
         <View style={{width: 25}}></View>
-      </View>
+      </View> */}
       <View
         style={{
           paddingVertical: 10,

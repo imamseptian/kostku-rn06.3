@@ -8,6 +8,7 @@ import FlatListTagihan from './FlatListTagihan';
 import FlatListTransaksi from './FlatListTransaksi';
 import FlatListTransaksiBayar from './FlatListTransaksiBayar';
 import HeaderPage from './HeaderPage';
+import HeaderTheme from './HeaderTheme';
 import HomeKamarSection from './HomeKamarSection';
 import HomePenghuniSection from './HomePenghuniSection';
 import HomeTitleDrawer from './HomeTitleDrawer';
@@ -42,4 +43,5 @@ export {
   MiniHeader,
   PureModal,
   TextInputResp,
+  HeaderTheme,
 };

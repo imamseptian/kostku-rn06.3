@@ -155,13 +155,6 @@ const DetailPendaftar = ({navigation, route}) => {
           throw errors;
         }
       });
-
-    // const ambilAsal = async () => {
-    //   await ambilProvinsi();
-    //   await ambilKota;
-    // };
-    // ambilAsal();
-
     return () => {
       source.cancel('Api Canceled');
     };
