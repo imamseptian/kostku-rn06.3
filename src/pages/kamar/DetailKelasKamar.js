@@ -226,7 +226,7 @@ const DetailKelasKamar = ({navigation, route}) => {
             }}>
             <Image
               source={{
-                uri: APIUrl + '/kostdata/kelas_kamar/foto/' + item.foto,
+                uri: APIUrl + '/storage/images/kelas/' + item.foto,
               }}
               style={{
                 width: 300,
@@ -371,6 +371,7 @@ const DetailKelasKamar = ({navigation, route}) => {
             id: item.id,
             nama: item.nama,
             kapasitas: item.kapasitas,
+            foto: item.foto,
           })
         }>
         <View

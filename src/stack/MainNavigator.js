@@ -26,7 +26,12 @@ import {
   ProfilPendaftar,
 } from '../pages/pendaftar';
 import {DetailKeuangan} from '../pages/pengeluaran';
-import {DetailPenghuni, ListPenghuni} from '../pages/penghuni';
+import {
+  DetailPenghuni,
+  ListPenghuni,
+  ProfilPenghuni,
+  EditPenghuni,
+} from '../pages/penghuni';
 import {Profile, EditProfil, EditKost} from '../pages/user';
 import {HalamanBayar} from '../pages/transaksi';
 import {KostStatistik} from '../pages/statistik';
@@ -123,26 +128,26 @@ const KamarStackScreen = ({navigation, route}) => {
       <KamarStack.Screen
         name="DetailKelas"
         component={DetailKelasKamar}
-        sharedElementsConfig={(route, otherRoute, showing) => {
-          const {item} = route.params;
-          console.log(otherRoute.name);
-          // console.log(item);
-          return [`item.${item.id}.foto_kamar`];
-        }}
-        options={() => ({
-          gestureEnabled: false,
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          transitionSpec: {
-            open: {
-              animation: 'timing',
-              config: {duration: 500, easing: Easing.linear},
-            },
-            close: {
-              animation: 'timing',
-              config: {duration: 500, easing: Easing.linear},
-            },
-          },
-        })}
+        // sharedElementsConfig={(route, otherRoute, showing) => {
+        //   const {item} = route.params;
+        //   console.log(otherRoute.name);
+        //   // console.log(item);
+        //   return [`item.${item.id}.foto_kamar`];
+        // }}
+        // options={() => ({
+        //   gestureEnabled: false,
+        //   cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        //   transitionSpec: {
+        //     open: {
+        //       animation: 'timing',
+        //       config: {duration: 500, easing: Easing.linear},
+        //     },
+        //     close: {
+        //       animation: 'timing',
+        //       config: {duration: 500, easing: Easing.linear},
+        //     },
+        //   },
+        // })}
       />
       <KamarStack.Screen name="CreateKamar" component={CreateKamar} />
       <KamarStack.Screen name="EditKelas" component={EditKelasKamar} />
@@ -186,46 +191,47 @@ const PenghuniStackScreen = ({navigation, route}) => {
       <PenghuniStack.Screen
         name="ListPenghuni"
         component={ListPenghuni}
-        options={() => ({
-          gestureEnabled: false,
-          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          transitionSpec: {
-            open: {
-              animation: 'timing',
-              config: {duration: 500, easing: Easing.linear},
-            },
-            close: {
-              animation: 'timing',
-              config: {duration: 500, easing: Easing.linear},
-            },
-          },
-        })}
+        // options={() => ({
+        //   gestureEnabled: false,
+        //   cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        //   transitionSpec: {
+        //     open: {
+        //       animation: 'timing',
+        //       config: {duration: 500, easing: Easing.linear},
+        //     },
+        //     close: {
+        //       animation: 'timing',
+        //       config: {duration: 500, easing: Easing.linear},
+        //     },
+        //   },
+        // })}
       />
 
       <PenghuniStack.Screen
-        name="DetailPenghuni"
-        component={DetailPenghuni}
-        options={() => ({
-          gestureEnabled: false,
-          transitionSpec: {
-            open: {
-              animation: 'timing',
-              config: {duration: 500, easing: Easing.inOut(Easing.ease)},
-            },
-            close: {
-              animation: 'spring',
-              config: {duration: 500, easing: Easing.inOut(Easing.linear)},
-            },
-          },
-          cardStyleInterpolator: ({current: {progress}}) => {
-            return {
-              cardStyle: {
-                opacity: progress,
-              },
-            };
-          },
-        })}
+        name="ProfilPenghuni"
+        component={ProfilPenghuni}
+        // options={() => ({
+        //   gestureEnabled: false,
+        //   transitionSpec: {
+        //     open: {
+        //       animation: 'timing',
+        //       config: {duration: 500, easing: Easing.inOut(Easing.ease)},
+        //     },
+        //     close: {
+        //       animation: 'spring',
+        //       config: {duration: 500, easing: Easing.inOut(Easing.linear)},
+        //     },
+        //   },
+        //   cardStyleInterpolator: ({current: {progress}}) => {
+        //     return {
+        //       cardStyle: {
+        //         opacity: progress,
+        //       },
+        //     };
+        //   },
+        // })}
       />
+      <PenghuniStack.Screen name="EditPenghuni" component={EditPenghuni} />
     </PenghuniStack.Navigator>
   );
 };

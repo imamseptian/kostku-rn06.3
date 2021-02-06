@@ -46,7 +46,7 @@ const FormAwal = ({navigation}) => {
               fontSize: 30,
               fontWeight: 'bold',
             }}>
-            Hallo , {dataRedux.user.nama_depan} {dataRedux.user.nama_belakang}
+            Hallo , {dataRedux.user.nama}
           </Text>
         </View>
       </Animated.View>

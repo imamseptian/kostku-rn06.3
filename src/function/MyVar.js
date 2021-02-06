@@ -1,6 +1,7 @@
 import {Dimensions} from 'react-native';
 
-const APIUrl = 'https://dry-forest-53707.herokuapp.com';
+// const APIUrl = 'https://dry-forest-53707.herokuapp.com';
+const APIUrl = 'https://apikostku.xyz';
 
 // const myColor = {
 //   colorTheme: '#9cdfde',
@@ -18,6 +19,7 @@ const defaultAsset = {
   kelas_kamar:
     'https://www.harapanrakyat.com/wp-content/uploads/2020/04/Desain-Kamar-Tidur-Nyaman-Hangat-696x464.jpg',
   foto_profil: 'https://liquipedia.net/commons/images/b/bd/AdmiralBulldog.png',
+  yupi: `https://i.pinimg.com/564x/41/73/68/4173687c3ced72dc678b9608a3f43285.jpg`,
 };
 
 const myColor = {

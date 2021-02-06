@@ -3,9 +3,7 @@ import {StyleSheet, Text, View, Image} from 'react-native';
 import {myColor, APIUrl, defaultAsset} from '../../function/MyVar';
 
 const BlackImage = ({urlImg}) => {
-  const [img, setimg] = useState(
-    APIUrl + '/kostdata/kelas_kamar/foto/' + urlImg,
-  );
+  const [img, setimg] = useState(APIUrl + '/storage/images/kelas/' + urlImg);
   return (
     <View>
       <Image

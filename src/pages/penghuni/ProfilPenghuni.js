@@ -1,5 +1,7 @@
+import axios from 'axios';
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  Alert,
   FlatList,
   Image,
   ScrollView,
@@ -8,16 +10,13 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Alert,
 } from 'react-native';
-import {defaultAsset, myColor, screenWidth, APIUrl} from '../../function/MyVar';
-import {TabBarang, TabBerkas, TabInfo} from './component';
-import {ButtonStickyTab} from './atoms';
-import {SharedElement} from 'react-navigation-shared-element';
-import axios from 'axios';
 import {useSelector} from 'react-redux';
+import {APIUrl, defaultAsset, myColor, screenWidth} from '../../function/MyVar';
+import {ButtonStickyTab} from './atoms';
+import {TabBarang, TabTagihan, TabInfo} from './components';
 
-const ProfilPendaftar = ({navigation, route}) => {
+const ProfilPenghuni = ({navigation, route}) => {
   const dataRedux = useSelector((state) => state.AuthReducer);
 
   const [lebar, setlebar] = useState(screenWidth);
@@ -25,49 +24,10 @@ const ProfilPendaftar = ({navigation, route}) => {
   const ref = useRef();
   const scrollRef = useRef();
   const {item} = route.params;
-  const [pendaftarItem, setpendaftarItem] = useState([]);
+  // const [pendaftarItem, setpendaftarItem] = useState([]);
   const [profilImg, setprofilImg] = useState(
     APIUrl + '/storage/images/pendaftar/' + item.foto_diri,
   );
-  const handleInputChange = (e, index, inputType) => {
-    const list = [...pendaftarItem];
-    list[index][inputType] = e;
-    setpendaftarItem(list);
-  };
-
-  useEffect(() => {
-    const source = axios.CancelToken.source();
-    // const ayaya = CancelToken.
-
-    let three = APIUrl + '/api/pendaftar/' + item.id;
-
-    axios
-      .post(APIUrl + '/api/barang_pendaftar', {id_pendaftar: item.id})
-      .then((res) => {
-        // let tempList = [];
-        res.data.barang.forEach((x, i) => {
-          x.total = 0;
-          console.log(`Index ${i}`);
-          console.log(`Isi ${x.nama}`);
-          // tempList.push(formatRupiah('0', 'Rp. '));
-        });
-        // setformatHarga(tempList);
-
-        setpendaftarItem(res.data.barang);
-      })
-      .catch((errors) => {
-        if (axios.isCancel(errors)) {
-          // setIsLoading(false);
-          console.log('caught cancel on ambil api pendaftar');
-        } else {
-          // setIsLoading(false);
-          throw errors;
-        }
-      });
-    return () => {
-      source.cancel('Api Canceled');
-    };
-  }, [route.params]);
 
   const datapage = [
     {
@@ -83,30 +43,11 @@ const ProfilPendaftar = ({navigation, route}) => {
     },
     {
       id: 1,
-      page: (
-        <TabBerkas
-          lebar={lebar}
-          selectedTab={selectedTab}
-          index={1}
-          data={item}
-        />
-      ),
+      page: <TabTagihan lebar={lebar} data={item} id_penghuni={item.id} />,
     },
     {
       id: 2,
-      page: (
-        <TabBarang
-          lebar={lebar}
-          // selectedTab={selectedTab}
-          // index={2}
-          dataChange={pendaftarItem}
-          ubahHarga={(x, y, z) => {
-            // setpendaftarItem({...pendaftarItem, barang_tambahan: e});
-            handleInputChange(x, y, z);
-            // console.log(e);
-          }}
-        />
-      ),
+      page: <TabBarang lebar={lebar} id_penghuni={item.id} />,
     },
   ];
 
@@ -122,41 +63,6 @@ const ProfilPendaftar = ({navigation, route}) => {
       animated: true,
     });
   }, [selectedTab]);
-
-  const decidePenghuni = (statTerima) => {
-    // const ayaya = CancelToken.
-    console.log('decide penghuni');
-    axios
-      .post(
-        APIUrl + '/api/tambah_penghuni',
-        {...item, terima: statTerima, barang_tambahan: pendaftarItem},
-        {
-          headers: {
-            Authorization: `Bearer ${dataRedux.token}`,
-          },
-        },
-      )
-      .then((response) => {
-        // console.log(response.data);
-        // console.log(response.data.data.active);
-        // console.log(response.data.data.barang_tambahan);
-        if (response.data.code == 200) {
-          navigation.pop(1);
-        } else {
-          alert(
-            'Maaf kamar yang didaftarkan penuh, silahkan hubungi pendaftar untuk mendaftar ke kamar lain',
-          );
-        }
-      })
-      .catch((error) => {
-        console.log('error jembod');
-        console.log(item);
-        console.log(pendaftarItem);
-        alert('error');
-        // console.log(error);
-        console.log('kantal');
-      });
-  };
 
   return (
     <View
@@ -209,37 +115,7 @@ const ProfilPendaftar = ({navigation, route}) => {
 
           <TouchableOpacity
             onPress={() => {
-              console.log(item);
-              Alert.alert(
-                'Konfirmasi Respon',
-                'Terima pendaftar sebagai penghuni kost anda?',
-                [
-                  {
-                    text: 'Tolak',
-                    onPress: () => decidePenghuni(false),
-                    style: 'cancel',
-                  },
-                  {
-                    text: 'Ya',
-                    onPress: () => {
-                      Alert.alert(
-                        'Konfirmasi Biaya Barang',
-                        'Yakin dengan biaya bulanan barang penghuni yang sudah ditentukan ?',
-                        [
-                          {
-                            text: 'Periksa Kembali',
-                            onPress: () => setselectedTab(2),
-                            style: 'cancel',
-                          },
-                          {text: 'Yakin', onPress: () => decidePenghuni(true)},
-                        ],
-                        {cancelable: false},
-                      );
-                    },
-                  },
-                ],
-                {cancelable: false},
-              );
+              navigation.push('EditPenghuni', item);
             }}>
             <View style={styles.btTanggapi}>
               <Text
@@ -248,7 +124,7 @@ const ProfilPendaftar = ({navigation, route}) => {
                   fontFamily: 'OpenSans-SemiBold',
                   fontSize: 12,
                 }}>
-                Tanggapi
+                Edit
               </Text>
             </View>
           </TouchableOpacity>
@@ -275,7 +151,7 @@ const ProfilPendaftar = ({navigation, route}) => {
               }}
               selectedTab={selectedTab}
               index={1}
-              title="Berkas&Pesanan"
+              title="Tagihan"
             />
             <ButtonStickyTab
               onPress={() => {
@@ -283,7 +159,7 @@ const ProfilPendaftar = ({navigation, route}) => {
               }}
               selectedTab={selectedTab}
               index={2}
-              title="Barang Bawaan"
+              title="Kamar & Barang"
             />
           </View>
         </View>
@@ -314,16 +190,7 @@ const ProfilPendaftar = ({navigation, route}) => {
   );
 };
 
-ProfilPendaftar.sharedElements = (route, otherRoute, showing) => {
-  const {item} = route.params;
-  console.log('anim pendaftar');
-  console.log(item);
-  // return DATA_ICON.map((item) => `item.${item.id}.icon`);
-
-  return [`item.${item.id}.foto_pendaftar`];
-};
-
-export default ProfilPendaftar;
+export default ProfilPenghuni;
 
 const styles = StyleSheet.create({
   wrapperTanggapan: {

@@ -118,7 +118,7 @@ const HomePenghuniSection = (props) => {
                   data={item}
                   onPress={() => {
                     navigation.navigate('PenghuniStackScreen', {
-                      screen: 'DetailPenghuni',
+                      screen: 'ProfilPenghuni',
                       params: {
                         item,
                       },

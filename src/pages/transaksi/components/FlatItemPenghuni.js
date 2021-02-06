@@ -11,7 +11,12 @@ import {
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 
-import {myColor, screenWidth, formatRupiah} from '../../../function/MyVar';
+import {
+  myColor,
+  screenWidth,
+  formatRupiah,
+  APIUrl,
+} from '../../../function/MyVar';
 
 const FlatItemPenghuni = (props) => {
   return (
@@ -42,8 +47,8 @@ const FlatItemPenghuni = (props) => {
           }}>
           <Image
             source={{
-              uri:
-                'https://wpq0221c4a-flywheel.netdna-ssl.com/wp-content/uploads/2018/12/AdmiralBulldog-150x150.jpg',
+              uri: APIUrl + '/storage/images/pendaftar/' + props.data.foto_diri,
+              // uri: `https://i.pinimg.com/564x/41/73/68/4173687c3ced72dc678b9608a3f43285.jpg`,
             }}
             style={{height: 50, width: 50, borderRadius: 25}}
           />
@@ -70,7 +75,7 @@ const FlatItemPenghuni = (props) => {
             }}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Text numberOfLines={1} style={styles.nama}>
-                {props.data.nama_depan} {props.data.nama_belakang}
+                {props.data.nama}
               </Text>
               <View
                 style={{
@@ -97,9 +102,9 @@ const FlatItemPenghuni = (props) => {
           </View>
 
           <View style={{marginTop: 5}}>
+            <Text style={styles.harga}>{props.data.nama_kamar}</Text>
             <Text style={styles.harga}>
-              {props.data.nama_kamar} (
-              {formatRupiah(props.data.total.toString(), 'Rp. ')} / Bulan)
+              {formatRupiah(props.data.total.toString(), 'Rp. ')} / Bulan
             </Text>
           </View>
         </View>

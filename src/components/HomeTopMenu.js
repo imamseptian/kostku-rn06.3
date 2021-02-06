@@ -35,8 +35,8 @@ const HomeTopMenu = (props) => {
         }}>
         <Text style={styles.textPendapatan}>Pemasukan Bulan ini :</Text>
         <Text style={styles.textPendapatan}>
-          {/* {formatRupiah(props.uang.toString(), 'Rp. ')} */}
-          Rp. 600.000
+          {formatRupiah(props.uang.toString(), 'Rp. ')}
+          {/* Rp. 600.000 */}
         </Text>
       </View>
       <View

@@ -72,7 +72,7 @@ const PageDL = ({navigation}) => {
   }, []);
 
   const downloadPDF = () => {
-    RNFetchBlob.fetch('GET', 'https://dry-forest-53707.herokuapp.com/api/mypdf')
+    RNFetchBlob.fetch('GET', APIUrl + '/api/mypdf')
       .then((res) => {
         let status = res.info().status;
         console.log(status);
@@ -124,14 +124,10 @@ const PageDL = ({navigation}) => {
     };
 
     config(options)
-      .fetch(
-        'GET',
-        `https://dry-forest-53707.herokuapp.com/api/mypdf/${selectedBulan}/${selectedTahun}`,
-        {
-          Authorization: `Bearer ${dataRedux.token}`,
-          // more headers  ..
-        },
-      )
+      .fetch('GET', `${APIUrl}/api/mypdf/${selectedBulan}/${selectedTahun}`, {
+        Authorization: `Bearer ${dataRedux.token}`,
+        // more headers  ..
+      })
       .then((res) => {
         //Showing alert after successful downloading
         console.log('res -> ', JSON.stringify(res));

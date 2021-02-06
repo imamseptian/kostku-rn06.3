@@ -20,14 +20,14 @@ const BoxProfile = (props) => {
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Image
           source={{
-            uri: APIUrl + '/kostdata/pemilik/foto/' + props.data.foto_profil,
+            uri:
+              APIUrl + '/kostdata/pemilik/foto/' + dataRedux.user.foto_profil,
           }}
           style={{height: 100, width: 100, borderRadius: 10}}
         />
         <View style={{marginLeft: 15, flex: 1}}>
           <Text style={styles.namaprofil}>
-            {/* {props.data.nama_depan} {props.data.nama_belakang} */}
-            {dataRedux.user.nama_depan} {dataRedux.user.nama_belakang}
+            {dataRedux.user.nama}
             {/* {JSON.stringify(dataRedux)} */}
           </Text>
           <Text style={styles.email}>{dataRedux.user.email}</Text>
@@ -58,8 +58,7 @@ const BoxProfile = (props) => {
         </View>
       </View>
 
-      <TouchableOpacity
-        onPress={() => navigation.push('EditProfil', props.data)}>
+      <TouchableOpacity onPress={() => navigation.push('EditProfil')}>
         <View
           style={{
             backgroundColor: myColor.addfacility,

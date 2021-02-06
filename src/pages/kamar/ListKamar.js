@@ -23,9 +23,8 @@ import {myAxios} from '../../function/MyAxios';
 import {APIUrl, myColor, screenHeight, screenWidth} from '../../function/MyVar';
 import {ItemKelas} from './component';
 
-const ListKamar = ({navigation}) => {
+const ListKamar = ({navigation, route}) => {
   const isFocused = useIsFocused();
-
   const scrollRef = useRef();
   const dataRedux = useSelector((state) => state.AuthReducer);
   const [kamar, setKamar] = useState([]);
@@ -33,7 +32,6 @@ const ListKamar = ({navigation}) => {
   const [selectedTag, setSelectedTag] = useState(1);
   const [maxLimit, setmaxLimit] = useState(0);
   const [banyakData, setbanyakData] = useState(0);
-  const [isLoad, setisLoad] = useState(false);
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState({
     id_kost: dataRedux.user.kostku,
@@ -42,7 +40,7 @@ const ListKamar = ({navigation}) => {
     orderby: 'asc',
   });
 
-  const setForm = (inputType, value) => {
+  const changeFilter = (inputType, value) => {
     setFilter({
       ...filter,
       [inputType]: value,
@@ -50,8 +48,6 @@ const ListKamar = ({navigation}) => {
   };
 
   const ambilApi = (myToken) => {
-    // const source = axios.CancelToken.source();
-    console.log('INI AMBIL API', isFocused);
     setIsLoading(true);
     myAxios.postAxios(
       APIUrl + '/api/classes?page=1',
@@ -62,18 +58,15 @@ const ListKamar = ({navigation}) => {
     );
     function onPost(status, data) {
       if (status == 'success') {
-        console.log(`My filter : ${filter.id_kost}`);
-        console.log(`Data : ${data}`);
-        // console.log(data.data.data);
         setKamar(data.data.data);
         setmaxLimit(data.data.last_page);
         setbanyakData(data.data.total);
-        setisLoad(true);
         setIsLoading(false);
       } else if (status == 'cancel') {
-        console.log('caught cancel filter');
+        console.log('[LIST KAMAR ] Request Canceled');
       } else {
-        console.log(data);
+        alert('error');
+        // console.log(data);
         setIsLoading(false);
       }
     }
@@ -82,45 +75,30 @@ const ListKamar = ({navigation}) => {
   useEffect(() => {
     const source = axios.CancelToken.source();
     if (isFocused) {
-      console.log('FOCUS LIST KAMAR --------------------');
-      console.log('focus', filter);
       ambilApi(source.token);
     }
-
     return () => {
-      console.log('LOST FOCUS LIST KAMAR --------------------');
-      setisLoad(false);
       setFilter({
         ...filter,
         namakeyword: '',
         sortname: 'nama',
         orderby: 'asc',
       });
-
       setSelectedTag(1);
       source.cancel('Component got unmounted');
-      // console.log('unmounted');
     };
-    // console.log('ayaya');
   }, [isFocused]);
 
   useEffect(() => {
     const source = axios.CancelToken.source();
-    if (isLoad) {
+    if (isFocused) {
       goToTop();
       ambilApi(source.token);
     }
-
     return () => {
-      source.cancel('FIlter CANCELED');
+      source.cancel('Filter Cancel');
     };
   }, [filter]);
-
-  const goToTop = () => {
-    if (kamar.length > 0) {
-      scrollRef.current.scrollToIndex({animated: true, index: 0});
-    }
-  };
 
   useEffect(() => {
     if (page != 1) {
@@ -149,6 +127,12 @@ const ListKamar = ({navigation}) => {
     }
   }, [page]);
 
+  const goToTop = () => {
+    if (kamar.length > 0) {
+      scrollRef.current.scrollToIndex({animated: true, index: 0});
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
@@ -156,16 +140,15 @@ const ListKamar = ({navigation}) => {
       {/* Header and SearchBar Section  */}
       <View style={styles.wrapperHeader}>
         <Text style={styles.title}>Daftar Kamar Kost</Text>
-        <View style={{marginBottom: 20}}>
-          <SearchBar
-            value={filter.namakeyword}
-            placeholder={'Cari Jenis Kamar'}
-            onChangeText={(value) => setForm('namakeyword', value)}
-            clearText={() => {
-              setForm('namakeyword', '');
-            }}
-          />
-        </View>
+
+        <SearchBar
+          value={filter.namakeyword}
+          placeholder={'Cari Jenis Kamar'}
+          onChangeText={(value) => changeFilter('namakeyword', value)}
+          clearText={() => {
+            changeFilter('namakeyword', '');
+          }}
+        />
       </View>
 
       {/* Content Section  */}
@@ -180,7 +163,7 @@ const ListKamar = ({navigation}) => {
               textColor={selectedTag == 1 ? 'white' : myColor.darkText}
               onPress={() => {
                 setSelectedTag(1);
-                setForm('sortname', 'nama');
+                changeFilter('sortname', 'nama');
               }}
               tagName="Nama"
             />
@@ -189,7 +172,7 @@ const ListKamar = ({navigation}) => {
               textColor={selectedTag == 2 ? 'white' : myColor.darkText}
               onPress={() => {
                 setSelectedTag(2);
-                setForm('sortname', 'harga');
+                changeFilter('sortname', 'harga');
               }}
               tagName="Harga"
             />
@@ -198,7 +181,7 @@ const ListKamar = ({navigation}) => {
               textColor={selectedTag == 3 ? 'white' : myColor.darkText}
               onPress={() => {
                 setSelectedTag(3);
-                setForm('sortname', 'kapasitas');
+                changeFilter('sortname', 'kapasitas');
               }}
               tagName="Kapasitas"
             />
@@ -209,10 +192,10 @@ const ListKamar = ({navigation}) => {
           sortCondition={filter.orderby}
           banyak={banyakData}
           onPress={() => {
-            if (filter.orderby == 'asc') {
-              setForm('orderby', 'desc');
+            if (filter.orderby === 'asc') {
+              changeFilter('orderby', 'desc');
             } else {
-              setForm('orderby', 'asc');
+              changeFilter('orderby', 'asc');
             }
           }}
         />
@@ -220,7 +203,7 @@ const ListKamar = ({navigation}) => {
         {/* List Kamar Section  */}
         <FlatList
           ref={scrollRef}
-          style={{marginTop: 10, paddingHorizontal: 0.05 * screenWidth}}
+          style={{marginTop: 10, paddingHorizontal: 15}}
           data={kamar}
           keyExtractor={(item) => item.id.toString()}
           showsVerticalScrollIndicator={false}
@@ -237,6 +220,7 @@ const ListKamar = ({navigation}) => {
             return (
               <ItemKelas
                 data={item}
+                // foto={route.params.foto}
                 onPress={() => navigation.push('DetailKelas', {item})}
               />
             );
@@ -284,24 +268,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#ffaa91',
   },
-  actionButtonIcon: {
-    fontSize: 20,
-    height: 22,
-    color: 'white',
-  },
-  searchWrapper: {
-    flexDirection: 'row',
-    marginTop: 10,
-    backgroundColor: 'white',
-    width: 0.9 * screenWidth,
-    alignItems: 'center',
-    borderRadius: 25,
-    height: 40,
-  },
-  searchTextInput: {
-    flex: 1,
-    marginRight: 15,
-  },
+
   loading: {
     position: 'absolute',
     left: 0,
@@ -314,7 +281,7 @@ const styles = StyleSheet.create({
   wrapperHeader: {
     backgroundColor: myColor.colorTheme,
     paddingTop: StatusBar.currentHeight,
-    paddingHorizontal: 0.05 * screenWidth,
+    paddingHorizontal: 15,
   },
   sortWrapper: {
     flexDirection: 'row',
@@ -322,7 +289,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
 
-    paddingLeft: 0.05 * screenWidth,
+    paddingLeft: 15,
   },
   sortTitle: {
     marginRight: 10,

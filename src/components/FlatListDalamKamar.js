@@ -58,7 +58,7 @@ const FlatListDalamKamar = (props) => {
               fontFamily: 'OpenSans-SemiBold',
             }}>
             {/* {JSON.stringify(props.data)} */}
-            {props.data.nama_depan} {props.data.nama_belakang}
+            {props.data.nama}
           </Text>
           <Text
             style={{

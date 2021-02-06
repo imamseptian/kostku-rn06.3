@@ -40,7 +40,7 @@ const TabBerkas = (props) => {
         </View>
         <Image
           source={{
-            uri: APIUrl + '/kostdata/pendaftar/foto/' + props.data.foto_ktp,
+            uri: APIUrl + '/storage/images/pendaftar/' + props.data.foto_ktp,
           }}
           style={styles.image}
           resizeMode="contain"
@@ -69,12 +69,12 @@ const TabBerkas = (props) => {
             marginLeft: 23,
             marginBottom: 10,
           }}>
-          Kamar Mewah
+          Kamar A Putri
         </Text>
         <Image
           source={{
             uri:
-              'https://narasidesign.com/wp-content/uploads/2019/10/Tips-Inspirasi-Penting-dalam-Merenovasi-Kamar-Tidur.jpg',
+              'https://arcadiadesain.com/wp-content/uploads/2019/11/63-Inspirasi-Desain-Kamar-Kost-Sederhana-Trend-Masa-Kini.jpg',
           }}
           style={{height: 150, borderRadius: 10}}
           resizeMode="contain"

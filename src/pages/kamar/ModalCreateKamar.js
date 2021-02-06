@@ -49,6 +49,7 @@ const ModalCreateKamar = (props) => {
     );
     function onPost(status, data) {
       if (status == 'success') {
+        console.log(data);
         alert('Tambah Kamar Sukses');
         props.refresh(source.token);
         props.tutup();

@@ -24,7 +24,7 @@ const DetailKamar = ({navigation, route}) => {
         <Image
           source={{
             uri:
-              'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/suburban-house-royalty-free-image-1584972559.jpg',
+              'https://arcadiadesain.com/wp-content/uploads/2019/11/63-Inspirasi-Desain-Kamar-Kost-Sederhana-Trend-Masa-Kini.jpg',
           }}
           style={{height: (2 / 3) * screenWidth, width: screenWidth}}
         />

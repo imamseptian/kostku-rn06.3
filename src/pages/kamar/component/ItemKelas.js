@@ -38,7 +38,7 @@ const ItemKelas = (props) => {
             source={{
               uri: errorImage
                 ? defaultAsset.kelas_kamar
-                : APIUrl + '/kostdata/kelas_kamar/foto/' + props.data.foto,
+                : APIUrl + '/storage/images/kelas/' + props.data.foto,
             }}
             onError={() => {
               // seturiImage(defaultAsset.kelas_kamar);

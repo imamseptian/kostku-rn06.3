@@ -12,7 +12,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import ImagePicker from 'react-native-image-picker';
+// import ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import {useDispatch, useSelector} from 'react-redux';
 import {Permission, PERMISSION_TYPE} from '../../AppPermission';
 import {MyPicker, NoTelpFormField, TextFormField} from '../../components';
@@ -20,7 +21,10 @@ import {fcmService} from '../../FCMService';
 import {myAxios} from '../../function/MyAxios';
 import {APIUrl, myColor} from '../../function/MyVar';
 import {setUserRedux} from '../../store';
-
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {CardForm, CardNoTelp, CardPicker} from '../../atoms';
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 const KostForm = ({navigation}) => {
@@ -42,13 +46,19 @@ const KostForm = ({navigation}) => {
     active: true,
   });
   const [errorMsg, seterrorMsg] = useState({
-    nama: '',
-    provinsi: '',
-    kota: '',
-    alamat: '',
-    jenis: '',
-    notelp: '',
-    deskripsi: '',
+    nama: null,
+    provinsi: null,
+    kota: null,
+    alamat: null,
+    jenis: null,
+    notelp: null,
+    deskripsi: null,
+  });
+
+  const [fotoKost, setfotoKost] = useState({
+    isUploaded: false,
+    base64: null,
+    path: null,
   });
 
   const jenisKost = [
@@ -143,43 +153,67 @@ const KostForm = ({navigation}) => {
   };
 
   const goToTop = () => {
-    scrollRef.current.scrollToIndex({animated: true, index: 0});
+    // scrollRef.current.scrollToIndex({animated: true, index: 0});
+    scrollRef.current?.scrollTo({
+      y: 0,
+      animated: true,
+    });
   };
 
+  // const pickImage = async () => {
+  //   setIsSubmit(true);
+  //   await Permission.requestMultiple([
+  //     PERMISSION_TYPE.photo,
+  //     PERMISSION_TYPE.camera,
+  //   ]);
+  //   ImagePicker.launchImageLibrary(
+  //     {mediaType: 'photo', base64: true, maxWidth: 720, maxHeight: 480},
+  //     (response) => {
+  //       // console.log('Response = ', response);
+
+  //       if (response.didCancel) {
+  //         console.log('User cancelled image picker');
+  //         setIsSubmit(false);
+  //       } else if (response.error) {
+  //         console.log('ImagePicker Error: ', response.error);
+  //         setIsSubmit(false);
+  //       } else if (response.customButton) {
+  //         console.log('User tapped custom button: ', response.customButton);
+  //         setIsSubmit(false);
+  //       } else {
+  //         let image = 'data:' + response.type + ';base64,' + response.data;
+  //         setDataFoto({
+  //           ...dataFoto,
+  //           isUploaded: true,
+  //           uri: response.uri,
+  //           type: response.type,
+  //           data: response.data,
+  //           base64: image,
+  //         });
+  //         setIsSubmit(false);
+  //       }
+  //     },
+  //   );
+  // };
+
   const pickImage = async () => {
-    setIsSubmit(true);
     await Permission.requestMultiple([
       PERMISSION_TYPE.photo,
       PERMISSION_TYPE.camera,
     ]);
-    ImagePicker.launchImageLibrary(
-      {mediaType: 'photo', base64: true, maxWidth: 720, maxHeight: 480},
-      (response) => {
-        // console.log('Response = ', response);
-
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-          setIsSubmit(false);
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-          setIsSubmit(false);
-        } else if (response.customButton) {
-          console.log('User tapped custom button: ', response.customButton);
-          setIsSubmit(false);
-        } else {
-          let image = 'data:' + response.type + ';base64,' + response.data;
-          setDataFoto({
-            ...dataFoto,
-            isUploaded: true,
-            uri: response.uri,
-            type: response.type,
-            data: response.data,
-            base64: image,
-          });
-          setIsSubmit(false);
-        }
-      },
-    );
+    ImagePicker.openPicker({
+      width: 720,
+      height: 480,
+      cropping: true,
+      includeBase64: true,
+    }).then((image) => {
+      let base64Temporary = 'data:' + image.mime + ';base64,' + image.data;
+      setfotoKost({
+        isUploaded: true,
+        base64: base64Temporary,
+        path: image.path,
+      });
+    });
   };
 
   // const scrollRef = useRef(ScrollView);
@@ -195,7 +229,7 @@ const KostForm = ({navigation}) => {
     const source = axios.CancelToken.source();
     myAxios.postAxios(
       APIUrl + '/api/kost',
-      dataFoto.isUploaded ? {...user, foto_kost: dataFoto.base64} : user,
+      fotoKost.isUploaded ? {...user, foto_kost: fotoKost.base64} : user,
       dataRedux.token,
       source.token,
       onPost,
@@ -214,17 +248,17 @@ const KostForm = ({navigation}) => {
           // console.log(data);
           goToHome();
         } else {
+          goToTop();
           seterrorMsg({
-            nama: data.errors.nama ? data.errors.nama : '',
-            provinsi: data.errors.provinsi ? data.errors.provinsi : '',
-            kota: data.errors.kota ? data.errors.kota : '',
-            alamat: data.errors.alamat ? data.errors.alamat : '',
-            jenis: data.errors.jenis ? data.errors.jenis : '',
-            notelp: data.errors.notelp ? data.errors.notelp : '',
-            deskripsi: data.errors.deskripsi ? data.errors.deskripsi : '',
+            nama: data.errors.nama ? data.errors.nama : null,
+            provinsi: data.errors.provinsi ? data.errors.provinsi : null,
+            kota: data.errors.kota ? data.errors.kota : null,
+            alamat: data.errors.alamat ? data.errors.alamat : null,
+            jenis: data.errors.jenis ? data.errors.jenis : null,
+            notelp: data.errors.notelp ? data.errors.notelp : null,
+            deskripsi: data.errors.deskripsi ? data.errors.deskripsi : null,
           });
           setIsSubmit(false);
-          goToTop();
         }
       } else if (status == 'cancel') {
         console.log('caught cancel filter');
@@ -245,6 +279,7 @@ const KostForm = ({navigation}) => {
         barStyle="dark-content"
       />
       <ScrollView
+        style={{paddingHorizontal: 15}}
         showsVerticalScrollIndicator={false}
         ref={scrollRef}
         contentContainerStyle={{paddingBottom: 20}}>
@@ -259,48 +294,43 @@ const KostForm = ({navigation}) => {
         </Text>
 
         <TouchableOpacity disabled={isSubmit} onPress={() => pickImage()}>
-          {!dataFoto.isUploaded ? (
-            <View
-              style={{
-                width: 0.8 * screenWidth,
-                maxWidth: 300,
-                height: (2 / 3) * 0.8 * screenWidth,
-                maxHeight: 200,
-                borderRadius: 10,
-                backgroundColor: myColor.darkText,
-                marginHorizontal: 0.1 * screenWidth,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: 10,
-              }}>
-              <Text style={{color: '#fff', fontSize: 14, fontWeight: 'bold'}}>
-                Tekan disini untuk upload Foto Kost
-              </Text>
-              <Text style={{color: '#fff', fontSize: 14, fontWeight: 'bold'}}>
-                *Opsional
-              </Text>
-            </View>
-          ) : (
-            <Image
-              source={{
-                uri: dataFoto.uri,
-              }}
-              style={{
-                width: 0.8 * screenWidth,
-                maxWidth: 300,
-                height: (2 / 3) * 0.8 * screenWidth,
-                maxHeight: 200,
-                borderRadius: 10,
-                marginHorizontal: 0.1 * screenWidth,
-                marginBottom: 10,
-              }}
-              resizeMode="cover"
-            />
-          )}
+          <View style={{alignItems: 'center', marginBottom: 25}}>
+            {!fotoKost.isUploaded ? (
+              <View
+                style={{
+                  width: 300,
+                  height: 200,
+                  borderRadius: 10,
+                  backgroundColor: myColor.divider,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                {/* <Text style={{color: '#fff', fontSize: 14, fontWeight: 'bold'}}>
+              </Text> */}
+                <MaterialCommunityIcons
+                  name="camera-plus"
+                  size={20}
+                  color={'#fff'}
+                />
+              </View>
+            ) : (
+              <Image
+                source={{
+                  uri: fotoKost.path,
+                  width: 300,
+                  height: 200,
+                }}
+                style={{
+                  borderRadius: 10,
+                }}
+                resizeMode="contain"
+              />
+            )}
+          </View>
         </TouchableOpacity>
-        <Text>{JSON.stringify(user)}</Text>
+        {/* <Text>{JSON.stringify(user)}</Text> */}
 
-        <TextFormField
+        {/* <TextFormField
           title="Nama Kost"
           placeholder="Masukan Nama Kost"
           onChangeText={(value) => {
@@ -308,20 +338,52 @@ const KostForm = ({navigation}) => {
           }}
           value={user.nama}
           pesanError={errorMsg.nama}
-        />
+        /> */}
 
-        <MyPicker
-          title="Provinsi"
+        <CardForm
+          title="Nama Kost"
+          placeholder="Nama Kost"
+          value={user.nama}
+          pesanError={errorMsg.nama}
+          onChangeText={(value) => {
+            setForm('nama', value);
+          }}>
+          <FontAwesome name="user" size={20} color={myColor.grayGoogle} />
+        </CardForm>
+
+        <CardPicker
           pesanError={errorMsg.provinsi}
-          selectedValue={user.provinsi}
+          title="Provinsi Kost"
           data={provinsi}
           itemName="nama"
+          selectedValue={user.provinsi}
           placeholder="Pilih Provinsi"
           onChangeFunction={(value) => setForm('provinsi', value)}
-          disabled={isSubmit}
-        />
+          disabled={isSubmit}>
+          <MaterialCommunityIcons
+            name="city"
+            size={20}
+            color={myColor.grayGoogle}
+          />
+        </CardPicker>
 
-        <MyPicker
+        <CardPicker
+          title="Kota"
+          pesanError={errorMsg.kota}
+          selectedValue={user.kota}
+          data={kota}
+          itemName="nama"
+          placeholder="Pilih Kota"
+          onChangeFunction={(value) => setForm('kota', value)}
+          disabled={isSubmit}>
+          <MaterialCommunityIcons
+            name="city"
+            size={20}
+            color={myColor.grayGoogle}
+          />
+        </CardPicker>
+
+        {/* <MyPicker
           title="Kota"
           pesanError={errorMsg.kota}
           selectedValue={user.kota}
@@ -330,9 +392,9 @@ const KostForm = ({navigation}) => {
           placeholder="Pilih Kota"
           onChangeFunction={(value) => setForm('kota', value)}
           disabled={isSubmit}
-        />
+        /> */}
 
-        <MyPicker
+        <CardPicker
           title="Jenis Kost"
           pesanError={errorMsg.jenis}
           selectedValue={user.jenis}
@@ -340,8 +402,13 @@ const KostForm = ({navigation}) => {
           itemName="nama"
           placeholder="Pilih Jenis"
           onChangeFunction={(value) => setForm('jenis', value)}
-          disabled={isSubmit}
-        />
+          disabled={isSubmit}>
+          <MaterialCommunityIcons
+            name="city"
+            size={20}
+            color={myColor.grayGoogle}
+          />
+        </CardPicker>
 
         {/* <View style={styles.formWrapper}>
           <View>
@@ -375,7 +442,22 @@ const KostForm = ({navigation}) => {
           </View>
         </View> */}
 
-        <TextFormField
+        <CardForm
+          title="Alamat Kost"
+          placeholder="Alamat Kost"
+          value={user.alamat}
+          pesanError={errorMsg.alamat}
+          onChangeText={(value) => {
+            setForm('alamat', value);
+          }}
+          onSubmitEditing={() => {
+            refNoTelp.current.focus();
+          }}
+          blurOnSubmit={false}>
+          <FontAwesome name="user" size={20} color={myColor.grayGoogle} />
+        </CardForm>
+
+        {/* <TextFormField
           title="Alamat Kost"
           placeholder="Masukan Alamat Kost"
           onChangeText={(value) => {
@@ -387,9 +469,9 @@ const KostForm = ({navigation}) => {
             refNoTelp.current.focus();
           }}
           blurOnSubmit={false}
-        />
+        /> */}
 
-        <NoTelpFormField
+        <CardNoTelp
           ref={refNoTelp}
           title="Nomor Telepon Kost"
           onChangeText={(value) => {
@@ -402,10 +484,24 @@ const KostForm = ({navigation}) => {
           onSubmitEditing={() => {
             refDeskripsi.current.focus();
           }}
-          blurOnSubmit={false}
-        />
+          blurOnSubmit={false}>
+          <FontAwesome name="user" size={20} color={myColor.grayGoogle} />
+        </CardNoTelp>
 
-        <TextFormField
+        <CardForm
+          ref={refDeskripsi}
+          title="Deskripsi Kost"
+          placeholder="Deskrips Kost"
+          onChangeText={(value) => {
+            setForm('deskripsi', value);
+          }}
+          value={user.deskripsi}
+          multiline={true}
+          pesanError={errorMsg.deskripsi}>
+          <FontAwesome name="user" size={20} color={myColor.grayGoogle} />
+        </CardForm>
+
+        {/* <TextFormField
           ref={refDeskripsi}
           title="Deskripsi Kost"
           placeholder="Deskrips Kost"
@@ -415,7 +511,7 @@ const KostForm = ({navigation}) => {
           value={user.deskripsi}
           multiline={true}
           pesanError={errorMsg.deskripsi}
-        />
+        /> */}
 
         <TouchableOpacity
           onPress={() => {

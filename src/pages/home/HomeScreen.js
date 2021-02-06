@@ -97,7 +97,7 @@ const HomeScreen = ({navigation, route}) => {
             penghuni: data.data_penghuni,
             kamar: data.data_kamar,
             // transaksi: data.transaksi,
-            // uang: data.uang,
+            uang: data.uang,
           });
           setIsLoading(false);
         } else if (status == 'cancel') {

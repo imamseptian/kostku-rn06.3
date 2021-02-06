@@ -12,7 +12,7 @@ import {
 
 const PieSection = (props) => {
   const [pieDataPenghuni, setPieDataPenghuni] = useState([]);
-  const pieColor = [myColor.myblue, myColor.colorTheme];
+  const pieColor = [myColor.colorTheme, myColor.myblue];
   const [selectedPiePenghuni, setSelectedPiePenghuni] = useState(0);
   const [showModalPenghuni, setShowModalPenghuni] = useState(false);
 

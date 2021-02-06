@@ -16,7 +16,9 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import ImagePicker from 'react-native-image-picker';
+// import ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
+
 import Spinner from 'react-native-loading-spinner-overlay';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -41,18 +43,16 @@ const LoginScreen = ({navigation}) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   //  DATA ERROR MESSAGE
   const [errorMsg, seterrorMsg] = useState({
-    nama_depan: '',
-    nama_belakang: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
-    tanggal_lahir: '',
+    nama: null,
+    email: null,
+    password: null,
+    password_confirmation: null,
+    tanggal_lahir: null,
   });
 
   //  DATA PENDAFTAR
   const [user, setUser] = useState({
-    nama_depan: '',
-    nama_belakang: '',
+    nama: '',
     email: '',
     password: '',
     password_confirmation: '',
@@ -68,6 +68,12 @@ const LoginScreen = ({navigation}) => {
     base64: '',
   });
 
+  const [fotoProfil, setfotoProfil] = useState({
+    isUploaded: false,
+    base64: null,
+    path: null,
+  });
+
   // STATUS SHOW / HIDE PASSWORD
   const [isStatus, setIsStatus] = useState({
     pass: true,
@@ -75,7 +81,7 @@ const LoginScreen = ({navigation}) => {
   });
 
   // REF KOLOM REGISTER
-  const refNamaBelakang = useRef();
+
   const refEmail = useRef();
   const refPassword = useRef();
   const refPassword_Confirmation = useRef();
@@ -103,10 +109,10 @@ const LoginScreen = ({navigation}) => {
     axios
       .post(
         `${APIUrl}/api/auth/signup`,
-        dataFoto.isUploaded
+        fotoProfil.isUploaded
           ? {
               ...user,
-              foto_profil: dataFoto.base64,
+              foto_profil: fotoProfil.base64,
               tanggal_lahir: user.tanggal_lahir.toString(),
             }
           : {...user, tanggal_lahir: user.tanggal_lahir.toString()},
@@ -118,8 +124,8 @@ const LoginScreen = ({navigation}) => {
         if (res.data.success) {
           navigation.pop(1);
         } else {
-          let passwordError = '';
-          let konfirmasiError = '';
+          let passwordError = null;
+          let konfirmasiError = null;
           let arrPass = [];
           if (res.data.errors.password) {
             arrPass = res.data.errors.password;
@@ -135,18 +141,13 @@ const LoginScreen = ({navigation}) => {
             }
           }
           seterrorMsg({
-            nama_depan: res.data.errors.nama_depan
-              ? res.data.errors.nama_depan
-              : '',
-            nama_belakang: res.data.errors.nama_belakang
-              ? res.data.errors.nama_belakang
-              : '',
-            email: res.data.errors.email ? res.data.errors.email : '',
+            nama: res.data.errors.nama ? res.data.errors.nama : null,
+            email: res.data.errors.email ? res.data.errors.email : null,
             password: passwordError,
             password_confirmation: konfirmasiError,
             tanggal_lahir: res.data.errors.tanggal_lahir
               ? res.data.errors.tanggal_lahir
-              : '',
+              : null,
           });
           setIsLoading(false);
         }
@@ -154,43 +155,65 @@ const LoginScreen = ({navigation}) => {
       .catch((error) => {
         alert('errro');
         console.log(user);
+        console.log('foto_profil : ', fotoProfil.base64);
+        console.log('tanggal_lahir: ', user.tanggal_lahir.toString());
         setIsLoading(false);
       });
   };
 
   // PICK IMAGE
+  // const pickImage = async () => {
+  //   setIsPressed(true);
+  //   await Permission.requestMultiple([
+  //     PERMISSION_TYPE.photo,
+  //     PERMISSION_TYPE.camera,
+  //   ]);
+  //   ImagePicker.launchImageLibrary(
+  //     {mediaType: 'photo', base64: true, maxWidth: 720, maxHeight: 480},
+  //     (response) => {
+  //       if (response.didCancel) {
+  //         console.log('User cancelled image picker');
+  //         setIsPressed(false);
+  //       } else if (response.error) {
+  //         console.log('ImagePicker Error: ', response.error);
+  //         setIsPressed(false);
+  //       } else if (response.customButton) {
+  //         console.log('User tapped custom button: ', response.customButton);
+  //         setIsPressed(false);
+  //       } else {
+  //         let image = 'data:' + response.type + ';base64,' + response.data;
+  //         setDataFoto({
+  //           ...dataFoto,
+  //           isUploaded: true,
+  //           uri: response.uri,
+  //           type: response.type,
+  //           data: response.data,
+  //           base64: image,
+  //         });
+  //         setIsPressed(false);
+  //       }
+  //     },
+  //   );
+  // };
+
   const pickImage = async () => {
-    setIsPressed(true);
     await Permission.requestMultiple([
       PERMISSION_TYPE.photo,
       PERMISSION_TYPE.camera,
     ]);
-    ImagePicker.launchImageLibrary(
-      {mediaType: 'photo', base64: true, maxWidth: 720, maxHeight: 480},
-      (response) => {
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-          setIsPressed(false);
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-          setIsPressed(false);
-        } else if (response.customButton) {
-          console.log('User tapped custom button: ', response.customButton);
-          setIsPressed(false);
-        } else {
-          let image = 'data:' + response.type + ';base64,' + response.data;
-          setDataFoto({
-            ...dataFoto,
-            isUploaded: true,
-            uri: response.uri,
-            type: response.type,
-            data: response.data,
-            base64: image,
-          });
-          setIsPressed(false);
-        }
-      },
-    );
+    ImagePicker.openPicker({
+      width: 512,
+      height: 512,
+      cropping: true,
+      includeBase64: true,
+    }).then((image) => {
+      let base64Temporary = 'data:' + image.mime + ';base64,' + image.data;
+      setfotoProfil({
+        isUploaded: true,
+        base64: base64Temporary,
+        path: image.path,
+      });
+    });
   };
 
   return (
@@ -210,7 +233,7 @@ const LoginScreen = ({navigation}) => {
       <Animatable.View animation="bounceIn" style={styles.animSVG}>
         <View style={styles.wrapperSVG}>
           <RegisterSVG width={200} height={160} />
-          <Text style={styles.fontSVG}>Register</Text>
+          <Text style={styles.fontSVG}>Registrasi</Text>
         </View>
       </Animatable.View>
 
@@ -237,113 +260,110 @@ const LoginScreen = ({navigation}) => {
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* SECTION UPLOAD FOTO  */}
           <View style={styles.wrapperUploadFoto}>
-            <TouchableNativeFeedback
-              disabled={isPressed}
-              onPress={() => pickImage()}>
-              <View style={styles.circleAvatar}>
-                {!dataFoto.isUploaded ? (
-                  <Text style={styles.textUploadFoto}>
-                    Tekan untuk upload foto profil
-                  </Text>
+            <TouchableOpacity disabled={isPressed} onPress={() => pickImage()}>
+              <View
+                style={{
+                  height: 100,
+                  width: 100,
+                  borderRadius: 50,
+                  backgroundColor: myColor.divider,
+                  borderWidth: 1,
+                  borderColor: '#fff',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                {!fotoProfil.isUploaded ? (
+                  <Text style={styles.textUploadFoto}>Upload Foto</Text>
                 ) : (
                   <Image
                     source={{
-                      uri: dataFoto.uri,
+                      uri: fotoProfil.path,
                     }}
                     style={styles.avatar}
+                    resizeMode="cover"
                   />
                 )}
               </View>
-            </TouchableNativeFeedback>
+            </TouchableOpacity>
           </View>
 
-          {/* SECTION NAMA DEPAN & BELAKANG  */}
-          <View style={styles.wrapperNama}>
-            <View>
-              <View style={styles.fieldNama}>
-                <TextInput
-                  value={user.nama_depan}
-                  placeholder="Nama Depan"
-                  style={styles.inputNama}
-                  onSubmitEditing={() => {
-                    refNamaBelakang.current.focus();
-                  }}
-                  blurOnSubmit={false}
-                  onChangeText={(value) => setForm('nama_depan', value)}
-                />
+          {/* SECTION NAMA  */}
+          <View style={{marginBottom: 10}}>
+            <View style={styles.wrapperNewField}>
+              <View style={{width: 25, alignItems: 'center'}}>
+                <FontAwesome name="user" color={myColor.fbtx} size={20} />
               </View>
-              <Text style={[styles.textError, styles.widthErrorNama]}>
-                {errorMsg.nama_depan}
-              </Text>
+              <TextInput
+                value={user.nama}
+                placeholder="Nama"
+                onChangeText={(value) => setForm('nama', value)}
+                style={styles.contentNewField}
+                onSubmitEditing={() => {
+                  refEmail.current.focus();
+                }}
+                blurOnSubmit={false}
+              />
             </View>
-            <View>
-              <View style={styles.fieldNama}>
-                <TextInput
-                  ref={refNamaBelakang}
-                  value={user.nama_belakang}
-                  placeholder="Nama Belakang"
-                  style={styles.inputNama}
-                  onSubmitEditing={() => {
-                    refEmail.current.focus();
-                  }}
-                  blurOnSubmit={false}
-                  onChangeText={(value) => setForm('nama_belakang', value)}
-                />
-              </View>
-              <Text style={[styles.textError, styles.widthErrorNama]}>
-                {errorMsg.nama_belakang}
+            {errorMsg.nama && (
+              <Text style={[styles.textError, {marginLeft: 40}]}>
+                {errorMsg.nama}
               </Text>
-            </View>
+            )}
           </View>
 
           {/* SECTION EMAIL  */}
-          <View style={styles.wrapperLine}>
-            <View style={styles.wrapperField}>
-              <MaterialCommunityIcons
-                name="email"
-                color={myColor.fbtx}
-                size={25}
-                style={{marginRight: 5}}
-              />
+          <View style={{marginBottom: 10}}>
+            <View style={styles.wrapperNewField}>
+              <View style={{width: 25, alignItems: 'center'}}>
+                <MaterialCommunityIcons
+                  name="email"
+                  color={myColor.fbtx}
+                  size={20}
+                />
+              </View>
+
               <TextInput
-                placeholder="Email"
                 ref={refEmail}
                 value={user.email}
-                style={styles.textInput}
+                placeholder="Email"
                 onChangeText={(value) => setForm('email', value)}
+                style={styles.contentNewField}
                 onSubmitEditing={() => {
                   refPassword.current.focus();
                 }}
                 blurOnSubmit={false}
               />
             </View>
-            <Text style={[styles.textError, {marginLeft: 40}]}>
-              {errorMsg.email}
-            </Text>
+            {errorMsg.email && (
+              <Text style={[styles.textError, {marginLeft: 40}]}>
+                {errorMsg.email}
+              </Text>
+            )}
           </View>
 
           {/* SECTION PASSWORD  */}
-          <View style={styles.wrapperLine}>
-            <View style={styles.wrapperField}>
-              <MaterialCommunityIcons
-                name="lock"
-                color={myColor.fbtx}
-                size={25}
-                style={{marginRight: 5}}
-              />
+          <View style={{marginBottom: 10}}>
+            <View style={styles.wrapperNewField}>
+              <View style={{width: 25, alignItems: 'center'}}>
+                <MaterialCommunityIcons
+                  name="lock"
+                  color={myColor.fbtx}
+                  size={20}
+                />
+              </View>
+
               <TextInput
-                placeholder="Password"
+                value={user.passowrd}
                 ref={refPassword}
-                value={user.password}
+                placeholder="Password"
+                style={styles.contentNewField}
                 secureTextEntry={isStatus.pass}
-                style={styles.textInput}
                 onSubmitEditing={() => {
                   refPassword_Confirmation.current.focus();
                 }}
-                onChangeText={(value) => setForm('password', value)}
                 blurOnSubmit={false}
+                onChangeText={(value) => setForm('password', value)}
               />
-
               <TouchableOpacity
                 style={{marginLeft: 5}}
                 onPress={() => setStatus('pass', !isStatus.pass)}>
@@ -354,32 +374,34 @@ const LoginScreen = ({navigation}) => {
                 />
               </TouchableOpacity>
             </View>
-            <Text style={[styles.textError, {marginLeft: 40}]}>
-              {errorMsg.password}
-            </Text>
+            {errorMsg.password && (
+              <Text style={[styles.textError, {marginLeft: 40}]}>
+                {errorMsg.password}
+              </Text>
+            )}
           </View>
 
           {/* SECTION KONFIRMASI PASSWORD  */}
-          <View style={[styles.wrapperLine, {marginBottom: 0}]}>
-            <View style={styles.wrapperField}>
-              <MaterialCommunityIcons
-                name="lock-alert"
-                color={myColor.fbtx}
-                size={25}
-                style={{marginRight: 5}}
-              />
+          <View style={{marginBottom: 10}}>
+            <View style={styles.wrapperNewField}>
+              <View style={{width: 25, alignItems: 'center'}}>
+                <MaterialCommunityIcons
+                  name="lock"
+                  color={myColor.fbtx}
+                  size={20}
+                />
+              </View>
 
               <TextInput
+                style={styles.contentNewField}
                 ref={refPassword_Confirmation}
                 placeholder="Konfirmasi Password"
                 value={user.password_confirmation}
                 secureTextEntry={isStatus.confirm}
-                style={styles.textInput}
                 onChangeText={(value) =>
                   setForm('password_confirmation', value)
                 }
               />
-
               <TouchableOpacity
                 style={{marginLeft: 5}}
                 onPress={() => setStatus('confirm', !isStatus.confirm)}>
@@ -390,9 +412,11 @@ const LoginScreen = ({navigation}) => {
                 />
               </TouchableOpacity>
             </View>
-            <Text style={[styles.textError, {marginLeft: 40}]}>
-              {errorMsg.password_confirmation}
-            </Text>
+            {errorMsg.password_confirmation && (
+              <Text style={[styles.textError, {marginLeft: 40}]}>
+                {errorMsg.password_confirmation}
+              </Text>
+            )}
           </View>
 
           <TouchableWithoutFeedback
@@ -457,7 +481,7 @@ const LoginScreen = ({navigation}) => {
               submitRegister();
             }}>
             <View style={styles.btLogin}>
-              <Text style={styles.textRegister}>Register</Text>
+              <Text style={styles.textRegister}>Registrasi</Text>
             </View>
           </TouchableOpacity>
         </ScrollView>
@@ -480,17 +504,15 @@ const styles = StyleSheet.create({
   },
   wrapperSVG: {
     flexDirection: 'row',
-    alignItems: 'center',
   },
   fontSVG: {fontSize: 26, color: 'white'},
   animForm: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f6f6f6',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     paddingTop: 5,
-
-    alignItems: 'center',
+    paddingHorizontal: 15,
   },
   text1: {textAlign: 'center', fontWeight: 'bold', fontSize: 20},
   text2: {textAlign: 'center', fontSize: 14, fontWeight: 'bold'},
@@ -501,24 +523,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     height: 40,
     alignItems: 'center',
-    width: 0.9 * screenWidth,
     paddingHorizontal: 10,
   },
-  wrapperNama: {
-    flexDirection: 'row',
-    marginBottom: 5,
-    alignItems: 'center',
-    width: 0.9 * screenWidth,
-    justifyContent: 'space-between',
-  },
-  fieldNama: {
-    borderWidth: 1,
-    borderColor: myColor.divider,
-    borderRadius: 10,
-    height: 40,
-    width: 0.43 * screenWidth,
-    alignItems: 'center',
-  },
+
   inputNama: {fontFamily: 'OpenSans-Regular', fontSize: 12},
   textInput: {
     fontFamily: 'OpenSans-Regular',
@@ -530,8 +537,9 @@ const styles = StyleSheet.create({
     backgroundColor: myColor.myblue,
 
     alignItems: 'center',
-    padding: 10,
-    borderRadius: 10,
+    paddingVertical: 10,
+    marginBottom: 10,
+    borderRadius: 5,
   },
   textDaftar: {
     textAlign: 'center',
@@ -542,14 +550,12 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans-SemiBold',
     fontSize: 12,
     color: myColor.alert,
-    maxWidth: 0.9 * screenWidth - 50,
   },
   wrapperLine: {
     marginBottom: 5,
   },
   wrapperUploadFoto: {
-    width: 0.9 * screenWidth,
-    marginTop: 10,
+    marginVertical: 10,
     alignItems: 'center',
   },
   circleAvatar: {
@@ -569,12 +575,33 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans-SemiBold',
     fontSize: 12,
   },
-  avatar: {height: 100, width: 100, borderRadius: 50},
-  widthErrorNama: {maxWidth: 0.43 * screenWidth, textAlign: 'center'},
+  avatar: {
+    height: 100,
+    width: 100,
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: '#fff',
+  },
+
   textRegister: {
     fontSize: 14,
     fontFamily: 'OpenSans-SemiBold',
 
     color: '#fff',
+  },
+  wrapperNewField: {
+    height: 40,
+    borderWidth: 1,
+    borderColor: myColor.divider,
+    flexDirection: 'row',
+    borderRadius: 10,
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  contentNewField: {
+    flex: 1,
+    paddingHorizontal: 10,
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 12,
   },
 });

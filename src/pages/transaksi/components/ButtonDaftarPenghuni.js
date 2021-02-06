@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {APIUrl} from '../../../function/MyVar';
 
 import {myColor, screenWidth, formatRupiah} from '../../../function/MyVar';
 const ButtonDaftarPenghuni = (props) => {
@@ -52,7 +53,9 @@ const ButtonDaftarPenghuni = (props) => {
               <Image
                 source={{
                   uri:
-                    'https://wpq0221c4a-flywheel.netdna-ssl.com/wp-content/uploads/2018/12/AdmiralBulldog-150x150.jpg',
+                    APIUrl +
+                    '/storage/images/pendaftar/' +
+                    props.penghuni.foto_diri,
                 }}
                 style={{height: 50, width: 50, borderRadius: 25}}
               />
@@ -69,7 +72,7 @@ const ButtonDaftarPenghuni = (props) => {
               }}>
               <View style={{flex: 1}}>
                 <Text numberOfLines={1} style={styles.nama}>
-                  {props.penghuni.nama_depan} {props.penghuni.nama_belakang}
+                  {props.penghuni.nama}
                 </Text>
                 <Text style={styles.harga}>{props.penghuni.nama_kamar}</Text>
               </View>

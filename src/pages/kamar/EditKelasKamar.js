@@ -9,7 +9,8 @@ import {
   TouchableNativeFeedback,
   View,
 } from 'react-native';
-import ImagePicker from 'react-native-image-picker';
+// import ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Text} from 'react-native-paper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -29,7 +30,6 @@ const EditKelasKamar = ({navigation, route}) => {
   const refHarga = useRef();
   const refKapasitas = useRef();
   const dataRedux = useSelector((state) => state.AuthReducer);
-  const [baseFoto, setBaseFoto] = useState('');
   const [dataFoto, setDataFoto] = useState({
     isUploaded: false,
     uri: '',
@@ -56,6 +56,13 @@ const EditKelasKamar = ({navigation, route}) => {
     kapasitas: '',
     deskripsi: '',
   });
+
+  const [fotoKamar, setfotoKamar] = useState({
+    isUploaded: false,
+    base64: null,
+    path: null,
+  });
+
   useEffect(() => {
     // setKamar(route.params.kamar);
     // setInputList(route.params.kamar.fasilitas);
@@ -78,35 +85,55 @@ const EditKelasKamar = ({navigation, route}) => {
     // rupiahToInt(formatHarga);
   }, [formatHarga]);
 
-  const pickImage = async () => {
-    setIsLoading(true);
-    Permission.requestMultiple([PERMISSION_TYPE.photo, PERMISSION_TYPE.camera]);
-    ImagePicker.launchImageLibrary(
-      {mediaType: 'photo', base64: true},
-      (response) => {
-        // console.log('Response = ', response);
+  // const pickImage = async () => {
+  //   setIsLoading(true);
+  //   Permission.requestMultiple([PERMISSION_TYPE.photo, PERMISSION_TYPE.camera]);
+  //   ImagePicker.launchImageLibrary(
+  //     {mediaType: 'photo', base64: true},
+  //     (response) => {
+  //       // console.log('Response = ', response);
 
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-          setIsLoading(false);
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-          setIsLoading(false);
-        } else if (response.customButton) {
-          console.log('User tapped custom button: ', response.customButton);
-          setIsLoading(false);
-        } else {
-          setDataFoto({
-            ...dataFoto,
-            isUploaded: true,
-            uri: response.uri,
-            type: response.type,
-            data: response.data,
-          });
-          setIsLoading(false);
-        }
-      },
-    );
+  //       if (response.didCancel) {
+  //         console.log('User cancelled image picker');
+  //         setIsLoading(false);
+  //       } else if (response.error) {
+  //         console.log('ImagePicker Error: ', response.error);
+  //         setIsLoading(false);
+  //       } else if (response.customButton) {
+  //         console.log('User tapped custom button: ', response.customButton);
+  //         setIsLoading(false);
+  //       } else {
+  //         setDataFoto({
+  //           ...dataFoto,
+  //           isUploaded: true,
+  //           uri: response.uri,
+  //           type: response.type,
+  //           data: response.data,
+  //         });
+  //         setIsLoading(false);
+  //       }
+  //     },
+  //   );
+  // };
+
+  const pickImage = async () => {
+    await Permission.requestMultiple([
+      PERMISSION_TYPE.photo,
+      PERMISSION_TYPE.camera,
+    ]);
+    ImagePicker.openPicker({
+      width: 720,
+      height: 480,
+      cropping: true,
+      includeBase64: true,
+    }).then((image) => {
+      let base64Temporary = 'data:' + image.mime + ';base64,' + image.data;
+      setfotoKamar({
+        isUploaded: true,
+        base64: base64Temporary,
+        path: image.path,
+      });
+    });
   };
 
   const editData = () => {
@@ -117,10 +144,10 @@ const EditKelasKamar = ({navigation, route}) => {
     axios
       .put(
         `${APIUrl}/api/class/${id}`,
-        dataFoto.isUploaded
+        fotoKamar.isUploaded
           ? {
               ...kamar,
-              newImg: 'data:' + dataFoto.type + ';base64,' + dataFoto.data,
+              newImg: fotoKamar.base64,
             }
           : kamar,
         {
@@ -203,7 +230,7 @@ const EditKelasKamar = ({navigation, route}) => {
         textContent={'Tunggu Sebentar'}
         textStyle={{color: '#FFF'}}
       />
-      <HeaderPage title="Tambah Kelas" />
+      <HeaderPage title="Edit Kelas" />
 
       {/* Content Section  */}
       <ScrollView
@@ -215,10 +242,10 @@ const EditKelasKamar = ({navigation, route}) => {
           <TouchableNativeFeedback
             disabled={isLoading}
             onPress={() => pickImage()}>
-            {dataFoto.isUploaded ? (
+            {fotoKamar.isUploaded ? (
               <Image
                 source={{
-                  uri: dataFoto.uri,
+                  uri: fotoKamar.path,
                 }}
                 style={styles.imageUploaded}
                 resizeMode="cover"
@@ -226,7 +253,7 @@ const EditKelasKamar = ({navigation, route}) => {
             ) : (
               <Image
                 source={{
-                  uri: APIUrl + '/kostdata/kelas_kamar/foto/' + kamar.foto,
+                  uri: APIUrl + '/storage/images/kelas/' + kamar.foto,
                 }}
                 style={styles.imageUploaded}
                 resizeMode="cover"

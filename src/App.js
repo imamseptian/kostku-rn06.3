@@ -7,6 +7,8 @@ import {store} from './store';
 import {MainStatistik, KostStatistik} from './pages/statistik';
 import {MyDatePicker, AccordionComponent} from './pages/CobaDate';
 import {ProfilPendaftar} from './pages/pendaftar';
+import {EditPenghuni, TestEditOpacity} from './pages/penghuni';
+import {CardProfile} from './pages/pendaftar/atoms';
 const LaporanStack = createSharedElementStackNavigator();
 
 export default function App() {
@@ -16,9 +18,12 @@ export default function App() {
       {/* <KostStatistik /> */}
       {/* <CobaVictory /> */}
       {/* <MainStatistik /> */}
+      {/* <EditPenghuni /> */}
+      {/* <TestEditOpacity /> */}
 
       {/* <MyDatePicker /> */}
       {/* <ProfilPendaftar /> */}
+      {/* <CardProfile /> */}
 
       <NavigationContainer>
         <AppNavigator />

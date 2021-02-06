@@ -17,12 +17,6 @@ import axios from 'axios';
 
 const Profile = () => {
   const dataRedux = useSelector((state) => state.AuthReducer);
-  const [profil, setprofil] = useState({
-    nama_depan: '',
-    nama_belakang: '',
-    email: '',
-    foto_profil: '',
-  });
 
   const [attribut, setattribut] = useState({
     kamar: 0,
@@ -56,7 +50,6 @@ const Profile = () => {
         if (status == 'success') {
           console.log('Get data kost success');
 
-          setprofil(data.user);
           setkost(data.kost);
           setattribut({
             ...attribut,
@@ -133,8 +126,8 @@ const Profile = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         // contentContainerStyle={{padding: 3}}
-        style={{paddingHorizontal: 0.05 * screenWidth}}>
-        <BoxProfile data={profil} attribut={attribut} />
+        style={{paddingHorizontal: 15}}>
+        <BoxProfile attribut={attribut} />
         <BoxInfoKost data={kost} daerah={asalDaerah} />
       </ScrollView>
     </View>

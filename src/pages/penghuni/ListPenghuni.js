@@ -11,6 +11,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import {CardProfile} from './atoms';
 import {useSelector} from 'react-redux';
 import {FlatListPenghuni} from '../../components';
 import {
@@ -33,10 +34,9 @@ const ListPenghuni = ({navigation}) => {
   const [banyakData, setbanyakData] = useState(0);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [isLoad, setisLoad] = useState(false);
   const [filter, setFilter] = useState({
     namakeyword: '',
-    sortname: 'nama_depan',
+    sortname: 'nama',
     orderby: 'asc',
     id_kost: dataRedux.user.kostku,
   });
@@ -44,7 +44,7 @@ const ListPenghuni = ({navigation}) => {
 
   // let cancelToken;
 
-  const setForm = (inputType, value) => {
+  const changeFilter = (inputType, value) => {
     setFilter({
       ...filter,
       [inputType]: value,
@@ -52,11 +52,6 @@ const ListPenghuni = ({navigation}) => {
   };
 
   const ambilApi = (myToken) => {
-    console.log('INI AMBIL API PENGHUNI');
-    console.log(myToken);
-    console.log(filter);
-    console.log(dataRedux.token);
-    console.log('#####################');
     setIsLoading(true);
     myAxios.postAxios(
       APIUrl + '/api/daftarpenghuni?page=1',
@@ -67,7 +62,6 @@ const ListPenghuni = ({navigation}) => {
     );
     function onPost(status, data) {
       if (status == 'success') {
-        setisLoad(true);
         setPenghuni(data.data.data);
         setmaxLimit(data.data.last_page);
         setbanyakData(data.data.total);
@@ -76,7 +70,7 @@ const ListPenghuni = ({navigation}) => {
         console.log('caught cancel filter');
       } else {
         console.log('error ambil api list penghuni');
-        console.log(data);
+        console.log(filter);
         setIsLoading(false);
       }
     }
@@ -85,16 +79,15 @@ const ListPenghuni = ({navigation}) => {
   useEffect(() => {
     const source = axios.CancelToken.source();
     if (isFocused) {
-      console.log('FOCUS LIST PENGHUNI');
       ambilApi(source.token);
     }
     return () => {
       console.log('LOST FOCUS LIST PENGHUNI');
-      setisLoad(false);
+
       setFilter({
         ...filter,
         namakeyword: '',
-        sortname: 'nama_depan',
+        sortname: 'nama',
         orderby: 'asc',
       });
       setSelectedTag(1);
@@ -137,7 +130,7 @@ const ListPenghuni = ({navigation}) => {
 
   useEffect(() => {
     const source = axios.CancelToken.source();
-    if (isLoad) {
+    if (isFocused) {
       goToTop();
       ambilApi(source.token);
     }
@@ -153,54 +146,36 @@ const ListPenghuni = ({navigation}) => {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
 
-      <View style={styles.containerUp}>
-        <View style={{marginLeft: 0.05 * screenWidth}}>
-          <Text style={{fontSize: 30, color: 'white', fontWeight: 'bold'}}>
-            Cari Penghuni
-          </Text>
-        </View>
-        <View
-          style={{
-            width: screenWidth,
-            paddingLeft: 0.05 * screenWidth,
-            marginBottom: 20,
-          }}>
-          <SearchBar
-            value={filter.namakeyword}
-            placeholder={'Cari Penghuni'}
-            onChangeText={(value) => setForm('namakeyword', value)}
-          />
-        </View>
+      {/* Header and SearchBar Section  */}
+      <View style={styles.wrapperHeader}>
+        <Text style={styles.title}>Daftar Penghuni</Text>
+
+        <SearchBar
+          value={filter.namakeyword}
+          placeholder={'Cari Jenis Kamar'}
+          onChangeText={(value) => changeFilter('namakeyword', value)}
+          clearText={() => {
+            changeFilter('namakeyword', '');
+          }}
+        />
       </View>
-      <View style={styles.containerBot}>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 10,
-            alignItems: 'center',
-            marginBottom: 10,
-            width: screenWidth,
-            paddingLeft: 0.05 * screenWidth,
-          }}>
-          <Text
-            style={{
-              marginRight: 10,
-              fontSize: 14,
-              fontWeight: 'bold',
-              color: myColor.darkText,
-            }}>
-            Urutkan
-          </Text>
+
+      {/* Content Section  */}
+      <View style={{flex: 1}}>
+        <View style={styles.sortWrapper}>
+          <Text style={styles.sortTitle}>Urutkan</Text>
+
+          {/* Sort Option Section  */}
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <TagSearch
               tagColor={selectedTag == 1 ? myColor.myblue : 'white'}
               textColor={selectedTag == 1 ? 'white' : myColor.darkText}
               onPress={() => {
                 setSelectedTag(1);
-                setForm('sortname', 'nama');
+                changeFilter('sortname', 'nama');
               }}
               tagName="Nama"
             />
@@ -209,7 +184,7 @@ const ListPenghuni = ({navigation}) => {
               textColor={selectedTag == 2 ? 'white' : myColor.darkText}
               onPress={() => {
                 setSelectedTag(2);
-                setForm('sortname', 'tanggal_masuk');
+                changeFilter('sortname', 'tanggal_masuk');
               }}
               tagName="Tanggal Masuk"
             />
@@ -218,7 +193,7 @@ const ListPenghuni = ({navigation}) => {
               textColor={selectedTag == 3 ? 'white' : myColor.darkText}
               onPress={() => {
                 setSelectedTag(3);
-                setForm('sortname', 'umur');
+                changeFilter('sortname', 'tanggal_lahir');
               }}
               tagName="Umur"
             />
@@ -227,56 +202,54 @@ const ListPenghuni = ({navigation}) => {
               textColor={selectedTag == 4 ? 'white' : myColor.darkText}
               onPress={() => {
                 setSelectedTag(4);
-                setForm('sortname', 'kelamin');
+                changeFilter('sortname', 'kelamin');
               }}
               tagName="Kelamin"
             />
           </ScrollView>
         </View>
+
         <SearchResult
           sortCondition={filter.orderby}
           banyak={banyakData}
           onPress={() => {
-            if (filter.orderby == 'asc') {
-              setForm('orderby', 'desc');
+            if (filter.orderby === 'asc') {
+              changeFilter('orderby', 'desc');
             } else {
-              setForm('orderby', 'asc');
+              changeFilter('orderby', 'asc');
             }
           }}
         />
-        <View style={{paddingBottom: 50}}>
-          {/* <FlatListPendaftar /> */}
-          <FlatList
-            ref={scrollRef}
-            style={{paddingHorizontal: 0.05 * screenWidth}}
-            data={penghuni}
-            keyExtractor={(item) => item.id.toString()}
-            // extraData={selectedId}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: 40}}
-            ListFooterComponent={
-              page < maxLimit && !isLoading ? (
-                <ButtonLoad
-                  onPress={() => {
-                    setPage((prevState) => prevState + 1);
-                  }}
-                />
-              ) : null
-            }
-            renderItem={({item, index, separator}) => {
-              return (
-                <FlatListPenghuni
-                  item={item}
-                  onPress={() => {
-                    // navigation.push('DetailPenghuni', {penghuni: item});
-                    navigation.push('DetailPenghuni', {item});
-                  }}
-                />
-              );
-            }}
-          />
-        </View>
+
+        {/* List Kamar Section  */}
+        <FlatList
+          ref={scrollRef}
+          style={{marginTop: 10, paddingHorizontal: 15}}
+          data={penghuni}
+          keyExtractor={(item) => item.id.toString()}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={
+            page < maxLimit && !isLoading ? (
+              <ButtonLoad
+                onPress={() => {
+                  setPage((prevState) => prevState + 1);
+                }}
+              />
+            ) : null
+          }
+          renderItem={({item, index, separator}) => {
+            return (
+              <CardProfile
+                item={item}
+                onPress={() => {
+                  navigation.push('ProfilPenghuni', {item});
+                }}
+              />
+            );
+          }}
+        />
       </View>
+
       <ActivityIndicator
         animating={isLoading}
         size="large"
@@ -290,16 +263,16 @@ const ListPenghuni = ({navigation}) => {
 export default ListPenghuni;
 
 const styles = StyleSheet.create({
-  wrapper: {
+  container: {
     flex: 1,
     backgroundColor: '#f6f6f6',
   },
-  containerUp: {
-    backgroundColor: myColor.colorTheme,
-    paddingTop: StatusBar.currentHeight,
-  },
-  containerBot: {
-    flex: 1,
+
+  title: {
+    fontSize: 24,
+    fontFamily: 'OpenSans-Bold',
+    color: '#fff',
+    fontWeight: 'bold',
   },
   loading: {
     position: 'absolute',
@@ -309,5 +282,24 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  wrapperHeader: {
+    backgroundColor: myColor.colorTheme,
+    paddingTop: StatusBar.currentHeight,
+    paddingHorizontal: 15,
+  },
+  sortWrapper: {
+    flexDirection: 'row',
+    marginTop: 10,
+    alignItems: 'center',
+    marginBottom: 10,
+
+    paddingLeft: 15,
+  },
+  sortTitle: {
+    marginRight: 10,
+    fontSize: 14,
+    fontFamily: 'OpenSans-SemiBold',
+    color: myColor.fbtx,
   },
 });

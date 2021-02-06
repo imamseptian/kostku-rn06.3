@@ -48,17 +48,15 @@ const CustomDrawer = (props) => {
     let config = {
       headers: {Authorization: `Bearer ${dataRedux.token}`},
     };
-    axios
-      .get('https://dry-forest-53707.herokuapp.com/api/logout', config)
-      .then((repos) => {
-        let topic = 'kostku-' + dataRedux.user.kostku;
-        console.log('unsub topic=' + topic);
-        fcmService.unsubscribeToTopic(topic);
-        clearAll();
+    axios.get(APIUrl + '/api/logout', config).then((repos) => {
+      let topic = 'kostku-' + dataRedux.user.kostku;
+      console.log('unsub topic=' + topic);
+      fcmService.unsubscribeToTopic(topic);
+      clearAll();
 
-        toLogin();
-        dispatch(unsetAuthRedux());
-      });
+      toLogin();
+      dispatch(unsetAuthRedux());
+    });
   };
 
   // const MyMenu = (props) => (
@@ -111,7 +109,7 @@ const CustomDrawer = (props) => {
                   source={{
                     uri:
                       APIUrl +
-                      '/kostdata/pemilik/foto/' +
+                      '/storage/images/users/' +
                       dataRedux.user.foto_profil,
                   }}
                   size={50}
@@ -120,9 +118,7 @@ const CustomDrawer = (props) => {
 
               <View style={{marginLeft: 15}}>
                 <Title style={styles.title}>
-                  {dataRedux.isAuth
-                    ? `${dataRedux.user.nama_depan} ${dataRedux.user.nama_belakang}`
-                    : null}
+                  {dataRedux.isAuth ? `${dataRedux.user.nama}` : null}
                 </Title>
                 <Caption style={styles.caption}>
                   {dataRedux.isAuth ? `${dataRedux.user.namakost}` : null}

@@ -40,8 +40,9 @@ class ModalItemTransaksi extends React.PureComponent {
             marginLeft: 5,
             maxWidth: 0.3 * screenWidth,
           }}>
+          {/* {JSON.stringify(this.props.data)} */}
           {this.props.jenis === 1
-            ? this.props.data.nama_depan + ' ' + this.props.data.nama_belakang
+            ? this.props.data.nama_penghuni
             : this.props.data.judul}
         </Text>
 

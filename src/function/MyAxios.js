@@ -18,6 +18,8 @@ class MyAxios {
           onPost('cancel', error);
         } else {
           onPost('error', error);
+          // alert('error');
+          console.log(error);
           // throw error;
         }
       });

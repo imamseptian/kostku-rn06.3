@@ -10,7 +10,8 @@ import {
   TouchableNativeFeedback,
   View,
 } from 'react-native';
-import ImagePicker from 'react-native-image-picker';
+// import ImagePicker from 'react-native-image-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Text} from 'react-native-paper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -48,60 +49,85 @@ const FormKelasKamar = ({navigation}) => {
     type: '',
     data: '',
   });
+  const [fotoKamar, setfotoKamar] = useState({
+    isUploaded: false,
+    base64: null,
+    path: null,
+  });
+
   const [kamar, setKamar] = useState({
     nama: '',
     harga: 0,
     kapasitas: 1,
     fasilitas: inputList,
     id_kost: dataRedux.user.kostku,
-    foto: '',
     deskripsi: '',
   });
   const [formatHarga, setformatHarga] = useState(
     formatRupiah(kamar.harga.toString(), 'Rp. '),
   );
 
-  useEffect(() => {
-    if (dataFoto.data != '') {
-      let image = 'data:' + dataFoto.type + ';base64,' + dataFoto.data;
-      setForm('foto', image);
-    }
-  }, [dataFoto]);
+  // useEffect(() => {
+  //   if (dataFoto.data != '') {
+  //     let image = 'data:' + dataFoto.type + ';base64,' + dataFoto.data;
+  //     setForm('foto', image);
+  //   }
+  // }, [dataFoto]);
 
   useEffect(() => {
     setKamar({...kamar, fasilitas: inputList});
   }, [inputList]);
 
+  // const pickImage = async () => {
+  //   setIsPressed(true);
+  //   await Permission.requestMultiple([
+  //     PERMISSION_TYPE.photo,
+  //     PERMISSION_TYPE.camera,
+  //   ]);
+  //   ImagePicker.launchImageLibrary(
+  //     {mediaType: 'photo', base64: true},
+  //     (response) => {
+  //       if (response.didCancel) {
+  //         console.log('User cancelled image picker');
+  //         setIsPressed(false);
+  //       } else if (response.error) {
+  //         console.log('ImagePicker Error: ', response.error);
+  //         setIsPressed(false);
+  //       } else if (response.customButton) {
+  //         console.log('User tapped custom button: ', response.customButton);
+  //         setIsPressed(false);
+  //       } else {
+  //         setDataFoto({
+  //           ...dataFoto,
+  //           isUploaded: true,
+  //           uri: response.uri,
+  //           type: response.type,
+  //           data: response.data,
+  //         });
+  //         setIsPressed(false);
+  //       }
+  //     },
+  //   );
+  // };
+
   const pickImage = async () => {
-    setIsPressed(true);
     await Permission.requestMultiple([
       PERMISSION_TYPE.photo,
       PERMISSION_TYPE.camera,
     ]);
-    ImagePicker.launchImageLibrary(
-      {mediaType: 'photo', base64: true},
-      (response) => {
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-          setIsPressed(false);
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-          setIsPressed(false);
-        } else if (response.customButton) {
-          console.log('User tapped custom button: ', response.customButton);
-          setIsPressed(false);
-        } else {
-          setDataFoto({
-            ...dataFoto,
-            isUploaded: true,
-            uri: response.uri,
-            type: response.type,
-            data: response.data,
-          });
-          setIsPressed(false);
-        }
-      },
-    );
+    ImagePicker.openPicker({
+      width: 720,
+      height: 480,
+      cropping: true,
+      includeBase64: true,
+    }).then((image) => {
+      let base64Temporary = 'data:' + image.mime + ';base64,' + image.data;
+      setfotoKamar({
+        isUploaded: true,
+        base64: base64Temporary,
+        path: image.path,
+      });
+    });
   };
 
   useEffect(() => {
@@ -130,11 +156,15 @@ const FormKelasKamar = ({navigation}) => {
       x.error = '';
     });
     axios
-      .post(APIUrl + '/api/class', kamar, {
-        headers: {
-          Authorization: `Bearer ${dataRedux.token}`,
+      .post(
+        APIUrl + '/api/class',
+        {...kamar, foto: fotoKamar.base64},
+        {
+          headers: {
+            Authorization: `Bearer ${dataRedux.token}`,
+          },
         },
-      })
+      )
       .then((res) => {
         if (res.data.success) {
           navigation.pop(1);
@@ -142,7 +172,7 @@ const FormKelasKamar = ({navigation}) => {
           inputList.forEach((x, i) => {
             let nameError = 'fasilitas.' + i + '.nama';
             if (res.data.errors[nameError] != undefined) {
-              handleInputChange;
+              // handleInputChange;
               handleInputChange(res.data.errors[nameError][0], i, 'error');
             }
           });
@@ -206,14 +236,14 @@ const FormKelasKamar = ({navigation}) => {
           <TouchableNativeFeedback
             disabled={isPressed}
             onPress={() => pickImage()}>
-            {dataFoto.isUploaded != true ? (
+            {fotoKamar.isUploaded != true ? (
               <View style={styles.blankImage}>
                 <FontAwesome name="upload" color="#fff" size={50} />
               </View>
             ) : (
               <Image
                 source={{
-                  uri: dataFoto.uri,
+                  uri: fotoKamar.path,
                 }}
                 style={styles.imageUploaded}
                 resizeMode="cover"

@@ -9,8 +9,13 @@ import {
 import {APIUrl, myColor} from '../../function/MyVar';
 const CircleAvatar = (props) => {
   const [img, setimg] = useState(
-    APIUrl + '/kostdata/pendaftar/foto/' + props.data.foto_diri,
+    APIUrl + '/storage/images/pendaftar/' + props.data.foto_diri,
   );
+
+  const kataPertama = () => {
+    let firstWord = props.data.nama.replace(/ .*/, '');
+    return firstWord;
+  };
 
   return (
     <TouchableNativeFeedback onPress={props.onPress}>
@@ -21,11 +26,12 @@ const CircleAvatar = (props) => {
           source={{
             uri: img,
           }}
-          onError={(e) =>
+          onError={(e) => {
+            // console.log('error photo circle', e);
             setimg(
               'https://liquipedia.net/commons/images/thumb/6/66/AdmiralBulldog_EPICENTER_XL.jpg/600px-AdmiralBulldog_EPICENTER_XL.jpg',
-            )
-          }
+            );
+          }}
           // source={require('../asset/imgdefault/avatar.jpeg')}
           // defaultSource={require('../asset/imgdefault/avatar.jpeg')}
           style={styles.avatarScroll}
@@ -35,7 +41,8 @@ const CircleAvatar = (props) => {
         {/* </View> */}
         <Text style={styles.avatarName} numberOfLines={1}>
           {/* {item.nama_depan} */}
-          {props.data.nama_depan}
+          {/* {props.data.nama} */}
+          {kataPertama()}
         </Text>
       </View>
     </TouchableNativeFeedback>

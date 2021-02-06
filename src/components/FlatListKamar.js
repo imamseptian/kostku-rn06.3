@@ -7,17 +7,21 @@ import {
   Image,
   TouchableNativeFeedback,
 } from 'react-native';
-import {myColor} from '../function/MyVar';
+import {myColor, APIUrl} from '../function/MyVar';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const screenWidth = Dimensions.get('window').width;
 
 const FlatListKamar = (props) => {
-  const [status, setstatus] = useState(0);
-  const [kamar, setKamar] = useState(props.item);
+  // const [status, setstatus] = useState(0);
+  // const [kamar, setKamar] = useState(props.item);
 
   return (
-    <TouchableNativeFeedback onPress={props.onPress}>
+    <TouchableNativeFeedback
+      //  onPress={props.onPress}
+      onPress={() => {
+        console.log(APIUrl + '/storage/images/kelas/' + props.foto);
+      }}>
       <View
         style={{
           marginBottom: 20,
@@ -36,12 +40,11 @@ const FlatListKamar = (props) => {
             style={{
               height: 100,
               width: 100,
-
               borderTopLeftRadius: 10,
+              backgroundColor: 'yellow',
             }}
             source={{
-              uri:
-                'https://www.harapanrakyat.com/wp-content/uploads/2020/04/Desain-Kamar-Tidur-Nyaman-Hangat-696x464.jpg',
+              uri: APIUrl + '/kostdata/kelas_kamar/foto/' + props.foto,
             }}
           />
           <View
@@ -61,7 +64,7 @@ const FlatListKamar = (props) => {
                   color: myColor.fbtx,
                   marginBottom: 3,
                 }}>
-                {kamar.nama}
+                {props.item.nama}
               </Text>
 
               <Text
@@ -72,7 +75,7 @@ const FlatListKamar = (props) => {
                   fontFamily: 'OpenSans-SemiBold',
                   color: myColor.darkText,
                 }}>
-                Kapasitas : {kamar.penghuni.length}/{kamar.kapasitas}
+                Kapasitas : {props.item.penghuni.length}/{props.item.kapasitas}
               </Text>
             </View>
 
@@ -121,7 +124,7 @@ const FlatListKamar = (props) => {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          {kamar.penghuni.length >= kamar.kapasitas ? (
+          {props.item.penghuni.length >= props.item.kapasitas ? (
             <View
               style={[styles.tagKapasitas, {backgroundColor: myColor.alert}]}>
               <Text style={[styles.tagText, {color: '#fff'}]}>Penuh</Text>
@@ -140,7 +143,7 @@ const FlatListKamar = (props) => {
               marginLeft: 10,
               flexDirection: 'row-reverse',
             }}>
-            {kamar.penghuni.length > 2 ? (
+            {props.item.penghuni.length > 2 ? (
               <View
                 style={{
                   backgroundColor: myColor.etcbuble,
@@ -158,7 +161,7 @@ const FlatListKamar = (props) => {
               </View>
             ) : null}
 
-            {kamar.penghuni.map((item, index) => {
+            {props.item.penghuni.map((item, index) => {
               if (index > 1) {
                 return null;
               } else {
@@ -181,8 +184,7 @@ const FlatListKamar = (props) => {
                     <Image
                       style={{height: 30, width: 30, borderRadius: 15}}
                       source={{
-                        uri:
-                          'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Henrik_Ahnberg.jpg/220px-Henrik_Ahnberg.jpg',
+                        uri: APIUrl + '/storage/images/kelas/' + props.foto,
                       }}
                     />
                   </View>

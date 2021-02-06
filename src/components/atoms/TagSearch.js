@@ -19,13 +19,13 @@ export default TagSearch;
 
 const styles = StyleSheet.create({
   sortOption: {
-    height: 30,
+    paddingVertical: 5,
     backgroundColor: 'white',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     justifyContent: 'center',
     borderRadius: 20,
-    marginRight: 10,
+    marginRight: 0,
     borderWidth: 0.5,
     borderColor: myColor.divider,
 

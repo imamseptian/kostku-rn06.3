@@ -4,6 +4,9 @@ import PenghuniTagihan from './PenghuniTagihan';
 import DetailPenghuni from './DetailPenghuni';
 import ListPenghuni from './ListPenghuni';
 import BarangPenghuni from './BarangPenghuni';
+import ProfilPenghuni from './ProfilPenghuni';
+import EditPenghuni from './EditPenghuni';
+import TestEditOpacity from './TestEditOpacity';
 
 export {
   PenghuniInfo,
@@ -12,4 +15,7 @@ export {
   DetailPenghuni,
   ListPenghuni,
   BarangPenghuni,
+  ProfilPenghuni,
+  EditPenghuni,
+  TestEditOpacity,
 };

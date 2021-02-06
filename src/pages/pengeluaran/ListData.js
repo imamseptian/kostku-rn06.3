@@ -1,12 +1,28 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
-import {myColor, screenWidth, formatRupiah} from '../../function/MyVar';
+import {
+  myColor,
+  screenWidth,
+  formatRupiah,
+  APIUrl,
+  defaultAsset,
+} from '../../function/MyVar';
 
 const ListData = (props) => {
   let tanggal_transaksi = new Date(props.data.tanggal_transaksi);
 
+  const [fotoProfil, setfotoProfil] = useState(
+    APIUrl + '/storage/images/pendaftar/' + props.data.foto_diri,
+  );
+
   return (
-    <TouchableOpacity onPress={props.onClickPemasukan}>
+    <TouchableOpacity
+      // onPress={props.onClickPemasukan}
+      onPress={() => {
+        console.log(
+          APIUrl + '/storage/images/pendaftar/' + props.data.foto_diri,
+        );
+      }}>
       <View
         style={{
           flexDirection: 'row',
@@ -18,10 +34,10 @@ const ListData = (props) => {
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <Image
             source={{
-              uri:
-                'https://liquipedia.net/commons/images/thumb/6/66/AdmiralBulldog_EPICENTER_XL.jpg/600px-AdmiralBulldog_EPICENTER_XL.jpg',
+              uri: fotoProfil,
             }}
             style={{height: 50, width: 50, borderRadius: 25}}
+            onError={(e) => setfotoProfil(defaultAsset.yupi)}
           />
           <View style={{marginLeft: 10}}>
             <Text
@@ -30,7 +46,8 @@ const ListData = (props) => {
                 fontFamily: 'OpenSans-SemiBold',
                 color: myColor.fbtx,
               }}>
-              {props.data.nama_depan} {props.data.nama_belakang}
+              {props.data.nama_penghuni}
+              {/* {JSON.stringify} */}
             </Text>
             <Text
               style={{

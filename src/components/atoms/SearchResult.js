@@ -15,7 +15,7 @@ const SearchResult = ({banyak, sortCondition, ...rest}) => {
       style={{
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginHorizontal: 0.05 * screenWidth,
+        paddingHorizontal: 15,
       }}>
       <Text style={styles.resultText}>Total</Text>
       <TouchableNativeFeedback {...rest}>

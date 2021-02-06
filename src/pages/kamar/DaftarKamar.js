@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
 } from 'react-native';
 import Modal from 'react-native-translucent-modal';
 import {FAB} from 'react-native-paper';
@@ -206,10 +207,15 @@ const DaftarKamar = ({navigation, route}) => {
               return (
                 <FlatListKamar
                   item={item}
+                  foto={route.params.foto}
                   onPress={() => {
                     navigation.push('DetailKamar', {kamar: item});
                   }}
                 />
+                // <Image
+                //   source={{uri: APIUrl + '/storage/images/kelas/'}}
+                //   style={{height: 100, width: 100}}
+                // />
               );
             }}
           />

@@ -22,7 +22,7 @@ const EditProfil = ({navigation, route}) => {
 
   const [showModal, setshowModal] = useState(false);
   const [propModal, setpropModal] = useState({
-    title: 'Edit Nama ',
+    title: 'Edit Nama',
     edit: 'nama',
   });
   return (
@@ -38,8 +38,7 @@ const EditProfil = ({navigation, route}) => {
         onRequestClose={() => setshowModal(false)}>
         <ModalEditProfil
           user={{
-            nama_depan: dataRedux.user.nama_depan,
-            nama_belakang: dataRedux.user.nama_belakang,
+            nama: dataRedux.user.nama,
             foto_profil: dataRedux.user.foto_profil,
           }}
           token={dataRedux.token}
@@ -127,44 +126,18 @@ const EditProfil = ({navigation, route}) => {
               setshowModal(true);
               setpropModal({
                 ...propModal,
-                title: 'Edit Nama Depan',
-                edit: 'nama_depan',
+                title: 'Nama',
+                edit: 'nama',
               });
             }}>
             <View style={styles.wrapperFieldInfo}>
               <View>
                 <Text style={styles.namaInfo}>Nama Depan</Text>
-                <Text style={styles.contentInfo}>
-                  {dataRedux.user.nama_depan}
-                </Text>
+                <Text style={styles.contentInfo}>{dataRedux.user.nama}</Text>
               </View>
               <Text style={styles.contentInfo}>
                 {/* {JSON.stringify(route.params)} */}
               </Text>
-              <SimpleLineIcons
-                name="arrow-right"
-                color={myColor.graytextprof}
-                size={25}
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setshowModal(true);
-              setpropModal({
-                ...propModal,
-                title: 'Edit Nama Belakang',
-                edit: 'nama_belakang',
-              });
-            }}>
-            <View style={styles.wrapperFieldInfo}>
-              <View>
-                <Text style={styles.namaInfo}>Nama Belakang</Text>
-                <Text style={styles.contentInfo}>
-                  {dataRedux.user.nama_belakang}
-                  {/* {JSON.stringify(dataRedux)} */}
-                </Text>
-              </View>
               <SimpleLineIcons
                 name="arrow-right"
                 color={myColor.graytextprof}

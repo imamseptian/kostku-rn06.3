@@ -134,9 +134,9 @@ const HomeKamarSection = (props) => {
                         opacity: 0.4,
                         borderRadius: 10,
                       }}></View> */}
-                    <SharedElement id={`item.${item.id}.foto_kamar`}>
-                      <BlackImage urlImg={item.foto} />
-                    </SharedElement>
+                    {/* <SharedElement id={`item.${item.id}.foto_kamar`}> */}
+                    <BlackImage urlImg={item.foto} />
+                    {/* </SharedElement> */}
                     <View style={styles.kamarContent}>
                       <Text style={styles.titleKamar}>{item.nama}</Text>
                       <View

@@ -8,6 +8,7 @@ import {fcmService} from './FCMService';
 import {Splash} from './pages';
 import {AuthNavigator, MainNavigator} from './stack';
 import {setAuthRedux} from './store';
+import {APIUrl} from './function/MyVar';
 
 const AppStack = createStackNavigator();
 
@@ -47,7 +48,7 @@ const AppNavigator = ({navigation}) => {
 
     try {
       axios
-        .get('https://dry-forest-53707.herokuapp.com/api/user', {
+        .get(APIUrl + '/api/user', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -82,7 +83,7 @@ const AppNavigator = ({navigation}) => {
 
     try {
       axios
-        .get('https://dry-forest-53707.herokuapp.com/api/checkstatus', {
+        .get(APIUrl + '/api/checkstatus', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
