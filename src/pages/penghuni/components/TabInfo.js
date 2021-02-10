@@ -59,21 +59,29 @@ const TabInfo = (props) => {
     };
   }, [props.data]);
 
-  let tanggal_lahir = new Date(props.data.tanggal_lahir);
-
   return (
     <View
       style={{
         width: props.lebar,
 
         paddingHorizontal: 10,
-        paddingTop: 20,
+        paddingTop: 30,
       }}>
       <CardText
+        title="Tanggal Masuk Kost"
+        // content={`${tanggal_masuk.getUTCDate()} ${
+        //   dataBulan[tanggal_masuk.getUTCMonth()].nama
+        // } ${tanggal_masuk.getUTCFullYear()}`}
+        content={props.tanggal_masuk}>
+        <Entypo name="calendar" size={20} color={myColor.grayGoogle} />
+      </CardText>
+
+      <CardText
         title="Tanggal Lahir"
-        content={`${tanggal_lahir.getUTCDate()} ${
-          dataBulan[tanggal_lahir.getUTCMonth()].nama
-        } ${tanggal_lahir.getUTCFullYear()}`}>
+        // content={`${tanggal_lahir.getUTCDate()} ${
+        //   dataBulan[tanggal_lahir.getUTCMonth()].nama
+        // } ${tanggal_lahir.getUTCFullYear()}`}
+        content={props.tanggal_lahir}>
         <Entypo name="calendar" size={20} color={myColor.grayGoogle} />
       </CardText>
 

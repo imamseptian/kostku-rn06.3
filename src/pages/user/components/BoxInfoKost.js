@@ -34,7 +34,7 @@ const BoxInfoKost = (props) => {
       <View style={{alignItems: 'center'}}>
         <Image
           source={{
-            uri: APIUrl + '/kostdata/kost/foto/' + props.data.foto_kost,
+            uri: APIUrl + '/storage/images/kost/' + props.data.foto_kost,
           }}
           style={{
             height: 200,

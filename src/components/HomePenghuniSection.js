@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Text,
   TouchableNativeFeedback,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {APIUrl, myColor} from '../function/MyVar';
@@ -83,7 +84,14 @@ const HomePenghuniSection = (props) => {
           paddingHorizontal: 0.05 * screenWidth,
         }}>
         <Text style={styles.sectionTitle}>Penghuni</Text>
-        <Text style={styles.seeAll}>Lihat Semua</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('PenghuniStackScreen', {
+              screen: 'ListPenghuni',
+            });
+          }}>
+          <Text style={styles.seeAll}>Lihat Semua</Text>
+        </TouchableOpacity>
       </View>
       <View
         style={{

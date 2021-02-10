@@ -18,10 +18,8 @@ const CardPicker = (props) => {
   useEffect(() => {
     // console.log(`PICKER ${props.placeholder}`);
     if (props.data.length > 0) {
-      if (
-        props.data.some((arrayData) => arrayData.id === props.selectedValue)
-      ) {
-        let namalabel = props.data.find((x) => x.id === props.selectedValue)[
+      if (props.data.some((arrayData) => arrayData.id == props.selectedValue)) {
+        let namalabel = props.data.find((x) => x.id == props.selectedValue)[
           props.itemName
         ];
         setselectedLabel(namalabel);

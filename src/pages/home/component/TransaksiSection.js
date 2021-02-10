@@ -1,9 +1,10 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {myColor, screenHeight, screenWidth} from '../../../function/MyVar';
 import {ItemTransaksi} from '../atom';
-
+import {useNavigation} from '@react-navigation/native';
 const TransaksiSection = (props) => {
+  const navigation = useNavigation();
   return (
     <View style={{marginTop: 20}}>
       <View
@@ -14,7 +15,17 @@ const TransaksiSection = (props) => {
           paddingHorizontal: 0.05 * screenWidth,
         }}>
         <Text style={styles.sectionTitle}>Transaksi Terakhir</Text>
-        <Text style={styles.seeAll}>Lihat Semua</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('KeuanganStackScreen', {
+              screen: 'DetailKeuangan',
+              params: {
+                page: 0,
+              },
+            });
+          }}>
+          <Text style={styles.seeAll}>Lihat Semua</Text>
+        </TouchableOpacity>
       </View>
       <View style={{marginTop: 10}}>
         {props.data.map((item, index) => {

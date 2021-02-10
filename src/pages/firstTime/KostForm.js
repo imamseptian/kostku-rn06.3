@@ -14,17 +14,15 @@ import {
 } from 'react-native';
 // import ImagePicker from 'react-native-image-picker';
 import ImagePicker from 'react-native-image-crop-picker';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {Permission, PERMISSION_TYPE} from '../../AppPermission';
-import {MyPicker, NoTelpFormField, TextFormField} from '../../components';
+import {CardForm, CardNoTelp, CardPicker} from '../../atoms';
 import {fcmService} from '../../FCMService';
 import {myAxios} from '../../function/MyAxios';
 import {APIUrl, myColor} from '../../function/MyVar';
 import {setUserRedux} from '../../store';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {CardForm, CardNoTelp, CardPicker} from '../../atoms';
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 const KostForm = ({navigation}) => {

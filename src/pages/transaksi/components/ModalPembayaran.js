@@ -33,7 +33,7 @@ const ModalPembayaran = (props) => {
     let tempTotal = 0;
     props.data.forEach((x, i) => {
       if (x.selected) {
-        tempTotal = tempTotal + x.jumlah;
+        tempTotal = tempTotal + parseInt(x.jumlah);
       }
       // tempList.push(formatRupiah('0', 'Rp. '));
     });

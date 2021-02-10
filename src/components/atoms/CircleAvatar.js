@@ -6,16 +6,16 @@ import {
   TouchableNativeFeedback,
   View,
 } from 'react-native';
-import {APIUrl, myColor} from '../../function/MyVar';
+import {APIUrl, myColor, kataPertama} from '../../function/MyVar';
 const CircleAvatar = (props) => {
   const [img, setimg] = useState(
     APIUrl + '/storage/images/pendaftar/' + props.data.foto_diri,
   );
 
-  const kataPertama = () => {
-    let firstWord = props.data.nama.replace(/ .*/, '');
-    return firstWord;
-  };
+  // const kataPertama = () => {
+  //   let firstWord = props.data.nama.replace(/ .*/, '');
+  //   return firstWord;
+  // };
 
   return (
     <TouchableNativeFeedback onPress={props.onPress}>
@@ -42,7 +42,7 @@ const CircleAvatar = (props) => {
         <Text style={styles.avatarName} numberOfLines={1}>
           {/* {item.nama_depan} */}
           {/* {props.data.nama} */}
-          {kataPertama()}
+          {kataPertama(props.data.nama)}
         </Text>
       </View>
     </TouchableNativeFeedback>

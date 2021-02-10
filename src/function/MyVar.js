@@ -82,6 +82,11 @@ const rupiahToInt = (angka) => {
   return nilai;
 };
 
+const kataPertama = (words) => {
+  let firstWord = words.replace(/ .*/, '');
+  return firstWord;
+};
+
 const startingYear = 2020;
 
 const dataBulan = [
@@ -130,4 +135,5 @@ export {
   dataTahun,
   defaultAsset,
   rupiahToInt,
+  kataPertama,
 };

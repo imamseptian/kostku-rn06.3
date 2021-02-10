@@ -32,7 +32,13 @@ import {
   ProfilPenghuni,
   EditPenghuni,
 } from '../pages/penghuni';
-import {Profile, EditProfil, EditKost} from '../pages/user';
+import {
+  Profile,
+  EditProfil,
+  EditKost,
+  EditProfilePage,
+  EditKostPage,
+} from '../pages/user';
 import {HalamanBayar} from '../pages/transaksi';
 import {KostStatistik} from '../pages/statistik';
 import FirstTimeNavigator from './FirstTimeNavigator';
@@ -93,8 +99,8 @@ const HomeStackScreen = ({navigation, route}) => {
         })}
       />
       <HomeStack.Screen name="Profil" component={Profile} />
-      <HomeStack.Screen name="EditProfil" component={EditProfil} />
-      <HomeStack.Screen name="EditKost" component={EditKost} />
+      <HomeStack.Screen name="EditProfil" component={EditProfilePage} />
+      <HomeStack.Screen name="EditKost" component={EditKostPage} />
       {/* <PendaftarStack.Screen
         name="DetailPendaftar"
         component={DetailPendaftar}
@@ -382,10 +388,10 @@ const MainNavigator = ({navigation}) => {
           console.log('----------------');
           console.log(notify.data.stack);
           console.log(notify.data.screen);
-          console.log('----------------');
+          console.log('----------------Kontol');
 
-          navigation.navigate('MainScreen', {
-            screen: 'PendaftarScreen',
+          navigation.navigate(notify.data.stack, {
+            screen: notify.data.screen,
           });
         }
         // else {

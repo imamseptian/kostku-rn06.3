@@ -20,8 +20,7 @@ const BoxProfile = (props) => {
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <Image
           source={{
-            uri:
-              APIUrl + '/kostdata/pemilik/foto/' + dataRedux.user.foto_profil,
+            uri: APIUrl + '/storage/images/users/' + dataRedux.user.foto_profil,
           }}
           style={{height: 100, width: 100, borderRadius: 10}}
         />

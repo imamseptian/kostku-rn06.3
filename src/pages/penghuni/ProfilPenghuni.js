@@ -12,18 +12,58 @@ import {
   View,
 } from 'react-native';
 import {useSelector} from 'react-redux';
-import {APIUrl, defaultAsset, myColor, screenWidth} from '../../function/MyVar';
+import {
+  APIUrl,
+  defaultAsset,
+  myColor,
+  screenWidth,
+  dataBulan,
+} from '../../function/MyVar';
 import {ButtonStickyTab} from './atoms';
 import {TabBarang, TabTagihan, TabInfo} from './components';
 
 const ProfilPenghuni = ({navigation, route}) => {
   const dataRedux = useSelector((state) => state.AuthReducer);
+  const [umurPenghuni, setumurPenghuni] = useState(0);
+  const [stringTanggal_masuk, setstringTanggal_masuk] = useState('');
+  const [stringTanggal_lahir, setstringTanggal_lahir] = useState('');
+  const {item} = route.params;
+  useEffect(() => {
+    console.log('useeffect profil');
+    let dateNow = new Date();
+    let dateBirth = new Date(item.tanggal_lahir);
+    let dateIn = new Date(item.tanggal_masuk);
+    dateBirth.setHours(
+      dateBirth.getHours() + dateBirth.getTimezoneOffset() / 60,
+    );
+    dateIn.setHours(dateIn.getHours() + dateIn.getTimezoneOffset() / 60);
+    let dif = dateNow.getTime() - dateBirth.getTime();
+    setumurPenghuni(Math.floor(dif / (1000 * 3600 * 24 * 365)));
+
+    setstringTanggal_lahir(
+      `${dateBirth.getDate()} ${
+        dataBulan[dateBirth.getMonth()].nama
+      } ${dateBirth.getFullYear()}`,
+    );
+
+    setstringTanggal_masuk(
+      `${dateIn.getDate()} ${
+        dataBulan[dateIn.getMonth()].nama
+      } ${dateIn.getFullYear()}`,
+    );
+    console.log('useeffect profil');
+    console.log(
+      `${dateIn.getDate()} ${
+        dataBulan[dateIn.getMonth()].nama
+      } ${dateIn.getFullYear()}`,
+    );
+  }, [item]);
 
   const [lebar, setlebar] = useState(screenWidth);
 
   const ref = useRef();
   const scrollRef = useRef();
-  const {item} = route.params;
+
   // const [pendaftarItem, setpendaftarItem] = useState([]);
   const [profilImg, setprofilImg] = useState(
     APIUrl + '/storage/images/pendaftar/' + item.foto_diri,
@@ -38,6 +78,8 @@ const ProfilPenghuni = ({navigation, route}) => {
           selectedTab={selectedTab}
           index={0}
           data={item}
+          tanggal_masuk={stringTanggal_masuk}
+          tanggal_lahir={stringTanggal_lahir}
         />
       ),
     },
@@ -108,7 +150,7 @@ const ProfilPenghuni = ({navigation, route}) => {
                   fontSize: 12,
                   color: myColor.darkText,
                 }}>
-                {item.kelamin === 1 ? 'Pria' : 'Wanita'}, 21 Tahun
+                {item.kelamin === 1 ? 'Pria' : 'Wanita'}, {umurPenghuni} Tahun
               </Text>
             </View>
           </View>

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Text,
   TouchableNativeFeedback,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -60,7 +61,14 @@ const HomeKamarSection = (props) => {
           paddingHorizontal: 0.05 * screenWidth,
         }}>
         <Text style={styles.sectionTitle}>Kamar</Text>
-        <Text style={styles.seeAll}>Lihat Semua</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('KamarStackScreen', {
+              screen: 'ListKamar',
+            });
+          }}>
+          <Text style={styles.seeAll}>Lihat Semua</Text>
+        </TouchableOpacity>
       </View>
       <View
         style={{

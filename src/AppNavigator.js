@@ -81,33 +81,41 @@ const AppNavigator = ({navigation}) => {
   const cekStatus = (token, topic) => {
     const source = axios.CancelToken.source();
 
-    try {
-      axios
-        .get(APIUrl + '/api/checkstatus', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          cancelToken: source.token,
-        })
-        .then((response) => {
-          if (response.data.status == 'logged in') {
-            setAuth(true);
-            getUser(token);
-          } else {
-            fcmService.unsubscribeToTopic(topic);
-            clearAll();
-            alert('Anda Sudah Logout, Silahkan Login Kembali');
-            setIsLoading(false);
-          }
-        });
-    } catch (error) {
-      if (axios.isCancel(error)) {
-        setIsLoading(false);
-      } else {
-        // handle error
-        setIsLoading(false);
-      }
-    }
+    axios
+      .get(APIUrl + '/api/checkstatus', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        cancelToken: source.token,
+      })
+      .then((response) => {
+        if (response.data.status == 'logged in') {
+          setAuth(true);
+          getUser(token);
+        } else {
+          fcmService.unsubscribeToTopic(topic);
+          clearAll();
+          alert('Anda Sudah Logout, Silahkan Login Kembali');
+          setIsLoading(false);
+        }
+      })
+      .catch((error) => {
+        if (axios.isCancel(error)) {
+          alert('erorr cancel');
+          setIsLoading(false);
+        } else {
+          // semisal error logout aja
+          fcmService.unsubscribeToTopic(topic);
+          clearAll();
+          alert('Anda Sudah Logout, Silahkan Login Kembali');
+          alert('here');
+          // semisal error logout aja
+          console.log(error);
+          console.log(token);
+          // handle error
+          setIsLoading(false);
+        }
+      });
 
     return () => {
       source.cancel();

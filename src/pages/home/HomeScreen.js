@@ -19,7 +19,7 @@ import {
 import {HomeClipper} from '../../components/atoms';
 import {myAxios} from '../../function/MyAxios';
 import {APIUrl, myColor} from '../../function/MyVar';
-import {TransaksiSection} from './component';
+import {TransaksiSection, HomeRec} from './component';
 
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
@@ -96,7 +96,7 @@ const HomeScreen = ({navigation, route}) => {
             ...dataHomescreen,
             penghuni: data.data_penghuni,
             kamar: data.data_kamar,
-            // transaksi: data.transaksi,
+            transaksi: data.transaksi,
             uang: data.uang,
           });
           setIsLoading(false);
@@ -143,11 +143,16 @@ const HomeScreen = ({navigation, route}) => {
           style={{
             borderBottomRightRadius: 20,
             borderBottomLeftRadius: 20,
-            paddingHorizontal: 0.05 * screenWidth,
+            paddingHorizontal: 15,
             paddingBottom: 10,
             backgroundColor: myColor.colorTheme,
           }}>
-          <HomeTopMenu uang={dataHomescreen.uang} />
+          {/* <HomeTopMenu uang={dataHomescreen.uang} /> */}
+          <HomeRec
+            uang={dataHomescreen.uang}
+            nama={dataRedux.user.nama}
+            foto={dataRedux.user.foto_profil}
+          />
         </View>
 
         {/* </View> */}

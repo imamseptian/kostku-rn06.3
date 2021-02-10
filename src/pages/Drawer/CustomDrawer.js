@@ -211,7 +211,7 @@ const CustomDrawer = (props) => {
             </MySubMenu>
 
             <MySubMenu
-              title="Detail Keuangan"
+              title="Riwayat Keuangan"
               onPress={() => {
                 props.navigation.navigate('KeuanganStackScreen', {
                   screen: 'DetailKeuangan',
