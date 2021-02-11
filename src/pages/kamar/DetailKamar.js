@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Dimensions,
   Image,
@@ -10,25 +10,51 @@ import {
   View,
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {FlatListDalamKamar} from '../../components';
-import {myColor} from '../../function/MyVar';
+import {FlatListDalamKamar, HeaderPage, PureModal} from '../../components';
+import {myColor, APIUrl} from '../../function/MyVar';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import Modal from 'react-native-translucent-modal';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 const DetailKamar = ({navigation, route}) => {
+  const {item} = route.params;
+  const images = [
+    {
+      url: APIUrl + '/storage/images/kelas/' + route.params.foto,
+
+      props: {
+        // headers: ...
+      },
+    },
+  ];
+  const [showImg, setshowImg] = useState(false);
   return (
     <View style={{flex: 1, backgroundColor: '#f6f6f6'}}>
       <StatusBar translucent backgroundColor="transparent" />
-      <View>
+      <Modal
+        visible={showImg}
+        transparent={true}
+        onRequestClose={() => setshowImg(false)}>
+        <ImageViewer
+          imageUrls={images}
+          enableSwipeDown={true}
+          onSwipeDown={() => setshowImg(false)}
+        />
+      </Modal>
+
+      <TouchableNativeFeedback
+        onPress={() => {
+          setshowImg(true);
+        }}>
         <Image
           source={{
-            uri:
-              'https://arcadiadesain.com/wp-content/uploads/2019/11/63-Inspirasi-Desain-Kamar-Kost-Sederhana-Trend-Masa-Kini.jpg',
+            uri: APIUrl + '/storage/images/kelas/' + route.params.foto,
           }}
           style={{height: (2 / 3) * screenWidth, width: screenWidth}}
         />
-      </View>
+      </TouchableNativeFeedback>
       <View
         style={{
           flex: 1,
@@ -37,15 +63,27 @@ const DetailKamar = ({navigation, route}) => {
         <Text
           style={{
             textAlign: 'center',
-            fontWeight: 'bold',
-            fontSize: 30,
+            fontFamily: 'OpenSans-Bold',
+            fontSize: 24,
             color: myColor.blackText,
           }}>
-          {route.params.kamar.nama}
+          {item.nama}
         </Text>
 
-        <ScrollView style={{paddingHorizontal: 0.05 * screenWidth}}>
-          {route.params.kamar.penghuni.map((item, index) => {
+        <Text
+          style={{
+            fontFamily: 'OpenSans-Bold',
+            fontSize: 14,
+            marginTop: 10,
+            color: myColor.blackText,
+            marginLeft: 15,
+          }}>
+          Penghuni :
+        </Text>
+
+        <ScrollView style={{paddingHorizontal: 15}}>
+          {/* <Text>{JSON.stringify(item)}</Text> */}
+          {item.penghuni.map((item, index) => {
             return (
               <FlatListDalamKamar
                 key={index}
@@ -53,7 +91,7 @@ const DetailKamar = ({navigation, route}) => {
                 tanggal={new Date(item.tanggal_masuk)}
                 onPress={() => {
                   navigation.navigate('PenghuniStackScreen', {
-                    screen: 'DetailPenghuni',
+                    screen: 'ProfilPenghuni',
                     params: {
                       item: item,
                     },

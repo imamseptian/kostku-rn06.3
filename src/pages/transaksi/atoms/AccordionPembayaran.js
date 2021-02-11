@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {formatRupiah, myColor, dataBulan} from '../../../function/MyVar';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 const AccordionPembayaran = (props) => {
   let tanggal_tagihan = new Date(props.data.tanggal_tagihan);
@@ -35,9 +36,18 @@ const AccordionPembayaran = (props) => {
           {dataBulan[tanggal_tagihan.getUTCMonth()].nama}{' '}
           {tanggal_tagihan.getUTCFullYear()}
         </Text>
-        <Text style={styles.titleHarga}>
-          {formatRupiah(props.data.jumlah.toString(), 'Rp. ')}
-        </Text>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Text style={[styles.titleHarga, {marginRight: 5}]}>
+            {formatRupiah(props.data.jumlah.toString(), 'Rp. ')}
+          </Text>
+          <AntDesign
+            name={
+              props.index === props.currentIndex ? 'upcircle' : 'downcircle'
+            }
+            size={12}
+            color={myColor.grayGoogle}
+          />
+        </View>
       </View>
       {props.index === props.currentIndex && (
         <View style={styles.subCategoriesList}>

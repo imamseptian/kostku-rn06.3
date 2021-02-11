@@ -29,28 +29,19 @@ const FlatListDalamKamar = (props) => {
           borderColor: myColor.divider,
           paddingHorizontal: 10,
         }}>
-        <View
+        <Image
+          source={{
+            uri: APIUrl + '/storage/images/pendaftar/' + props.data.foto_diri,
+          }}
           style={{
-            height: 76,
-            width: 76,
-            borderRadius: 38,
-            backgroundColor: 'red',
-            borderWidth: 2,
-            borderColor: '#fff',
-            elevation: 5,
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginRight: 5,
-          }}>
-          <Image
-            source={{
-              uri: APIUrl + '/kostdata/pendaftar/foto/' + props.data.foto_diri,
-            }}
-            style={{height: 74, width: 74, borderRadius: 74 / 2}}
-          />
-        </View>
+            height: 60,
+            width: 60,
+            borderRadius: 60 / 2,
+            backgroundColor: myColor.divider,
+          }}
+        />
 
-        <View style={{}}>
+        <View style={{marginLeft: 10}}>
           <Text
             style={{
               color: myColor.fbtx,

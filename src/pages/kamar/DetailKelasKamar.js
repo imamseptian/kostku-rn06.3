@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import Modal from 'react-native-translucent-modal';
 import {
   Animated,
   Image,
@@ -14,11 +13,12 @@ import {
   FlatList,
   ScrollView,
 } from 'react-native';
+import Modal from 'react-native-translucent-modal';
 import ImageViewer from 'react-native-image-zoom-viewer';
+import {HeaderPage, PureModal} from '../../components';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {SharedElement} from 'react-navigation-shared-element';
 import {APIUrl, myColor, screenWidth, formatRupiah} from '../../function/MyVar';
-import {HeaderPage, PureModal} from '../../components';
 import {KelasInfo} from './component';
 import axios from 'axios';
 
@@ -65,7 +65,7 @@ const DetailKelasKamar = ({navigation, route}) => {
   const [currentPage, setcurrentPage] = useState(0);
   const images = [
     {
-      url: APIUrl + '/kostdata/kelas_kamar/foto/' + item.foto,
+      url: APIUrl + '/storage/images/kelas/' + item.foto,
 
       props: {
         // headers: ...

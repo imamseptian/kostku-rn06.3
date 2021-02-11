@@ -17,11 +17,7 @@ const FlatListKamar = (props) => {
   // const [kamar, setKamar] = useState(props.item);
 
   return (
-    <TouchableNativeFeedback
-      //  onPress={props.onPress}
-      onPress={() => {
-        console.log(APIUrl + '/storage/images/kelas/' + props.foto);
-      }}>
+    <TouchableNativeFeedback onPress={props.onPress}>
       <View
         style={{
           marginBottom: 20,
@@ -41,10 +37,10 @@ const FlatListKamar = (props) => {
               height: 100,
               width: 100,
               borderTopLeftRadius: 10,
-              backgroundColor: 'yellow',
+              // backgroundColor: 'yellow',
             }}
             source={{
-              uri: APIUrl + '/kostdata/kelas_kamar/foto/' + props.foto,
+              uri: APIUrl + '/storage/images/kelas/' + props.foto,
             }}
           />
           <View

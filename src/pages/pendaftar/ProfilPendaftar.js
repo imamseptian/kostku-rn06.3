@@ -16,6 +16,9 @@ import {ButtonStickyTab} from './atoms';
 import {SharedElement} from 'react-navigation-shared-element';
 import axios from 'axios';
 import {useSelector} from 'react-redux';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import {HeaderPage, PureModal} from '../../components';
+import Modal from 'react-native-translucent-modal';
 
 const ProfilPendaftar = ({navigation, route}) => {
   const dataRedux = useSelector((state) => state.AuthReducer);
@@ -29,11 +32,29 @@ const ProfilPendaftar = ({navigation, route}) => {
   const [profilImg, setprofilImg] = useState(
     APIUrl + '/storage/images/pendaftar/' + item.foto_diri,
   );
+  const [showImg, setshowImg] = useState(false);
+  const [imageIndex, setimageIndex] = useState(0);
   const handleInputChange = (e, index, inputType) => {
     const list = [...pendaftarItem];
     list[index][inputType] = e;
     setpendaftarItem(list);
   };
+  const images = [
+    {
+      url: APIUrl + '/storage/images/pendaftar/' + item.foto_diri,
+
+      props: {
+        // headers: ...
+      },
+    },
+    {
+      url: APIUrl + '/storage/images/pendaftar/' + item.foto_ktp,
+
+      props: {
+        // headers: ...
+      },
+    },
+  ];
 
   useEffect(() => {
     const source = axios.CancelToken.source();
@@ -89,6 +110,10 @@ const ProfilPendaftar = ({navigation, route}) => {
           selectedTab={selectedTab}
           index={1}
           data={item}
+          showKTP={() => {
+            setimageIndex(1);
+            setshowImg(true);
+          }}
         />
       ),
     },
@@ -166,6 +191,17 @@ const ProfilPendaftar = ({navigation, route}) => {
       }}
       style={{flex: 1, backgroundColor: '#f6f6f6'}}>
       <StatusBar translucent backgroundColor="transparent" />
+      <Modal
+        visible={showImg}
+        transparent={true}
+        onRequestClose={() => setshowImg(false)}>
+        <ImageViewer
+          imageUrls={images}
+          enableSwipeDown={true}
+          index={imageIndex}
+          onSwipeDown={() => setshowImg(false)}
+        />
+      </Modal>
       {/* section 1  */}
       <ScrollView
         ref={scrollRef}
@@ -182,7 +218,13 @@ const ProfilPendaftar = ({navigation, route}) => {
 
         <View style={styles.wrapperTanggapan}>
           <View style={styles.posProfilePic}>
-            <TouchableOpacity style={styles.bgProfilePic}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.bgProfilePic}
+              onPress={() => {
+                setimageIndex(0);
+                setshowImg(true);
+              }}>
               {/* <SharedElement id={`item.${item.id}.foto_pendaftar`}> */}
               <Image
                 source={{uri: profilImg}}

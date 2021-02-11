@@ -128,27 +128,29 @@ const TabInfo = (props) => {
         <Entypo name="v-card" size={20} color={myColor.grayGoogle} />
       </CardText>
 
-      <View style={styles.wrapperCard}>
-        <View style={styles.wrapperTitle}>
-          <Entypo name="v-card" size={20} color={myColor.grayGoogle} />
-          <Text
-            style={{
-              fontSize: 12,
-              fontFamily: 'OpenSans-SemiBold',
-              color: myColor.darkText,
-              marginLeft: 3,
-            }}>
-            Foto KTP
-          </Text>
+      <TouchableOpacity onPress={props.showKTP}>
+        <View style={styles.wrapperCard}>
+          <View style={styles.wrapperTitle}>
+            <Entypo name="v-card" size={20} color={myColor.grayGoogle} />
+            <Text
+              style={{
+                fontSize: 12,
+                fontFamily: 'OpenSans-SemiBold',
+                color: myColor.darkText,
+                marginLeft: 3,
+              }}>
+              Foto KTP
+            </Text>
+          </View>
+          <Image
+            source={{
+              uri: APIUrl + '/storage/images/pendaftar/' + props.data.foto_ktp,
+            }}
+            style={styles.image}
+            resizeMode="contain"
+          />
         </View>
-        <Image
-          source={{
-            uri: APIUrl + '/storage/images/pendaftar/' + props.data.foto_ktp,
-          }}
-          style={styles.image}
-          resizeMode="contain"
-        />
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };

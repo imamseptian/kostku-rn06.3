@@ -12,11 +12,14 @@ import axios from 'axios';
 import {myAxios} from '../../../function/MyAxios';
 import {useSelector} from 'react-redux';
 import {CardTagihan} from '../atoms';
-
+import {Transition, Transitioning} from 'react-native-reanimated';
 const TabTagihan = (props) => {
   const [dataTagihan, setdataTagihan] = useState([]);
 
+  const [currentIndex, setCurrentIndex] = useState(null);
+
   const dataRedux = useSelector((state) => state.AuthReducer);
+
   useEffect(() => {
     const source = axios.CancelToken.source();
     myAxios.getAxios(
@@ -64,7 +67,18 @@ const TabTagihan = (props) => {
         </Text>
       </View>
       {dataTagihan.map((x, i) => {
-        return <CardTagihan key={i} item={x} index={i} />;
+        return (
+          <CardTagihan
+            key={i}
+            data={x}
+            index={i}
+            onPress={() => {
+              // alert(i);
+              setCurrentIndex(i === currentIndex ? null : i);
+            }}
+            currentIndex={currentIndex}
+          />
+        );
       })}
 
       {/* <Text>{JSON.stringify(dataTagihan)}</Text> */}

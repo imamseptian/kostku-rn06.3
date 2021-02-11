@@ -209,7 +209,10 @@ const DaftarKamar = ({navigation, route}) => {
                   item={item}
                   foto={route.params.foto}
                   onPress={() => {
-                    navigation.push('DetailKamar', {kamar: item});
+                    navigation.push('DetailKamar', {
+                      item: item,
+                      foto: route.params.foto,
+                    });
                   }}
                 />
                 // <Image
