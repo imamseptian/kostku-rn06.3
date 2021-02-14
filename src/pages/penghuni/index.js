@@ -7,6 +7,8 @@ import BarangPenghuni from './BarangPenghuni';
 import ProfilPenghuni from './ProfilPenghuni';
 import EditPenghuni from './EditPenghuni';
 import TestEditOpacity from './TestEditOpacity';
+import PilihKelas from './PilihKelas';
+import PilihKamar from './PilihKamar';
 
 export {
   PenghuniInfo,
@@ -18,4 +20,6 @@ export {
   ProfilPenghuni,
   EditPenghuni,
   TestEditOpacity,
+  PilihKelas,
+  PilihKamar,
 };

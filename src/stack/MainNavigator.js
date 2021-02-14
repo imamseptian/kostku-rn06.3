@@ -31,6 +31,8 @@ import {
   ListPenghuni,
   ProfilPenghuni,
   EditPenghuni,
+  PilihKelas,
+  PilihKamar,
 } from '../pages/penghuni';
 import {
   Profile,
@@ -238,6 +240,8 @@ const PenghuniStackScreen = ({navigation, route}) => {
         // })}
       />
       <PenghuniStack.Screen name="EditPenghuni" component={EditPenghuni} />
+      <PenghuniStack.Screen name="PilihKelas" component={PilihKelas} />
+      <PenghuniStack.Screen name="PilihKamar" component={PilihKamar} />
     </PenghuniStack.Navigator>
   );
 };

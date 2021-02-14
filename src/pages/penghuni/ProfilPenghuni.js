@@ -24,7 +24,9 @@ import {TabBarang, TabTagihan, TabInfo} from './components';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import {HeaderPage, PureModal} from '../../components';
 import Modal from 'react-native-translucent-modal';
-
+import OptionsMenu from 'react-native-option-menu';
+import Feather from 'react-native-vector-icons/Feather';
+import Spinner from 'react-native-loading-spinner-overlay';
 const ProfilPenghuni = ({navigation, route}) => {
   const dataRedux = useSelector((state) => state.AuthReducer);
   const [umurPenghuni, setumurPenghuni] = useState(0);
@@ -33,6 +35,7 @@ const ProfilPenghuni = ({navigation, route}) => {
   const {item} = route.params;
   const [showImg, setshowImg] = useState(false);
   const [imageIndex, setimageIndex] = useState(0);
+  const [isLoading, setisLoading] = useState(false);
   useEffect(() => {
     console.log('useeffect profil');
     let dateNow = new Date();
@@ -73,6 +76,75 @@ const ProfilPenghuni = ({navigation, route}) => {
   const [profilImg, setprofilImg] = useState(
     APIUrl + '/storage/images/pendaftar/' + item.foto_diri,
   );
+
+  const pindahKamar = () => {
+    navigation.push('PilihKelas', item);
+  };
+
+  const editPenghuni = () => {
+    navigation.push('EditPenghuni', item);
+  };
+
+  const hapusPenghuni = () => {
+    setisLoading(true);
+    axios
+      .post(`${APIUrl}/api/konfirmasi_hapus`, {id: item.id})
+      .then((res) => {
+        setisLoading(false);
+        let pesan = '';
+        if (res.data.count !== null) {
+          // // const source = axios.CancelToken.source();
+          // // ambilApi(source.token);
+          // // setIsLoading(true);
+          // console.log(res.data);
+          // alert('ADA TAGIHAN' + res.data.count);
+
+          // // navigation.reset({
+          // //   routes: [{name: 'PenghuniStackScreen'}],
+          // // });
+          pesan = `Penghuni ini memiliki ${res.data.count.count} tagihan yang belum lunas, yakin ingin menghapus?`;
+        } else {
+          pesan = `Penghuni ini bebas dari tagihan, yakin ingin menghapus?`;
+        }
+
+        Alert.alert(
+          'Konfirmasi',
+          pesan,
+          [
+            {
+              text: 'Batal',
+              onPress: () => console.log('Batal Hapus'),
+              style: 'cancel',
+            },
+            {text: 'Ya', onPress: () => decideHapus()},
+          ],
+          {cancelable: false},
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(id_kelas);
+      });
+  };
+
+  const decideHapus = () => {
+    axios
+      .post(`${APIUrl}/api/hapus_penghuni`, {id: item.id})
+      .then((res) => {
+        if (res.data.success) {
+          navigation.reset({
+            routes: [{name: 'PenghuniStackScreen'}],
+          });
+        } else {
+          alert('Penghuni tidak bisa dihapus');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(id_kelas);
+        alert('Error Hapus Penghuni');
+      });
+  };
 
   const images = [
     {
@@ -140,7 +212,11 @@ const ProfilPenghuni = ({navigation, route}) => {
       }}
       style={{flex: 1, backgroundColor: '#f6f6f6'}}>
       <StatusBar translucent backgroundColor="transparent" />
-
+      <Spinner
+        visible={isLoading}
+        textContent={'Tunggu Sebentar'}
+        textStyle={{color: '#FFF'}}
+      />
       <Modal
         visible={showImg}
         transparent={true}
@@ -162,7 +238,32 @@ const ProfilPenghuni = ({navigation, route}) => {
           style={{
             height: 100,
             backgroundColor: myColor.colorTheme,
-          }}></View>
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            paddingTop: StatusBar.currentHeight + 5,
+            paddingHorizontal: 5,
+          }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}>
+            <Feather name="arrow-left" color={'#fff'} size={25} />
+          </TouchableOpacity>
+
+          <OptionsMenu
+            customButton={
+              <Feather name="more-vertical" size={25} color={'#fff'} />
+            }
+            destructiveIndex={1}
+            options={[
+              'Edit Penghuni',
+              'Hapus Penghuni',
+              'Pindah Kamar',
+              'Batal',
+            ]}
+            actions={[editPenghuni, hapusPenghuni, pindahKamar]}
+          />
+        </View>
 
         {/* section 2 */}
 
@@ -199,7 +300,7 @@ const ProfilPenghuni = ({navigation, route}) => {
             </View>
           </View>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               navigation.push('EditPenghuni', item);
             }}>
@@ -213,7 +314,7 @@ const ProfilPenghuni = ({navigation, route}) => {
                 Edit
               </Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
         {/* section 3  */}
