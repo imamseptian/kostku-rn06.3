@@ -57,7 +57,14 @@ const CardPicker = (props) => {
                   paddingHorizontal: 10,
                   justifyContent: 'center',
                 }}>
-                <Text>{item[props.itemName]}</Text>
+                <Text
+                  style={{
+                    fontFamily: 'OpenSans-Regular',
+                    fontSize: 12,
+                    textTransform: 'capitalize',
+                  }}>
+                  {item[props.itemName]}
+                </Text>
               </View>
             </TouchableOpacity>
           );
@@ -93,11 +100,13 @@ const CardPicker = (props) => {
               maxHeight: '80%',
               width: '90%',
               backgroundColor: 'white',
-              borderRadius: 10,
+              borderRadius: 5,
               paddingHorizontal: 5,
               paddingVertical: 5,
             }}>
-            <ScrollView>{content}</ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {content}
+            </ScrollView>
           </View>
         </PureModal>
       </Modal>
@@ -127,6 +136,7 @@ const CardPicker = (props) => {
                 color: myColor.fbtx,
                 fontSize: 12,
                 textAlign: 'justify',
+                textTransform: 'capitalize',
               }}>
               {selectedLabel}
             </Text>

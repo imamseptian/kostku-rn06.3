@@ -22,7 +22,11 @@ import {PureModal} from '../../../components';
 // import {formatRupiah, myColor, screenWidth} from '../../../function/MyVar';
 import {ModalEditBarang, ModalTambahBarang} from './';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {useNavigation} from '@react-navigation/native';
+import {
+  useNavigation,
+  StackActions,
+  CommonActions,
+} from '@react-navigation/native';
 const TabBarang = (props) => {
   const navigation = useNavigation();
   const [kamar, setkamar] = useState(null);
@@ -126,6 +130,13 @@ const TabBarang = (props) => {
                 item: kamar,
               },
             });
+            // navigation.navigate('KamarStackScreen', {
+            //   screen: 'DetailKelas',
+            //   initial: false,
+            //   params: {
+            //     item: kamar,
+            //   },
+            // });
           }
         }}>
         <View style={styles.wrapperCard}>

@@ -55,7 +55,7 @@ const CustomDrawer = (props) => {
       clearAll();
 
       toLogin();
-      dispatch(unsetAuthRedux());
+      // dispatch(unsetAuthRedux());
     });
   };
 

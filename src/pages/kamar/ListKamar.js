@@ -127,6 +127,42 @@ const ListKamar = ({navigation, route}) => {
     }
   }, [page]);
 
+  const deleteKelas = (id_kelas) => {
+    // const source = axios.CancelToken.source();
+    // ambilApi(source.token);
+    axios
+      .post(`${APIUrl}/api/hapus_kelas`, {id: id_kelas, brutus: 22})
+      .then((res) => {
+        if (res.data.success) {
+          // const source = axios.CancelToken.source();
+          // ambilApi(source.token);
+          setIsLoading(true);
+          axios
+            .post(APIUrl + '/api/classes?page=1', filter, {
+              headers: {
+                Authorization: `Bearer ${dataRedux.token}`,
+              },
+            })
+            .then((response) => {
+              setKamar(response.data.data.data);
+              setmaxLimit(response.data.data.last_page);
+              setbanyakData(response.data.data.total);
+              setIsLoading(false);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          alert('sukes hapus');
+        } else {
+          alert('Maaf kamar pada kelas ini masih memiliki penghuni');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(id_kelas);
+      });
+  };
+
   const goToTop = () => {
     if (kamar.length > 0) {
       scrollRef.current.scrollToIndex({animated: true, index: 0});
@@ -222,6 +258,9 @@ const ListKamar = ({navigation, route}) => {
                 data={item}
                 // foto={route.params.foto}
                 onPress={() => navigation.push('DetailKelas', {item})}
+                hapusKamar={(id_kelas) => {
+                  deleteKelas(id_kelas);
+                }}
               />
             );
           }}

@@ -16,6 +16,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {Text} from 'react-native-paper';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useSelector} from 'react-redux';
 import {Permission, PERMISSION_TYPE} from '../../AppPermission';
 import {HeaderPage, TextFormField} from '../../components';
@@ -120,14 +121,18 @@ const FormKelasKamar = ({navigation}) => {
       height: 480,
       cropping: true,
       includeBase64: true,
-    }).then((image) => {
-      let base64Temporary = 'data:' + image.mime + ';base64,' + image.data;
-      setfotoKamar({
-        isUploaded: true,
-        base64: base64Temporary,
-        path: image.path,
+    })
+      .then((image) => {
+        let base64Temporary = 'data:' + image.mime + ';base64,' + image.data;
+        setfotoKamar({
+          isUploaded: true,
+          base64: base64Temporary,
+          path: image.path,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
       });
-    });
   };
 
   useEffect(() => {
@@ -238,7 +243,11 @@ const FormKelasKamar = ({navigation}) => {
             onPress={() => pickImage()}>
             {fotoKamar.isUploaded != true ? (
               <View style={styles.blankImage}>
-                <FontAwesome name="upload" color="#fff" size={50} />
+                <MaterialCommunityIcons
+                  name="camera-plus"
+                  size={30}
+                  color={'#fff'}
+                />
               </View>
             ) : (
               <Image
@@ -454,7 +463,7 @@ const styles = StyleSheet.create({
   blankImage: {
     width: 0.83 * screenWidth,
     height: (2 / 3) * 0.83 * screenWidth,
-    backgroundColor: '#636e72',
+    backgroundColor: myColor.divider,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,

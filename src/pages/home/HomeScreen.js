@@ -150,8 +150,8 @@ const HomeScreen = ({navigation, route}) => {
           {/* <HomeTopMenu uang={dataHomescreen.uang} /> */}
           <HomeRec
             uang={dataHomescreen.uang}
-            nama={dataRedux.user.nama}
-            foto={dataRedux.user.foto_profil}
+            nama={dataRedux.isAuth ? `${dataRedux.user.nama}` : null}
+            foto={dataRedux.isAuth ? `${dataRedux.user.foto_profil}` : null}
           />
         </View>
 

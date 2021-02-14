@@ -17,7 +17,7 @@ import {useDispatch} from 'react-redux';
 import LoginSVG from '../../asset/image/login2.svg';
 import {fcmService} from '../../FCMService';
 import {myColor, APIUrl, screenHeight, screenWidth} from '../../function/MyVar';
-import {setAuthRedux} from '../../store';
+import {setAuthRedux, unsetAuthRedux} from '../../store';
 
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
@@ -53,9 +53,10 @@ const LoginScreen = ({navigation}) => {
     setIsLoading(true);
     axios
       .post(`${APIUrl}/api/auth/login`, user)
-      .then((res) => {
+      .then(async (res) => {
         if (res.data.success) {
           const dataPengguna = res.data.user;
+          await dispatch(unsetAuthRedux());
           dispatch(setAuthRedux(dataPengguna, res.data.access_token));
 
           console.log('subs saat login :kostku- ', res.data.user.kostku);

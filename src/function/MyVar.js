@@ -83,6 +83,9 @@ const rupiahToInt = (angka) => {
 };
 
 const kataPertama = (words) => {
+  if (words === null) {
+    return;
+  }
   let firstWord = words.replace(/ .*/, '');
   return firstWord;
 };

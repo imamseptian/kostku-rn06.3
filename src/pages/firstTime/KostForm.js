@@ -16,6 +16,7 @@ import {
 import ImagePicker from 'react-native-image-crop-picker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {Permission, PERMISSION_TYPE} from '../../AppPermission';
 import {CardForm, CardNoTelp, CardPicker} from '../../atoms';
@@ -23,6 +24,7 @@ import {fcmService} from '../../FCMService';
 import {myAxios} from '../../function/MyAxios';
 import {APIUrl, myColor} from '../../function/MyVar';
 import {setUserRedux} from '../../store';
+import Entypo from 'react-native-vector-icons/Entypo';
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 const KostForm = ({navigation}) => {
@@ -34,8 +36,8 @@ const KostForm = ({navigation}) => {
 
   const [user, setUser] = useState({
     nama: '',
-    provinsi: undefined,
-    kota: undefined,
+    provinsi: null,
+    kota: null,
     alamat: '',
     jenis: 1,
     notelp: '',
@@ -97,7 +99,7 @@ const KostForm = ({navigation}) => {
     [navigation, hasUnsavedChanges],
   );
 
-  const ProvURL = `https://dev.farizdotid.com/api/daerahindonesia/provinsi`;
+  // const ProvURL = `https://dev.farizdotid.com/api/daerahindonesia/provinsi`;
   // const ProvURL = `https://x.rajaapi.com/MeP7c5neqPkLFsmfECbpnjiY69MQPqkEzRDEEsho6flCgp9kNdVa4BBFVG/m/wilayah/provinsi`;
   const [provinsi, setProvinsi] = useState([]);
   const [kota, setKota] = useState([]);
@@ -110,12 +112,12 @@ const KostForm = ({navigation}) => {
     base64: '',
   });
   const [isLoading, setIsLoading] = useState(false);
-  let URLkota = `https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=${user.provinsi}`;
+  // let URLkota = `https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=${user.provinsi}`;
 
   useEffect(() => {
     setIsSubmit(true);
     axios
-      .get(ProvURL)
+      .get(`${APIUrl}/api/list_provinsi`)
       .then((response) => {
         setProvinsi(response.data.provinsi);
         setIsSubmit(false);
@@ -128,13 +130,13 @@ const KostForm = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    if (user.provinsi != 0) {
+    if (user.provinsi !== null) {
       setIsSubmit(true);
       axios
-        .get(URLkota)
+        .get(`${APIUrl}/api/list_kota/${user.provinsi}`)
         .then((response) => {
           setIsSubmit(false);
-          setKota(response.data.kota_kabupaten);
+          setKota(response.data.kota);
         })
         .catch((error) => {
           setIsSubmit(false);
@@ -204,14 +206,18 @@ const KostForm = ({navigation}) => {
       height: 480,
       cropping: true,
       includeBase64: true,
-    }).then((image) => {
-      let base64Temporary = 'data:' + image.mime + ';base64,' + image.data;
-      setfotoKost({
-        isUploaded: true,
-        base64: base64Temporary,
-        path: image.path,
+    })
+      .then((image) => {
+        let base64Temporary = 'data:' + image.mime + ';base64,' + image.data;
+        setfotoKost({
+          isUploaded: true,
+          base64: base64Temporary,
+          path: image.path,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
       });
-    });
   };
 
   // const scrollRef = useRef(ScrollView);
@@ -346,14 +352,14 @@ const KostForm = ({navigation}) => {
           onChangeText={(value) => {
             setForm('nama', value);
           }}>
-          <FontAwesome name="user" size={20} color={myColor.grayGoogle} />
+          <Entypo name="home" size={20} color={myColor.grayGoogle} />
         </CardForm>
 
         <CardPicker
           pesanError={errorMsg.provinsi}
           title="Provinsi Kost"
           data={provinsi}
-          itemName="nama"
+          itemName="name"
           selectedValue={user.provinsi}
           placeholder="Pilih Provinsi"
           onChangeFunction={(value) => setForm('provinsi', value)}
@@ -370,7 +376,7 @@ const KostForm = ({navigation}) => {
           pesanError={errorMsg.kota}
           selectedValue={user.kota}
           data={kota}
-          itemName="nama"
+          itemName="name"
           placeholder="Pilih Kota"
           onChangeFunction={(value) => setForm('kota', value)}
           disabled={isSubmit}>
@@ -391,22 +397,6 @@ const KostForm = ({navigation}) => {
           onChangeFunction={(value) => setForm('kota', value)}
           disabled={isSubmit}
         /> */}
-
-        <CardPicker
-          title="Jenis Kost"
-          pesanError={errorMsg.jenis}
-          selectedValue={user.jenis}
-          data={jenisKost}
-          itemName="nama"
-          placeholder="Pilih Jenis"
-          onChangeFunction={(value) => setForm('jenis', value)}
-          disabled={isSubmit}>
-          <MaterialCommunityIcons
-            name="city"
-            size={20}
-            color={myColor.grayGoogle}
-          />
-        </CardPicker>
 
         {/* <View style={styles.formWrapper}>
           <View>
@@ -439,6 +429,8 @@ const KostForm = ({navigation}) => {
             )}
           </View>
         </View> */}
+        {/* <Text>{provinsi.length}</Text>
+        <Text>{JSON.stringify(provinsi)}</Text> */}
 
         <CardForm
           title="Alamat Kost"
@@ -452,7 +444,7 @@ const KostForm = ({navigation}) => {
             refNoTelp.current.focus();
           }}
           blurOnSubmit={false}>
-          <FontAwesome name="user" size={20} color={myColor.grayGoogle} />
+          <Entypo name="address" size={20} color={myColor.grayGoogle} />
         </CardForm>
 
         {/* <TextFormField
@@ -469,7 +461,50 @@ const KostForm = ({navigation}) => {
           blurOnSubmit={false}
         /> */}
 
-        <CardNoTelp
+        <CardForm
+          ref={refNoTelp}
+          title="Nomor HP Pengelola Kost"
+          onChangeText={(value) => {
+            let tempHP = value;
+            let regex = /^[0-9\b]+$/;
+
+            // if value is not blank, then test the regex
+            if (tempHP === '' || regex.test(tempHP)) {
+              setForm('notelp', value);
+            }
+
+            // let notelpku = value.replace('/r', '/');
+            // setForm('notelp', notelpku);
+          }}
+          value={user.notelp}
+          placeholder="Nomor HP Pengelola Kost"
+          keyboardType="phone-pad"
+          pesanError={errorMsg.notelp}
+          // onSubmitEditing={() => {
+          //   refNoTelp.current.focus();
+          // }}
+        >
+          <Entypo
+            name="phone"
+            size={20}
+            color={myColor.grayGoogle}
+            style={{transform: [{rotateY: '180deg'}]}}
+          />
+        </CardForm>
+
+        <CardPicker
+          title="Jenis Kost"
+          pesanError={errorMsg.jenis}
+          selectedValue={user.jenis}
+          data={jenisKost}
+          itemName="nama"
+          placeholder="Pilih Jenis"
+          onChangeFunction={(value) => setForm('jenis', value)}
+          disabled={isSubmit}>
+          <Entypo name="home" size={20} color={myColor.grayGoogle} />
+        </CardPicker>
+
+        {/* <CardNoTelp
           ref={refNoTelp}
           title="Nomor Telepon Kost"
           onChangeText={(value) => {
@@ -484,7 +519,7 @@ const KostForm = ({navigation}) => {
           }}
           blurOnSubmit={false}>
           <FontAwesome name="user" size={20} color={myColor.grayGoogle} />
-        </CardNoTelp>
+        </CardNoTelp> */}
 
         <CardForm
           ref={refDeskripsi}
@@ -496,7 +531,11 @@ const KostForm = ({navigation}) => {
           value={user.deskripsi}
           multiline={true}
           pesanError={errorMsg.deskripsi}>
-          <FontAwesome name="user" size={20} color={myColor.grayGoogle} />
+          <MaterialIcons
+            name="description"
+            size={20}
+            color={myColor.grayGoogle}
+          />
         </CardForm>
 
         {/* <TextFormField

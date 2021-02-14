@@ -16,6 +16,7 @@ import Modal from 'react-native-translucent-modal';
 import {FAB} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {FlatListKamar} from '../../components';
+import {ItemKamar} from './component';
 import {ButtonLoad, SearchBar, SearchResult} from '../../components/atoms';
 import {myAxios} from '../../function/MyAxios';
 import {APIUrl, myColor} from '../../function/MyVar';
@@ -102,7 +103,7 @@ const DaftarKamar = ({navigation, route}) => {
     const source = axios.CancelToken.source();
     if (page != 1) {
       myAxios.postAxios(
-        APIUrl + '/api/getdaftarkamar?page=' + page,
+        APIUrl + '/api/daftarkamar?page=' + page,
         filter,
         dataRedux.token,
         source.token,
@@ -133,6 +134,42 @@ const DaftarKamar = ({navigation, route}) => {
       ...filter,
       [inputType]: value,
     });
+  };
+
+  const deleteKamar = (id_kamar) => {
+    // const source = axios.CancelToken.source();
+    // ambilApi(source.token);
+    axios
+      .post(`${APIUrl}/api/hapus_kamar`, {id: id_kamar})
+      .then((res) => {
+        if (res.data.success) {
+          // const source = axios.CancelToken.source();
+          // ambilApi(source.token);
+          setIsLoading(true);
+          axios
+            .post(APIUrl + '/api/daftarkamar?page=1', filter, {
+              headers: {
+                Authorization: `Bearer ${dataRedux.token}`,
+              },
+            })
+            .then((response) => {
+              setDaftarKamar(response.data.data.data);
+              setmaxLimit(response.data.data.last_page);
+              setbanyakData(response.data.data.total);
+              setIsLoading(false);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          alert('sukes hapus');
+        } else {
+          alert('Maaf kamar pada kelas ini masih memiliki penghuni');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(id_kamar);
+      });
   };
 
   return (
@@ -205,9 +242,12 @@ const DaftarKamar = ({navigation, route}) => {
             }
             renderItem={({item, index, separator}) => {
               return (
-                <FlatListKamar
+                <ItemKamar
                   item={item}
                   foto={route.params.foto}
+                  hapusKamar={(id_kamar) => {
+                    deleteKamar(id_kamar);
+                  }}
                   onPress={() => {
                     navigation.push('DetailKamar', {
                       item: item,

@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {SharedElement} from 'react-navigation-shared-element';
+import OptionsMenu from 'react-native-option-menu';
+import Feather from 'react-native-vector-icons/Feather';
 import {
   APIUrl,
   defaultAsset,
@@ -16,37 +18,45 @@ const ItemKelas = (props) => {
     defaultAsset.kelas_kamar,
   );
 
+  const hapusKamar = () => {
+    // alert('Edit');
+    props.hapusKamar(props.data.id);
+  };
+  const deletePost = () => {
+    alert('delete');
+  };
+
   return (
     <TouchableOpacity
       onPress={props.onPress}
-      onLongPress={() =>
-        console.log(APIUrl + '/kostdata/kelas_kamar/foto/' + props.data.foto)
-      }
+      // onLongPress={() =>
+      //   console.log(APIUrl + '/kostdata/kelas_kamar/foto/' + props.data.foto)
+      // }
       // onPress={() => {
       //   console.log(APIUrl + '/kostdata/kelas_kamar/foto/' + props.data.foto);
       // }}
     >
       <View style={styles.item}>
-        <SharedElement id={`item.${props.data.id}.foto_kamar`}>
-          <Image
-            style={{
-              borderTopLeftRadius: 10,
-              borderBottomLeftRadius: 10,
-              height: 100,
-              width: 120,
-            }}
-            source={{
-              uri: errorImage
-                ? defaultAsset.kelas_kamar
-                : APIUrl + '/storage/images/kelas/' + props.data.foto,
-            }}
-            onError={() => {
-              // seturiImage(defaultAsset.kelas_kamar);
-              seterrorImage(true);
-            }}
-            resizeMode="stretch"
-          />
-        </SharedElement>
+        {/* <SharedElement id={`item.${props.data.id}.foto_kamar`}> */}
+        <Image
+          style={{
+            borderTopLeftRadius: 10,
+            borderBottomLeftRadius: 10,
+            height: 100,
+            width: 120,
+          }}
+          source={{
+            uri: errorImage
+              ? defaultAsset.kelas_kamar
+              : APIUrl + '/storage/images/kelas/' + props.data.foto,
+          }}
+          onError={() => {
+            // seturiImage(defaultAsset.kelas_kamar);
+            seterrorImage(true);
+          }}
+          resizeMode="stretch"
+        />
+        {/* </SharedElement> */}
 
         <View
           style={{
@@ -72,6 +82,14 @@ const ItemKelas = (props) => {
             {formatRupiah(props.data.harga.toString(), 'Rp.')}
           </Text>
         </View>
+        {/* <View style={{position: 'absolute', top: 0, right: 0}}> */}
+        <OptionsMenu
+          customButton={<Feather name="more-vertical" size={25} color="#900" />}
+          destructiveIndex={1}
+          options={['Hapus Kelas', 'Batal']}
+          actions={[hapusKamar]}
+        />
+        {/* </View> */}
 
         <View
           style={{
