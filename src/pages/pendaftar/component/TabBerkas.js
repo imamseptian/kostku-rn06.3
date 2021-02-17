@@ -109,7 +109,7 @@ const TabBerkas = (props) => {
                 color: myColor.darkText,
                 marginLeft: 3,
               }}>
-              Kamar Penghuni
+              Kamar yang Dipesan
             </Text>
           </View>
           {kamar !== null && (
@@ -121,7 +121,7 @@ const TabBerkas = (props) => {
                   fontSize: 14,
                   marginBottom: 10,
                 }}>
-                Kamar Penghuni
+                Kamar Pesanan
               </Text>
 
               <View style={{alignItems: 'center'}}>
@@ -208,18 +208,20 @@ export default TabBerkas;
 const styles = StyleSheet.create({
   wrapperCard: {
     paddingVertical: 15,
-    elevation: 3,
+
     backgroundColor: 'white',
     borderRadius: 5,
     paddingHorizontal: 10,
     position: 'relative',
-    marginBottom: 15,
+    marginBottom: 25,
+    borderWidth: 1,
+    borderColor: myColor.divider,
   },
   wrapperTitle: {
     flexDirection: 'row',
     alignItems: 'center',
     position: 'absolute',
-    top: -10,
+    top: -20,
     left: 10,
   },
   image: {height: 150, borderRadius: 10},

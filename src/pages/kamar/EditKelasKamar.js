@@ -85,37 +85,6 @@ const EditKelasKamar = ({navigation, route}) => {
     // rupiahToInt(formatHarga);
   }, [formatHarga]);
 
-  // const pickImage = async () => {
-  //   setIsLoading(true);
-  //   Permission.requestMultiple([PERMISSION_TYPE.photo, PERMISSION_TYPE.camera]);
-  //   ImagePicker.launchImageLibrary(
-  //     {mediaType: 'photo', base64: true},
-  //     (response) => {
-  //       // console.log('Response = ', response);
-
-  //       if (response.didCancel) {
-  //         console.log('User cancelled image picker');
-  //         setIsLoading(false);
-  //       } else if (response.error) {
-  //         console.log('ImagePicker Error: ', response.error);
-  //         setIsLoading(false);
-  //       } else if (response.customButton) {
-  //         console.log('User tapped custom button: ', response.customButton);
-  //         setIsLoading(false);
-  //       } else {
-  //         setDataFoto({
-  //           ...dataFoto,
-  //           isUploaded: true,
-  //           uri: response.uri,
-  //           type: response.type,
-  //           data: response.data,
-  //         });
-  //         setIsLoading(false);
-  //       }
-  //     },
-  //   );
-  // };
-
   const pickImage = async () => {
     await Permission.requestMultiple([
       PERMISSION_TYPE.photo,
@@ -126,14 +95,18 @@ const EditKelasKamar = ({navigation, route}) => {
       height: 480,
       cropping: true,
       includeBase64: true,
-    }).then((image) => {
-      let base64Temporary = 'data:' + image.mime + ';base64,' + image.data;
-      setfotoKamar({
-        isUploaded: true,
-        base64: base64Temporary,
-        path: image.path,
+    })
+      .then((image) => {
+        let base64Temporary = 'data:' + image.mime + ';base64,' + image.data;
+        setfotoKamar({
+          isUploaded: true,
+          base64: base64Temporary,
+          path: image.path,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
       });
-    });
   };
 
   const editData = () => {

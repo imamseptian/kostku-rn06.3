@@ -10,13 +10,13 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import axios from 'axios';
-import {myColor, APIUrl} from '../../function/MyVar';
-import {myAxios} from '../../function/MyAxios';
+import {myColor, APIUrl} from '../../../function/MyVar';
+import {myAxios} from '../../../function/MyAxios';
 import Feather from 'react-native-vector-icons/Feather';
 
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
-const ModalCreateKamar = (props) => {
+const ModalTambahKamar = (props) => {
   const [kamar, setKamar] = useState({
     nama: '',
     id_kelas: props.id,
@@ -250,7 +250,7 @@ const ModalCreateKamar = (props) => {
   );
 };
 
-export default ModalCreateKamar;
+export default ModalTambahKamar;
 
 const styles = StyleSheet.create({
   subtitle: {

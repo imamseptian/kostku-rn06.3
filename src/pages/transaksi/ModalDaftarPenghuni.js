@@ -64,6 +64,7 @@ const ModalDaftarPenghuni = (props) => {
       if (status == 'success') {
         console.log(data.code);
         setdataPenghuni(data.data);
+        // setdataPenghuni([]);
         setisLoading(false);
       } else if (status == 'cancel') {
         console.log('caught cancel filter');
@@ -78,6 +79,45 @@ const ModalDaftarPenghuni = (props) => {
       console.log('Tagihan unmounted');
     };
   }, [filter]);
+
+  let contentFlat;
+
+  if (dataPenghuni.length < 1) {
+    contentFlat = (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <Text
+          style={{
+            fontFamily: 'OpenSans-SemiBold',
+            fontSize: 12,
+            color: myColor.darkText,
+          }}>
+          Semua penghuni sudah melunasi tagihannya
+        </Text>
+      </View>
+    );
+  } else {
+    contentFlat = (
+      <FlatList
+        style={{paddingHorizontal: 3}}
+        data={dataPenghuni}
+        keyExtractor={(item) => item.id.toString()}
+        showsVerticalScrollIndicator={false}
+        renderItem={({item, index, separator}) => {
+          return (
+            <FlatItemPenghuni
+              key={index}
+              data={item}
+              onPress={() => {
+                props.itemClick(item);
+                //   setpenghuni(item);
+                //   setshowModal(false);
+              }}
+            />
+          );
+        }}
+      />
+    );
+  }
 
   return (
     <View
@@ -140,24 +180,7 @@ const ModalDaftarPenghuni = (props) => {
               color={myColor.colorTheme}
             />
           ) : (
-            <FlatList
-              style={{paddingHorizontal: 3}}
-              data={dataPenghuni}
-              keyExtractor={(item) => item.id.toString()}
-              showsVerticalScrollIndicator={false}
-              renderItem={({item, index, separator}) => {
-                return (
-                  <FlatItemPenghuni
-                    data={item}
-                    onPress={() => {
-                      props.itemClick(item);
-                      //   setpenghuni(item);
-                      //   setshowModal(false);
-                    }}
-                  />
-                );
-              }}
-            />
+            contentFlat
           )}
         </View>
 

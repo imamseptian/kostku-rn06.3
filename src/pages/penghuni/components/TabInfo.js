@@ -22,42 +22,6 @@ const TabInfo = (props) => {
   //       goToTop();
   //     }
   //   }, [props.selectedTab]);
-  useEffect(() => {
-    const source = axios.CancelToken.source();
-    let one =
-      'https://dev.farizdotid.com/api/daerahindonesia/kota/' + props.data.kota;
-    let two =
-      'https://dev.farizdotid.com/api/daerahindonesia/provinsi/' +
-      props.data.provinsi;
-    const requestOne = axios.get(one, {
-      cancelToken: source.token,
-    });
-    const requestTwo = axios.get(two, {
-      cancelToken: source.token,
-    });
-    axios
-      .all([requestOne, requestTwo])
-      .then(
-        axios.spread((...responses) => {
-          const responseOne = responses[0];
-          const responseTwo = responses[1];
-
-          setasalDaerah({
-            ...asalDaerah,
-            kota: responseOne.data.nama,
-            provinsi: responseTwo.data.nama,
-          });
-          // use/access the results
-        }),
-      )
-      .catch((errors) => {
-        // react on errors.
-      });
-
-    return () => {
-      source.cancel('Api Canceled');
-    };
-  }, [props.data]);
 
   return (
     <View
@@ -87,7 +51,8 @@ const TabInfo = (props) => {
 
       <CardText
         title="Alamat Asal"
-        content={`${props.data.alamat}, ${asalDaerah.kota}, ${asalDaerah.provinsi}`}>
+        address={true}
+        content={`${props.data.alamat}, ${props.data.nama_kota}, ${props.data.nama_provinsi}`}>
         <Entypo name="address" size={20} color={myColor.grayGoogle} />
       </CardText>
       <CardText title="Nomor HP" content={props.data.notelp}>
@@ -104,7 +69,7 @@ const TabInfo = (props) => {
 
       <CardText
         title="Status Hubungan"
-        content={props.data.status_hubungan ? 'Lajang' : 'Menikah'}>
+        content={props.data.status_hubungan == 1 ? 'Lajang' : 'Menikah'}>
         <FontAwesome5
           name="hand-holding-heart"
           size={20}
@@ -114,7 +79,7 @@ const TabInfo = (props) => {
 
       <CardText
         title="Status"
-        content={props.data.status_pekerjaan === 1 ? 'Pelajar' : 'Pekerja'}>
+        content={props.data.status_pekerjaan == 1 ? 'Pelajar' : 'Pekerja'}>
         <MaterialIcons name="work" size={20} color={myColor.grayGoogle} />
       </CardText>
 
@@ -160,12 +125,14 @@ export default TabInfo;
 const styles = StyleSheet.create({
   wrapperCard: {
     paddingVertical: 15,
-    elevation: 3,
+
     backgroundColor: 'white',
     borderRadius: 5,
     paddingHorizontal: 10,
     position: 'relative',
     marginBottom: 15,
+    borderWidth: 1,
+    borderColor: myColor.divider,
   },
   wrapperTitle: {
     flexDirection: 'row',

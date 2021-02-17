@@ -13,13 +13,18 @@ import {
   rupiahToInt,
   screenWidth,
 } from '../../../function/MyVar';
+import {myAxios} from '../../../function/MyAxios';
 import axios from 'axios';
 const ModalEditFasilitas = (props) => {
   const [fasilitas, setfasilitas] = useState(props.data);
 
   const updateFasilitas = () => {
     axios
-      .put(APIUrl + '/api/fasilitas/' + fasilitas.id, fasilitas)
+      .put(APIUrl + '/api/fasilitas/' + fasilitas.id, fasilitas, {
+        headers: {
+          Authorization: `Bearer ${props.token}`,
+        },
+      })
       .then((res) => {
         if (res.data.success) {
           props.refreshFasilitas();
@@ -54,7 +59,7 @@ const ModalEditFasilitas = (props) => {
         }}
       />
       {/* <Text>{props.id_kelas}</Text> */}
-      <Text>{JSON.stringify(fasilitas)}</Text>
+      {/* <Text>{JSON.stringify(fasilitas)}</Text> */}
 
       <TouchableOpacity
         disabled={fasilitas.nama.length > 0 ? false : true}

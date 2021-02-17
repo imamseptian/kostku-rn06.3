@@ -9,10 +9,12 @@ import {
   KostDaerahChart,
   ModalDaerah,
 } from './component';
+import {useIsFocused} from '@react-navigation/native';
 
 const PieSection = (props) => {
+  const isFocused = useIsFocused();
   const [pieDataPenghuni, setPieDataPenghuni] = useState([]);
-  const pieColor = [myColor.colorTheme, myColor.myblue];
+  const pieColor = [myColor.myblue, myColor.colorTheme];
   const [selectedPiePenghuni, setSelectedPiePenghuni] = useState(0);
   const [showModalPenghuni, setShowModalPenghuni] = useState(false);
 
@@ -33,21 +35,22 @@ const PieSection = (props) => {
       7,
     );
 
-  const setterDaerah = (retData, daerah, callback1, callback2) => {
+  const setterDaerah = (retData, callback1, callback2) => {
     let tempProvColor = [];
     if (retData.length > 6) {
       let tempArr = [];
       let combineArr = [];
       let tempTotal = 0;
       retData.forEach((x, i) => {
+        // console.log('tipe:', x);
         if (i > 4) {
-          combineArr.push(x[daerah]);
-          tempTotal = tempTotal + x.quantity;
+          combineArr.push(x.id);
+          tempTotal = tempTotal + parseInt(x.quantity);
         } else {
           tempArr.push(x);
         }
       });
-      tempArr.push({[daerah]: combineArr, quantity: tempTotal});
+      tempArr.push({id: combineArr, quantity: tempTotal});
       tempArr.forEach((x, i) => {
         tempProvColor.push(randomColor());
       });
@@ -63,27 +66,31 @@ const PieSection = (props) => {
   };
 
   useEffect(() => {
-    axios
-      .post(APIUrl + '/api/statistik_pie', {
-        id_kost: props.id_kost,
-      })
-      .then((res) => {
-        setterDaerah(
-          res.data.provinsi,
-          'provinsi',
-          setPieProvinsi,
-          setprovinsiColor,
-        );
-        setterDaerah(res.data.kota, 'kota', setPieKota, setKotaColor);
+    if (isFocused) {
+      axios
+        .get(APIUrl + '/api/statistik_pie/' + props.id_kost, {
+          headers: {
+            Authorization: `Bearer ${props.token}`,
+          },
+        })
+        .then((res) => {
+          setterDaerah(
+            res.data.provinsi,
 
-        setPieDataPenghuni(res.data.penghuni);
+            setPieProvinsi,
+            setprovinsiColor,
+          );
+          setterDaerah(res.data.kota, setPieKota, setKotaColor);
 
-        // console.log(res.data.provinsi);
-      })
-      .catch((error) => {
-        alert('error pie');
-      });
-  }, []);
+          setPieDataPenghuni(res.data.penghuni);
+
+          // console.log(res.data.provinsi);
+        })
+        .catch((error) => {
+          alert('error pie');
+        });
+    }
+  }, [isFocused]);
 
   return (
     <View>
@@ -96,6 +103,7 @@ const PieSection = (props) => {
             closeModal={() => setShowModalPenghuni(false)}
             data={pieDataPenghuni[selectedPiePenghuni]}
             keyword={'kelamin'}
+            token={props.token}
           />
         </PureModal>
       </Modal>
@@ -109,6 +117,7 @@ const PieSection = (props) => {
             data={pieProvinsi[selectedPieProvinsi]}
             closeModal={() => setshowModalProvinsi(false)}
             daerah="provinsi"
+            token={props.token}
           />
         </PureModal>
       </Modal>
@@ -122,6 +131,7 @@ const PieSection = (props) => {
             data={pieKota[selectedPieKota]}
             closeModal={() => setshowModalKota(false)}
             daerah="kota"
+            token={props.token}
           />
         </PureModal>
       </Modal>
@@ -142,7 +152,7 @@ const PieSection = (props) => {
         title="Statistik Provinsi"
         colorData={provinsiColor}
         onPiePress={(v) => {
-          //   console.log(v);
+          // console.log(v);
           setSelectedPieProvinsi(v);
           setshowModalProvinsi(true);
           // alert(v);

@@ -17,7 +17,7 @@ class KostDaerahChart extends React.PureComponent {
     } = this.props;
 
     const pieData = data.map((item, index) => ({
-      value: item.quantity,
+      value: parseInt(item.quantity),
       svg: {
         fill: colorData[index],
         onPress: () => {
@@ -65,7 +65,7 @@ class KostDaerahChart extends React.PureComponent {
                   data={x}
                   // keyword={i === data.length - 1 ? 'etc' : this.props.daerah}
                   keyword={
-                    data.length < 7
+                    data.length < 6
                       ? this.props.daerah
                       : [i === data.length - 1 ? 'etc' : this.props.daerah]
                   }

@@ -12,6 +12,8 @@ import {
 import ImagePicker from 'react-native-image-crop-picker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import {useDispatch, useSelector} from 'react-redux';
 import {Permission, PERMISSION_TYPE} from '../../AppPermission';
@@ -51,7 +53,7 @@ const EditKostPage = ({navigation, route}) => {
   useEffect(() => {
     setIsSubmit(true);
     axios
-      .get(`https://dev.farizdotid.com/api/daerahindonesia/provinsi`)
+      .get(`${APIUrl}/api/list_provinsi`)
       .then((response) => {
         setProvinsi(response.data.provinsi);
         setIsSubmit(false);
@@ -62,12 +64,10 @@ const EditKostPage = ({navigation, route}) => {
         console.log(error);
       });
     axios
-      .get(
-        `https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=${dataKost.provinsi}`,
-      )
+      .get(`${APIUrl}/api/list_kota/${dataKost.provinsi}`)
       .then((response) => {
         setIsSubmit(false);
-        setKota(response.data.kota_kabupaten);
+        setKota(response.data.kota);
       })
       .catch((error) => {
         setIsSubmit(false);
@@ -76,15 +76,13 @@ const EditKostPage = ({navigation, route}) => {
   }, [route.params]);
 
   useEffect(() => {
-    if (dataKost.provinsi != 0) {
+    if (dataKost.provinsi !== null) {
       setIsSubmit(true);
       axios
-        .get(
-          `https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=${dataKost.provinsi}`,
-        )
+        .get(`${APIUrl}/api/list_kota/${dataKost.provinsi}`)
         .then((response) => {
           setIsSubmit(false);
-          setKota(response.data.kota_kabupaten);
+          setKota(response.data.kota);
         })
         .catch((error) => {
           setIsSubmit(false);
@@ -110,14 +108,18 @@ const EditKostPage = ({navigation, route}) => {
       height: 480,
       cropping: true,
       includeBase64: true,
-    }).then((image) => {
-      let base64Temporary = 'data:' + image.mime + ';base64,' + image.data;
-      setfotoKost({
-        isUploaded: true,
-        base64: base64Temporary,
-        path: image.path,
+    })
+      .then((image) => {
+        let base64Temporary = 'data:' + image.mime + ';base64,' + image.data;
+        setfotoKost({
+          isUploaded: true,
+          base64: base64Temporary,
+          path: image.path,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
       });
-    });
   };
 
   const submitEdit = () => {
@@ -249,7 +251,7 @@ const EditKostPage = ({navigation, route}) => {
             pesanError={errorMsg.provinsi}
             title="Provinsi Kost"
             data={provinsi}
-            itemName="nama"
+            itemName="name"
             selectedValue={dataKost.provinsi}
             placeholder="Pilih Provinsi"
             onChangeFunction={(value) => setKost('provinsi', value)}
@@ -266,7 +268,7 @@ const EditKostPage = ({navigation, route}) => {
             pesanError={errorMsg.kota}
             selectedValue={dataKost.kota}
             data={kota}
-            itemName="nama"
+            itemName="name"
             placeholder="Pilih Kota"
             onChangeFunction={(value) => setKost('kota', value)}
             disabled={isSubmit}>
@@ -365,22 +367,32 @@ const EditKostPage = ({navigation, route}) => {
           blurOnSubmit={false}
         /> */}
 
-          <CardNoTelp
+          <CardForm
             ref={refNoTelp}
-            title="Nomor Telepon Kost"
+            title="Nomor HP Pengelola Kost"
             onChangeText={(value) => {
-              setKost('notelp', value);
+              let tempHP = value;
+              let regex = /^[0-9\b]+$/;
+
+              // if value is not blank, then test the regex
+              if (tempHP === '' || regex.test(tempHP)) {
+                setKost('notelp', value);
+              }
+
+              // let notelpku = value.replace('/r', '/');
+              // setForm('notelp', notelpku);
             }}
             value={dataKost.notelp}
-            keyboardType="number-pad"
-            pesanError={errorMsg.notelp}
-            awalan="+62"
-            onSubmitEditing={() => {
-              refDeskripsi.current.focus();
-            }}
-            blurOnSubmit={false}>
-            <FontAwesome name="user" size={20} color={myColor.grayGoogle} />
-          </CardNoTelp>
+            placeholder="Nomor HP Pengelola Kost"
+            keyboardType="phone-pad"
+            pesanError={errorMsg.notelp}>
+            <Entypo
+              name="phone"
+              size={20}
+              color={myColor.grayGoogle}
+              style={{transform: [{rotateY: '180deg'}]}}
+            />
+          </CardForm>
 
           <CardForm
             ref={refDeskripsi}
@@ -392,7 +404,11 @@ const EditKostPage = ({navigation, route}) => {
             value={dataKost.deskripsi}
             multiline={true}
             pesanError={errorMsg.deskripsi}>
-            <FontAwesome name="user" size={20} color={myColor.grayGoogle} />
+            <MaterialIcons
+              name="description"
+              size={20}
+              color={myColor.grayGoogle}
+            />
           </CardForm>
         </View>
       </ScrollView>

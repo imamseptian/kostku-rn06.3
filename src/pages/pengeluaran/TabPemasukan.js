@@ -26,8 +26,10 @@ import axios from 'axios';
 import Modal from 'react-native-translucent-modal';
 import {PureModal} from '../../components';
 import {ModalDetailPemasukan} from './components';
+import {useIsFocused} from '@react-navigation/native';
 
 const TabPemasukan = (props) => {
+  const isFocused = useIsFocused();
   const [dataPemasukan, setdataPemasukan] = useState([]);
   const [dataMap, setdataMap] = useState([]);
   const [myTahun, setmyTahun] = useState(dataTahun());
@@ -99,11 +101,13 @@ const TabPemasukan = (props) => {
 
   useEffect(() => {
     console.log('triggered');
-    ambilPemasukan();
+    if (isFocused) {
+      ambilPemasukan();
+    }
     return () => {
       console.log('aaa');
     };
-  }, [selectedBulan, selectedTahun]);
+  }, [selectedBulan, selectedTahun, isFocused]);
 
   return (
     <View style={{flex: 1, width: props.lebar}}>

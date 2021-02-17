@@ -22,9 +22,10 @@ import {Permission, PERMISSION_TYPE} from '../../AppPermission';
 import ImagePicker from 'react-native-image-crop-picker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {CardForm, CardText, CardPicker} from './atoms';
+import {CardText} from './atoms';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import axios from 'axios';
+import {CardForm, CardPicker} from '../../atoms';
 
 const EditPenghuni = ({navigation, route}) => {
   const sizefoto = 120;
@@ -33,6 +34,23 @@ const EditPenghuni = ({navigation, route}) => {
   const [tanggal_lahir, settanggal_lahir] = useState(
     new Date(route.params.tanggal_lahir),
   );
+
+  const [errorMsg, seterrorMsg] = useState({
+    nama: null,
+    kelamin: null,
+    provinsi: null,
+    kota: null,
+    alamat: null,
+    email: null,
+    notelp: null,
+    noktp: null,
+    foto_ktp: null,
+    foto_diri: null,
+    status_pekerjaan: null,
+    status_hubungan: null,
+    tempat_kerja_pendidikan: null,
+    tanggal_lahir: null,
+  });
 
   const [dataProvinsi, setdataProvinsi] = useState([]);
   const [dataKota, setdataKota] = useState([]);
@@ -78,13 +96,17 @@ const EditPenghuni = ({navigation, route}) => {
       height: height,
       cropping: true,
       includeBase64: true,
-    }).then((image) => {
-      let base64Temporary = 'data:' + image.mime + ';base64,' + image.data;
-      callback({
-        base64: base64Temporary,
-        path: image.path,
+    })
+      .then((image) => {
+        let base64Temporary = 'data:' + image.mime + ';base64,' + image.data;
+        callback({
+          base64: base64Temporary,
+          path: image.path,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
       });
-    });
   };
 
   const submitEdit = () => {
@@ -96,33 +118,82 @@ const EditPenghuni = ({navigation, route}) => {
         tanggal_lahir: tanggal_lahir,
       })
       .then((res) => {
-        console.log(res.data);
-        console.log(penghuni);
-        navigation.popToTop();
+        if (res.data.success) {
+          console.log(res.data);
+          console.log(penghuni);
+          navigation.goBack(2);
+        } else {
+          console.log(res.data);
+          seterrorMsg({
+            nama: res.data.errors.nama ? res.data.errors.nama : null,
+
+            kelamin: res.data.errors.kelamin ? res.data.errors.kelamin : null,
+            provinsi: res.data.errors.provinsi
+              ? res.data.errors.provinsi
+              : null,
+            kota: res.data.errors.kota ? res.data.errors.kota : null,
+            alamat: res.data.errors.alamat ? res.data.errors.alamat : null,
+            email: res.data.errors.email ? res.data.errors.email : null,
+            notelp: res.data.errors.notelp ? res.data.errors.notelp : null,
+            noktp: res.data.errors.noktp ? res.data.errors.noktp : null,
+            foto_ktp: res.data.errors.foto_ktp
+              ? res.data.errors.foto_ktp
+              : null,
+            foto_diri: res.data.errors.foto_diri
+              ? res.data.errors.foto_diri
+              : null,
+            status_pekerjaan: res.data.errors.status_pekerjaan
+              ? res.data.errors.status_pekerjaan
+              : null,
+            status_hubungan: res.data.errors.status_hubungan
+              ? res.data.errors.status_hubungan
+              : null,
+            tempat_kerja_pendidikan: res.data.errors.tempat_kerja_pendidikan
+              ? res.data.errors.tempat_kerja_pendidikan
+              : null,
+            tanggal_lahir: res.data.errors.tanggal_lahir
+              ? res.data.errors.tanggal_lahir
+              : null,
+          });
+        }
       })
       .catch((error) => {
         alert('error');
+        console.log(error);
+        console.log(penghuni);
       });
   };
 
   useEffect(() => {
+    // setIsSubmit(true);
     axios
-      .get(`https://dev.farizdotid.com/api/daerahindonesia/provinsi`)
-      .then((res) => {
-        setdataProvinsi(res.data.provinsi);
+      .get(`${APIUrl}/api/list_provinsi`)
+      .then((response) => {
+        setdataProvinsi(response.data.provinsi);
+        // setIsSubmit(false);
+        // console.log(response.data);
       })
       .catch((error) => {
-        console.log('error fetch provinsi');
+        // setIsSubmit(false);
+        console.log(error);
+      });
+    axios
+      .get(`${APIUrl}/api/list_kota/${penghuni.provinsi}`)
+      .then((response) => {
+        // setIsSubmit(false);
+        setdataKota(response.data.kota);
+      })
+      .catch((error) => {
+        // setIsSubmit(false);
+        console.log(error);
       });
   }, []);
 
   useEffect(() => {
     axios
-      .get(
-        `https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=${penghuni.provinsi}`,
-      )
+      .get(`${APIUrl}/api/list_kota/${penghuni.provinsi}`)
       .then((res) => {
-        setdataKota(res.data.kota_kabupaten);
+        setdataKota(res.data.kota);
       })
       .catch((error) => {
         console.log('error fetch kota');
@@ -214,7 +285,9 @@ const EditPenghuni = ({navigation, route}) => {
           {/* <Text>{JSON.stringify(penghuni)}</Text> */}
           <CardForm
             title="Nama"
+            placeholder="Nama"
             value={penghuni.nama}
+            pesanError={errorMsg.nama}
             onChangeText={(v) => {
               setForm('nama', v);
             }}>
@@ -234,8 +307,11 @@ const EditPenghuni = ({navigation, route}) => {
               <Entypo name="calendar" size={20} color={myColor.grayGoogle} />
             </CardText>
           </TouchableOpacity>
+
           <CardForm
             title="Nomor HP"
+            placeholder="Nomor HP"
+            pesanError={errorMsg.notelp}
             value={penghuni.notelp}
             onChangeText={(v) => {
               setForm('notelp', v);
@@ -250,6 +326,8 @@ const EditPenghuni = ({navigation, route}) => {
 
           <CardForm
             title="Email"
+            placeholder="Email"
+            pesanError={errorMsg.email}
             value={penghuni.email}
             onChangeText={(v) => {
               setForm('email', v);
@@ -260,9 +338,10 @@ const EditPenghuni = ({navigation, route}) => {
           <CardPicker
             title="Provinsi Asal"
             data={dataProvinsi}
-            itemName="nama"
+            itemName="name"
             selectedValue={penghuni.provinsi}
             placeholder="Pilih Provinsi"
+            pesanError={errorMsg.provinsi}
             onChangeFunction={(val) => {
               setpenghuni({...penghuni, provinsi: val});
             }}>
@@ -272,11 +351,11 @@ const EditPenghuni = ({navigation, route}) => {
               color={myColor.grayGoogle}
             />
           </CardPicker>
-
+          {/* <Text>{JSON.stringify(dataKota)}</Text> */}
           <CardPicker
             title="Kota Asal"
             data={dataKota}
-            itemName="nama"
+            itemName="name"
             selectedValue={penghuni.kota}
             placeholder="Pilih Kota"
             onChangeFunction={(val) => {
@@ -291,6 +370,8 @@ const EditPenghuni = ({navigation, route}) => {
 
           <CardForm
             title="Alamat Asal"
+            placeholder="Alamat Asal"
+            pesanError={errorMsg.alamat}
             value={penghuni.alamat}
             onChangeText={(v) => {
               setForm('alamat', v);
@@ -301,6 +382,8 @@ const EditPenghuni = ({navigation, route}) => {
           <CardForm
             title="Nomor KTP"
             value={penghuni.noktp}
+            pesanError={errorMsg.noktp}
+            placeholder="Nomor KTP"
             onChangeText={(v) => {
               setForm('noktp', v);
             }}>
@@ -392,8 +475,10 @@ const EditPenghuni = ({navigation, route}) => {
           </CardPicker>
 
           <CardForm
+            placeholder="Alamat Tempat Kerja / Pendidikan"
             title="Alamat Tempat Kerja / Pendidikan"
             value={penghuni.tempat_kerja_pendidikan}
+            pesanError={errorMsg.tempat_kerja_pendidikan}
             onChangeText={(v) => {
               setForm('tempat_kerja_pendidikan', v);
             }}>
@@ -403,6 +488,7 @@ const EditPenghuni = ({navigation, route}) => {
               color={myColor.grayGoogle}
             />
           </CardForm>
+          {/* <Text>{JSON.stringify(penghuni)}</Text> */}
           <TouchableOpacity
             activeOpacity={0.6}
             onPress={() => {

@@ -108,7 +108,7 @@ const DetailKamar = ({navigation, route}) => {
         </ScrollView>
       </View>
 
-      <TouchableNativeFeedback>
+      {/* <TouchableNativeFeedback>
         <View
           style={{
             backgroundColor: myColor.alert,
@@ -124,7 +124,7 @@ const DetailKamar = ({navigation, route}) => {
           }}>
           <FontAwesome name="pencil" color="#fff" size={20} />
         </View>
-      </TouchableNativeFeedback>
+      </TouchableNativeFeedback> */}
     </View>
   );
 };

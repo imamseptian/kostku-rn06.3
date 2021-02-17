@@ -25,6 +25,7 @@ const CardText = (props) => {
           color: myColor.fbtx,
           fontSize: 12,
           textAlign: 'justify',
+          textTransform: props.address ? 'capitalize' : null,
         }}>
         {props.content}
       </Text>

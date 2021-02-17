@@ -16,11 +16,11 @@ import Modal from 'react-native-translucent-modal';
 import {FAB} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {FlatListKamar} from '../../components';
-import {ItemKamar} from './component';
+import {ItemKamar, ModalTambahKamar, ModalEditKamar} from './component';
 import {ButtonLoad, SearchBar, SearchResult} from '../../components/atoms';
 import {myAxios} from '../../function/MyAxios';
 import {APIUrl, myColor} from '../../function/MyVar';
-import {ModalCreateKamar} from './';
+// import {ModalCreateKamar} from './';
 
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
@@ -28,6 +28,8 @@ const screenHeight = Math.round(Dimensions.get('window').height);
 const DaftarKamar = ({navigation, route}) => {
   const isFocused = useIsFocused();
   const [showModal, setShowModal] = useState(false);
+  const [selectedKamar, setSelectedKamar] = useState(null);
+  const [showModalEdit, setshowModalEdit] = useState(false);
   const dataRedux = useSelector((state) => state.AuthReducer);
   const [daftarKamar, setDaftarKamar] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
@@ -146,21 +148,7 @@ const DaftarKamar = ({navigation, route}) => {
           // const source = axios.CancelToken.source();
           // ambilApi(source.token);
           setIsLoading(true);
-          axios
-            .post(APIUrl + '/api/daftarkamar?page=1', filter, {
-              headers: {
-                Authorization: `Bearer ${dataRedux.token}`,
-              },
-            })
-            .then((response) => {
-              setDaftarKamar(response.data.data.data);
-              setmaxLimit(response.data.data.last_page);
-              setbanyakData(response.data.data.total);
-              setIsLoading(false);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          ambilApi();
           alert('sukes hapus');
         } else {
           alert('Maaf kamar pada kelas ini masih memiliki penghuni');
@@ -181,10 +169,22 @@ const DaftarKamar = ({navigation, route}) => {
         visible={showModal}
         transparent={true}
         onRequestClose={() => setShowModal(false)}>
-        <ModalCreateKamar
+        <ModalTambahKamar
           id={route.params.id}
-          kapasitas={route.params.kapasitas}
           tutup={() => setShowModal(false)}
+          token={dataRedux.token}
+          refresh={ambilApi}
+        />
+      </Modal>
+
+      <Modal
+        visible={showModalEdit}
+        transparent={true}
+        onRequestClose={() => setshowModalEdit(false)}>
+        <ModalEditKamar
+          id={route.params.id}
+          data={selectedKamar}
+          tutup={() => setshowModalEdit(false)}
           token={dataRedux.token}
           refresh={ambilApi}
         />
@@ -227,6 +227,7 @@ const DaftarKamar = ({navigation, route}) => {
             // ref={scrollRef}
             style={{marginTop: 10, paddingHorizontal: 0.05 * screenWidth}}
             data={daftarKamar}
+            kapasitas={route.params.kapasitas}
             keyExtractor={(item) => item.id.toString()}
             // extraData={selectedId}
             showsVerticalScrollIndicator={false}
@@ -245,6 +246,10 @@ const DaftarKamar = ({navigation, route}) => {
                 <ItemKamar
                   item={item}
                   foto={route.params.foto}
+                  editKamar={(kamar) => {
+                    setSelectedKamar(kamar);
+                    setshowModalEdit(true);
+                  }}
                   hapusKamar={(id_kamar) => {
                     deleteKamar(id_kamar);
                   }}
@@ -278,19 +283,19 @@ const DaftarKamar = ({navigation, route}) => {
           setShowModal(true);
         }}
       />
-      <SharedElement id={`item.${route.params.id}.foto_kamar`}>
-        <View
-          style={{
-            position: 'absolute',
-            left: 0,
-            bottom: 0,
-            width: 10,
-            height: 10,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'white',
-          }}></View>
-      </SharedElement>
+      {/* <SharedElement id={`item.${route.params.id}.foto_kamar`}> */}
+      <View
+        style={{
+          position: 'absolute',
+          left: 0,
+          bottom: 0,
+          width: 10,
+          height: 10,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: 'white',
+        }}></View>
+      {/* </SharedElement> */}
       <ActivityIndicator
         animating={isLoading}
         size="large"

@@ -17,17 +17,25 @@ import {
 import axios from 'axios';
 import {ModalItemPenghuni} from '../atom';
 
-const ModalPenghuni = ({data, closeModal, keyword, ...rest}) => {
+const ModalPenghuni = ({data, closeModal, keyword, token, ...rest}) => {
   const [datapenghuni, setdatapenghuni] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   useEffect(() => {
     setisLoading(true);
     axios
-      .post(APIUrl + '/api/filter_penghuni', {
-        id_kost: 1,
-        // kelamin: data.kelamin,
-        [keyword]: data[keyword],
-      })
+      .post(
+        APIUrl + '/api/filter_penghuni',
+        {
+          id_kost: 1,
+          // kelamin: data.kelamin,
+          [keyword]: data[keyword],
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
       .then((res) => {
         setdatapenghuni(res.data.data);
         // console.log(res.data.data);
@@ -85,7 +93,7 @@ const ModalPenghuni = ({data, closeModal, keyword, ...rest}) => {
             fontFamily: 'OpenSans-Bold',
             color: myColor.fbtx,
           }}>
-          {data.kelamin === 1 ? 'Pria' : 'Wanita'}
+          {data.kelamin == 1 ? 'Pria' : 'Wanita'}
           {/* {JSON.stringify(data)} */}
           {/* {(() => {
             if (data.kelamin == 1) {
@@ -113,6 +121,7 @@ const ModalPenghuni = ({data, closeModal, keyword, ...rest}) => {
         <ActivityIndicator size="large" color={myColor.colorTheme} />
       ) : (
         // <ListPenghuni />
+        // <Text>{JSON.stringify(datapenghuni)}</Text>
         <FlatList
           data={datapenghuni}
           keyExtractor={(item) => item.id.toString()}

@@ -212,7 +212,7 @@ const ListKamar = ({navigation, route}) => {
               }}
               tagName="Harga"
             />
-            <TagSearch
+            {/* <TagSearch
               tagColor={selectedTag == 3 ? myColor.myblue : 'white'}
               textColor={selectedTag == 3 ? 'white' : myColor.darkText}
               onPress={() => {
@@ -220,7 +220,7 @@ const ListKamar = ({navigation, route}) => {
                 changeFilter('sortname', 'kapasitas');
               }}
               tagName="Kapasitas"
-            />
+            /> */}
           </ScrollView>
         </View>
 
@@ -235,6 +235,7 @@ const ListKamar = ({navigation, route}) => {
             }
           }}
         />
+        {/* <Text>{JSON.stringify(kamar)}</Text> */}
 
         {/* List Kamar Section  */}
         <FlatList

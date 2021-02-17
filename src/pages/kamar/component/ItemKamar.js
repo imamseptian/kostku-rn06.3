@@ -22,6 +22,10 @@ const ItemKamar = (props) => {
     props.hapusKamar(props.item.id);
   };
 
+  const editKamar = () => {
+    props.editKamar(props.item);
+  };
+
   return (
     <TouchableNativeFeedback onPress={props.onPress}>
       <View
@@ -75,6 +79,7 @@ const ItemKamar = (props) => {
                   marginBottom: 3,
                 }}>
                 {props.item.nama}
+                {/* {props.item.id} */}
               </Text>
 
               <Text
@@ -93,8 +98,8 @@ const ItemKamar = (props) => {
                 <Feather name="more-vertical" size={25} color="#900" />
               }
               destructiveIndex={1}
-              options={['Hapus Kelas', 'Batal']}
-              actions={[hapusKamar]}
+              options={['EditKamar', 'Hapus Kelas', 'Batal']}
+              actions={[editKamar, hapusKamar]}
             />
           </View>
 
@@ -203,7 +208,10 @@ const ItemKamar = (props) => {
                     <Image
                       style={{height: 30, width: 30, borderRadius: 15}}
                       source={{
-                        uri: APIUrl + '/storage/images/kelas/' + props.foto,
+                        uri:
+                          APIUrl +
+                          '/storage/images/pendaftar/' +
+                          item.foto_diri,
                       }}
                     />
                   </View>

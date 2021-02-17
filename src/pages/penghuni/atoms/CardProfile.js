@@ -37,11 +37,11 @@ class CardProfile extends React.PureComponent {
                     color: '#fff',
                   }}>
                   Status :{' '}
-                  {this.props.item.status_pekerjaan === 1
+                  {this.props.item.status_pekerjaan == 1
                     ? 'Pelajar'
                     : 'Pekerja'}{' '}
                   &{' '}
-                  {this.props.item.status_hubungan === 1 ? 'Lajang' : 'Menikah'}
+                  {this.props.item.status_hubungan == 1 ? 'Lajang' : 'Menikah'}
                 </Text>
               </View>
             </View>
@@ -63,7 +63,7 @@ class CardProfile extends React.PureComponent {
                     fontSize: 12,
                     color: myColor.darkText,
                   }}>
-                  {this.props.item.kelamin === 1 ? 'Pria' : 'Wanita'},{' '}
+                  {this.props.item.kelamin == 1 ? 'Pria' : 'Wanita'},{' '}
                   {jumlahUmur()} Tahun
                 </Text>
               </View>

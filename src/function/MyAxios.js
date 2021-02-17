@@ -42,7 +42,8 @@ class MyAxios {
           onGet('cancel', error);
         } else {
           onGet('error', error);
-          throw error;
+          console.log('[Class] ', error);
+          // throw error;
         }
       });
   };

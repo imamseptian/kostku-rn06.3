@@ -31,6 +31,11 @@ const ModalTransaksi = (props) => {
           `/api/get_transaksi/1/${props.jenis}/${
             tanggal_transaksi.getUTCMonth() + 1
           }/${tanggal_transaksi.getUTCFullYear()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${props.token}`,
+          },
+        },
       )
       .then((res) => {
         setdataTransaksi(res.data.data);
@@ -71,7 +76,7 @@ const ModalTransaksi = (props) => {
               fontSize: 14,
               color: myColor.fbtx,
             }}>
-            {props.jenis === 1 ? 'Pemasukan' : 'Pengeluaran'}
+            {props.jenis == 1 ? 'Pemasukan' : 'Pengeluaran'}
           </Text>
           <Text
             style={{
@@ -104,6 +109,7 @@ const ModalTransaksi = (props) => {
       {isLoading ? (
         <ActivityIndicator size="large" color={myColor.colorTheme} />
       ) : (
+        // <Text>{JSON.stringify(dataTransaksi)}</Text>
         <FlatList
           data={dataTransaksi}
           style={{paddingHorizontal: 0.05 * screenWidth}}
@@ -119,9 +125,9 @@ const ModalTransaksi = (props) => {
       <View
         style={[styles.btNav, {backgroundColor: myColor.myblue, marginTop: 0}]}>
         <Text style={[styles.textNav, {color: '#fff'}]}>
-          {props.jenis === 1
-            ? 'Ke Halaman Detail Pemasukan'
-            : 'Ke Halaman Detail Pengeluaran'}
+          {props.jenis == 1
+            ? 'Ke Halaman Riwayat Pemasukan'
+            : 'Ke Halaman Riwayat Pengeluaran'}
         </Text>
       </View>
       <TouchableOpacity onPress={props.closeModal}>

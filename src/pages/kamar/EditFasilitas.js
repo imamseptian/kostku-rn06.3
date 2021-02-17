@@ -4,7 +4,6 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
-  Modal,
   StatusBar,
   StyleSheet,
   Text,
@@ -12,11 +11,14 @@ import {
   View,
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import Modal from 'react-native-translucent-modal';
 import {HeaderPage, PureModal} from '../../components';
 import {APIUrl, myColor, screenWidth} from '../../function/MyVar';
 import {ModalEditFasilitas, ModalTambahFasilitas} from './component';
+import {useSelector} from 'react-redux';
 
 const EditFasilitas = ({navigation, route}) => {
+  const dataRedux = useSelector((state) => state.AuthReducer);
   const [dataFasilitas, setdataFasilitas] = useState(route.params.fasilitas);
   const [showModalEdit, setshowModalEdit] = useState(false);
   const [showModalTambah, setshowModalTambah] = useState(false);
@@ -45,7 +47,11 @@ const EditFasilitas = ({navigation, route}) => {
   const hapusFasilitas = (id) => {
     setisLoading(true);
     axios
-      .delete(APIUrl + '/api/hapuskamarfasilitas/' + id)
+      .delete(APIUrl + '/api/hapuskamarfasilitas/' + id, {
+        headers: {
+          Authorization: `Bearer ${dataRedux.token}`,
+        },
+      })
       .then((res) => {
         if (res.data.success) {
           alert('sukses');
@@ -89,6 +95,7 @@ const EditFasilitas = ({navigation, route}) => {
               closeModal={() => {
                 setshowModalEdit(false);
               }}
+              token={dataRedux.token}
               refreshFasilitas={() => {
                 setshowModalEdit(false);
                 refreshFasilitas();
@@ -108,6 +115,7 @@ const EditFasilitas = ({navigation, route}) => {
             closeModal={() => {
               setshowModalTambah(false);
             }}
+            token={dataRedux.token}
             refreshFasilitas={() => {
               setshowModalTambah(false);
               refreshFasilitas();

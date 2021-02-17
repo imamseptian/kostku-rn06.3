@@ -9,7 +9,9 @@ import {
   TouchableOpacity,
   View,
   Alert,
+  TextInput,
 } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {defaultAsset, myColor, screenWidth, APIUrl} from '../../function/MyVar';
 import {TabBarang, TabBerkas, TabInfo} from './component';
 import {ButtonStickyTab} from './atoms';
@@ -22,8 +24,10 @@ import Modal from 'react-native-translucent-modal';
 
 const ProfilPendaftar = ({navigation, route}) => {
   const dataRedux = useSelector((state) => state.AuthReducer);
-
+  const [isLoading, setisLoading] = useState(false);
   const [lebar, setlebar] = useState(screenWidth);
+  const [tolakModalShow, settolakModalShow] = useState(false);
+  const [alasanTolak, setalasanTolak] = useState('');
 
   const ref = useRef();
   const scrollRef = useRef();
@@ -151,10 +155,16 @@ const ProfilPendaftar = ({navigation, route}) => {
   const decidePenghuni = (statTerima) => {
     // const ayaya = CancelToken.
     console.log('decide penghuni');
+    setisLoading(true);
     axios
       .post(
         APIUrl + '/api/tambah_penghuni',
-        {...item, terima: statTerima, barang_tambahan: pendaftarItem},
+        {
+          ...item,
+          terima: statTerima,
+          barang_tambahan: pendaftarItem,
+          alasan: alasanTolak,
+        },
         {
           headers: {
             Authorization: `Bearer ${dataRedux.token}`,
@@ -166,20 +176,22 @@ const ProfilPendaftar = ({navigation, route}) => {
         // console.log(response.data.data.active);
         // console.log(response.data.data.barang_tambahan);
         if (response.data.code == 200) {
+          setisLoading(false);
           navigation.pop(1);
         } else {
+          setisLoading(false);
           alert(
             'Maaf kamar yang didaftarkan penuh, silahkan hubungi pendaftar untuk mendaftar ke kamar lain',
           );
         }
       })
       .catch((error) => {
-        console.log('error jembod');
+        setisLoading(false);
+
         console.log(item);
         console.log(pendaftarItem);
         alert('error');
         // console.log(error);
-        console.log('kantal');
       });
   };
 
@@ -191,6 +203,11 @@ const ProfilPendaftar = ({navigation, route}) => {
       }}
       style={{flex: 1, backgroundColor: '#f6f6f6'}}>
       <StatusBar translucent backgroundColor="transparent" />
+      <Spinner
+        visible={isLoading}
+        textContent={'Loading...'}
+        textStyle={{color: '#FFF'}}
+      />
       <Modal
         visible={showImg}
         transparent={true}
@@ -201,6 +218,67 @@ const ProfilPendaftar = ({navigation, route}) => {
           index={imageIndex}
           onSwipeDown={() => setshowImg(false)}
         />
+      </Modal>
+      <Modal
+        visible={tolakModalShow}
+        transparent={true}
+        onRequestClose={() => settolakModalShow(false)}>
+        <PureModal>
+          <View
+            style={{
+              width: '80%',
+              backgroundColor: 'white',
+              borderTopLeftRadius: 5,
+              borderTopRightRadius: 20,
+              borderBottomLeftRadius: 20,
+              borderBottomRightRadius: 5,
+              paddingHorizontal: 15,
+              paddingVertical: 10,
+            }}>
+            <Text
+              style={{
+                fontFamily: 'OpenSans-SemiBold',
+                fontSize: 12,
+                textAlign: 'center',
+                marginBottom: 15,
+              }}>
+              Silahkan Masukan Alasan Penolakan
+            </Text>
+            <TextInput
+              value={alasanTolak}
+              placeholder="Masukan Alasan"
+              onChangeText={(v) => {
+                setalasanTolak(v);
+              }}
+              style={{
+                borderWidth: 1,
+                borderColor: myColor.divider,
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 12,
+                marginBottom: 20,
+                paddingHorizontal: 10,
+              }}
+            />
+            <TouchableOpacity onPress={() => decidePenghuni(false)}>
+              <View
+                style={{
+                  paddingVertical: 10,
+                  backgroundColor: myColor.myblue,
+                  alignItems: 'center',
+                  borderRadius: 5,
+                }}>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontFamily: 'OpenSans-SemiBold',
+                    color: '#fff',
+                  }}>
+                  Submit Penolakan
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </PureModal>
       </Modal>
       {/* section 1  */}
       <ScrollView
@@ -244,7 +322,7 @@ const ProfilPendaftar = ({navigation, route}) => {
                   fontSize: 12,
                   color: myColor.darkText,
                 }}>
-                {item.kelamin === 1 ? 'Pria' : 'Wanita'}, 21 Tahun
+                {item.kelamin == 1 ? 'Pria' : 'Wanita'}, 21 Tahun
               </Text>
             </View>
           </View>
@@ -258,7 +336,7 @@ const ProfilPendaftar = ({navigation, route}) => {
                 [
                   {
                     text: 'Tolak',
-                    onPress: () => decidePenghuni(false),
+                    onPress: () => settolakModalShow(true),
                     style: 'cancel',
                   },
                   {

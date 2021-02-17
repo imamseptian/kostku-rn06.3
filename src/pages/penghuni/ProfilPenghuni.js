@@ -228,6 +228,7 @@ const ProfilPenghuni = ({navigation, route}) => {
           onSwipeDown={() => setshowImg(false)}
         />
       </Modal>
+
       {/* section 1  */}
       <ScrollView
         ref={scrollRef}
@@ -295,7 +296,7 @@ const ProfilPenghuni = ({navigation, route}) => {
                   fontSize: 12,
                   color: myColor.darkText,
                 }}>
-                {item.kelamin === 1 ? 'Pria' : 'Wanita'}, {umurPenghuni} Tahun
+                {item.kelamin == 1 ? 'Pria' : 'Wanita'}, {umurPenghuni} Tahun
               </Text>
             </View>
           </View>
@@ -329,7 +330,7 @@ const ProfilPenghuni = ({navigation, route}) => {
               }}
               selectedTab={selectedTab}
               index={0}
-              title="Informasi Pendaftar"
+              title="Informasi Penghuni"
             />
 
             <ButtonStickyTab

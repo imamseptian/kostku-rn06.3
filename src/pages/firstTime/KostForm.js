@@ -16,6 +16,7 @@ import {
 import ImagePicker from 'react-native-image-crop-picker';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {Permission, PERMISSION_TYPE} from '../../AppPermission';
@@ -24,7 +25,6 @@ import {fcmService} from '../../FCMService';
 import {myAxios} from '../../function/MyAxios';
 import {APIUrl, myColor} from '../../function/MyVar';
 import {setUserRedux} from '../../store';
-import Entypo from 'react-native-vector-icons/Entypo';
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 const KostForm = ({navigation}) => {

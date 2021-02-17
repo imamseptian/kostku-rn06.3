@@ -22,7 +22,11 @@ const ModalTambahFasilitas = (props) => {
 
   const tambahFasilitas = () => {
     axios
-      .post(APIUrl + '/api/addfasilitas', fasilitas)
+      .post(APIUrl + '/api/addfasilitas', fasilitas, {
+        headers: {
+          Authorization: `Bearer ${props.token}`,
+        },
+      })
       .then((res) => {
         if (res.data.success) {
           props.refreshFasilitas();

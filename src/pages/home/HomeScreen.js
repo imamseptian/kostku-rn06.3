@@ -79,33 +79,36 @@ const HomeScreen = ({navigation, route}) => {
   useEffect(() => {
     const source = axios.CancelToken.source();
     console.log('fungsi homescreen');
-    if (dataRedux.user != undefined && dataRedux.user.kostku != 0) {
-      // console.log(dataHomescreen.penghuni.length);
-      setIsLoading(true);
-      myAxios.getAxios(
-        APIUrl + '/api/homescreen/' + dataRedux.user.kostku,
-        dataRedux.token,
-        source.token,
-        onGet,
-      );
-      function onGet(status, data) {
-        if (status == 'success') {
-          console.log('Get data kost success');
-          // console.log(data);
-          setdataHomescreen({
-            ...dataHomescreen,
-            penghuni: data.data_penghuni,
-            kamar: data.data_kamar,
-            transaksi: data.transaksi,
-            uang: data.uang,
-          });
-          setIsLoading(false);
-        } else if (status == 'cancel') {
-          console.log('caught cancel filter');
-          setIsLoading(false);
-        } else {
-          console.log(data);
-          setIsLoading(false);
+    if (isFocused) {
+      if (dataRedux.user != undefined && dataRedux.user.kostku != 0) {
+        // console.log(dataHomescreen.penghuni.length);
+        setIsLoading(true);
+        myAxios.getAxios(
+          APIUrl + '/api/homescreen/' + dataRedux.user.kostku,
+          dataRedux.token,
+          source.token,
+          onGet,
+        );
+        function onGet(status, data) {
+          if (status == 'success') {
+            console.log('Get data kost success');
+            // console.log(data);
+            setdataHomescreen({
+              ...dataHomescreen,
+              penghuni: data.data_penghuni,
+              kamar: data.data_kamar,
+              transaksi: data.transaksi,
+              uang: data.uang,
+            });
+            setIsLoading(false);
+          } else if (status == 'cancel') {
+            console.log('caught cancel filter');
+            setIsLoading(false);
+          } else {
+            console.log(data);
+            console.log();
+            setIsLoading(false);
+          }
         }
       }
     }

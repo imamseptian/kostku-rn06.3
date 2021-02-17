@@ -13,7 +13,7 @@ const ModalDetailPemasukan = (props) => {
   const totalBarang = () => {
     let total = 0;
     props.data.barang.forEach((x, i) => {
-      total = total + x.total;
+      total = total + parseInt(x.total);
     });
 
     return total;
@@ -80,10 +80,7 @@ const ModalDetailPemasukan = (props) => {
               {props.data.nama_depan} {props.data.nama_belakang}
             </Text>
           </View> */}
-          <FieldData
-            subTitle="Nama"
-            content={`${props.data.nama_depan} ${props.data.nama_belakang}`}
-          />
+          <FieldData subTitle="Nama" content={`${props.data.nama_penghuni}`} />
           <FieldData subTitle="Kamar" content={`${props.data.nama_kamar}`} />
           <FieldData
             subTitle="Tanggal Bayar"
@@ -154,7 +151,7 @@ const ModalDetailPemasukan = (props) => {
                   color: myColor.fbtx,
                   fontSize: 12,
                 }}>
-                {'Total'}
+                {'Total Biaya Barang'}
               </Text>
               <Text
                 style={{

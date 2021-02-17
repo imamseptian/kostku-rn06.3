@@ -22,9 +22,11 @@ import {ModalAddPengeluaran} from './';
 import {Picker} from '@react-native-picker/picker';
 import {myAxios} from '../../function/MyAxios';
 import {ItemPengeluaran} from './components';
+import {useIsFocused} from '@react-navigation/native';
 
 import axios from 'axios';
 const TabPengeluaran = (props) => {
+  const isFocused = useIsFocused();
   const [showModal, setshowModal] = useState(false);
   const [dataPengeluaran, setdataPengeluaran] = useState([]);
   const [myTahun, setmyTahun] = useState(dataTahun());
@@ -60,11 +62,13 @@ const TabPengeluaran = (props) => {
 
   useEffect(() => {
     console.log('triggered');
-    ambilpengeluaran();
+    if (isFocused) {
+      ambilpengeluaran();
+    }
     return () => {
       console.log('aaa');
     };
-  }, [selectedBulan, selectedTahun]);
+  }, [selectedBulan, selectedTahun, isFocused]);
 
   return (
     <View style={{flex: 1, width: props.lebar}}>

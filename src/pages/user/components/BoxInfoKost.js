@@ -60,11 +60,15 @@ const BoxInfoKost = (props) => {
 
         <View style={styles.wrapperFieldInfo}>
           <Text style={styles.namaInfo}>Provinsi</Text>
-          <Text style={styles.contentInfo}>{props.daerah.provinsi}</Text>
+          <Text style={[styles.contentInfo, {textTransform: 'capitalize'}]}>
+            {props.data.nama_provinsi}
+          </Text>
         </View>
         <View style={styles.wrapperFieldInfo}>
           <Text style={styles.namaInfo}>Kabupaten/Kota</Text>
-          <Text style={styles.contentInfo}>{props.daerah.kota}</Text>
+          <Text style={[styles.contentInfo, {textTransform: 'capitalize'}]}>
+            {props.data.nama_kota}
+          </Text>
         </View>
         <View style={styles.wrapperFieldInfo}>
           <Text style={styles.namaInfo}>Alamat</Text>
@@ -76,7 +80,7 @@ const BoxInfoKost = (props) => {
         </View>
         <View style={styles.wrapperFieldInfo}>
           <Text style={styles.namaInfo}>Deskripsi Kost</Text>
-          <Text style={styles.contentInfo}>{props.data.deskripsi}</Text>
+          <Text style={styles.contentInfo}>{JSON.stringify(props.data)}</Text>
         </View>
       </View>
 

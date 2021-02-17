@@ -145,7 +145,7 @@ const ListPendaftar = ({navigation, route}) => {
 
         <SearchBar
           value={filter.namakeyword}
-          placeholder={'Cari Jenis Kamar'}
+          placeholder={'Cari Pendaftar'}
           onChangeText={(value) => changeFilter('namakeyword', value)}
           clearText={() => {
             changeFilter('namakeyword', '');

@@ -121,7 +121,7 @@ const TabRiwayat = (props) => {
         }}>
         {content}
       </View>
-      {/* <Text>KONTOL</Text> */}
+
       <ActivityIndicator
         animating={isLoading}
         size="large"

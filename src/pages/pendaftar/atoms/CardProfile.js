@@ -87,8 +87,8 @@ const CardProfile = (props) => {
                   color: '#fff',
                 }}>
                 Status :{' '}
-                {props.item.status_pekerjaan === 1 ? 'Pelajar' : 'Pekerja'} &{' '}
-                {props.item.status_hubungan === 1 ? 'Lajang' : 'Menikah'}
+                {props.item.status_pekerjaan == 1 ? 'Pelajar' : 'Pekerja'} &{' '}
+                {props.item.status_hubungan == 1 ? 'Lajang' : 'Menikah'}
               </Text>
             </View>
           </View>
@@ -118,7 +118,7 @@ const CardProfile = (props) => {
                   fontSize: 12,
                   color: myColor.darkText,
                 }}>
-                {props.item.kelamin === 1 ? 'Pria' : 'Wanita'}, {jumlahUmur()}{' '}
+                {props.item.kelamin == 1 ? 'Pria' : 'Wanita'}, {jumlahUmur()}{' '}
                 Tahun
               </Text>
             </View>

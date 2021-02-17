@@ -16,7 +16,7 @@ class KostPenghuniChart extends React.PureComponent {
     } = this.props;
 
     const pieData = data.map((item, index) => ({
-      value: item.quantity,
+      value: parseInt(item.quantity),
       svg: {
         fill: colorData[index],
         onPress: () => {
@@ -62,25 +62,30 @@ class KostPenghuniChart extends React.PureComponent {
               marginLeft: 20,
               justifyContent: 'center',
             }}>
-            <View style={{flexDirection: 'row', marginBottom: 10}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginBottom: 10,
+                alignItems: 'center',
+              }}>
               <View
                 style={{
-                  height: 20,
-                  width: 20,
+                  height: 15,
+                  width: 15,
                   backgroundColor: myColor.myblue,
                   marginRight: 10,
                 }}></View>
-              <Text>Pria</Text>
+              <Text style={styles.textTag}>Pria</Text>
             </View>
             <View style={{flexDirection: 'row', marginBottom: 10}}>
               <View
                 style={{
-                  height: 20,
-                  width: 20,
+                  height: 15,
+                  width: 15,
                   backgroundColor: myColor.colorTheme,
                   marginRight: 10,
                 }}></View>
-              <Text>Wanita</Text>
+              <Text style={styles.textTag}>Wanita</Text>
             </View>
           </View>
         </View>
@@ -91,4 +96,9 @@ class KostPenghuniChart extends React.PureComponent {
 
 export default KostPenghuniChart;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  textTag: {
+    fontFamily: 'OpenSans-Regular',
+    fontSize: 12,
+  },
+});

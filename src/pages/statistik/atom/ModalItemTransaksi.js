@@ -6,6 +6,7 @@ import {
   defaultAsset,
   formatRupiah,
   dataBulan,
+  APIUrl,
 } from '../../../function/MyVar';
 
 class ModalItemTransaksi extends React.PureComponent {
@@ -27,24 +28,39 @@ class ModalItemTransaksi extends React.PureComponent {
         }}>
         {this.props.jenis === 1 && (
           <Image
-            source={{uri: defaultAsset.kelas_kamar}}
+            source={{
+              uri: APIUrl + '/storage/images/pendaftar/' + this.props.data.foto,
+            }}
             style={{height: 50, width: 50, borderRadius: 50 / 2}}
           />
         )}
-
-        <Text
-          // numberOfLines={2}
-          style={{
-            fontFamily: 'OpenSans-SemiBold',
-            fontSize: 12,
-            marginLeft: 5,
-            maxWidth: 0.3 * screenWidth,
-          }}>
-          {/* {JSON.stringify(this.props.data)} */}
-          {this.props.jenis === 1
-            ? this.props.data.nama_penghuni
-            : this.props.data.judul}
-        </Text>
+        <View>
+          <Text
+            // numberOfLines={2}
+            style={{
+              fontFamily: 'OpenSans-SemiBold',
+              fontSize: 12,
+              marginLeft: 5,
+              maxWidth: 0.3 * screenWidth,
+            }}>
+            {/* {JSON.stringify(this.props.data)} */}
+            {this.props.jenis === 1
+              ? this.props.data.nama_penghuni
+              : this.props.data.judul}
+          </Text>
+          {this.props.jenis === 1 && (
+            <Text
+              // numberOfLines={2}
+              style={{
+                fontFamily: 'OpenSans-Regular',
+                fontSize: 12,
+                marginLeft: 5,
+                maxWidth: 0.3 * screenWidth,
+              }}>
+              {this.props.data.nama_kamar}
+            </Text>
+          )}
+        </View>
 
         <View style={{flex: 1}}>
           <Text

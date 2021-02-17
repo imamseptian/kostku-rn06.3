@@ -17,12 +17,13 @@ const ListData = (props) => {
 
   return (
     <TouchableOpacity
-      // onPress={props.onClickPemasukan}
-      onPress={() => {
-        console.log(
-          APIUrl + '/storage/images/pendaftar/' + props.data.foto_diri,
-        );
-      }}>
+      onPress={props.onClickPemasukan}
+      // onPress={() => {
+      //   console.log(
+      //     APIUrl + '/storage/images/pendaftar/' + props.data.foto_diri,
+      //   );
+      // }}
+    >
       <View
         style={{
           flexDirection: 'row',

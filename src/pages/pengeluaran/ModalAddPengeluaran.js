@@ -7,6 +7,7 @@ import {
   TextInput,
   View,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
@@ -164,7 +165,23 @@ const ModalAddPengeluaran = (props) => {
             }
           }}
         />
-        <TouchableOpacity onPress={() => submitPengeluaran()}>
+        <TouchableOpacity
+          // onPress={() => submitPengeluaran()}
+          onPress={() => {
+            Alert.alert(
+              'Konfirmasi',
+              'Apakah anda yakin data yang diisi telah sesuai ? data pengeluaran tidak bisa dihapus/diedit setelah dibuat',
+              [
+                {
+                  text: 'Batal',
+                  onPress: () => console.log('batal'),
+                  style: 'cancel',
+                },
+                {text: 'Ya', onPress: () => submitPengeluaran()},
+              ],
+              {cancelable: false},
+            );
+          }}>
           <View
             style={{
               paddingVertical: 10,

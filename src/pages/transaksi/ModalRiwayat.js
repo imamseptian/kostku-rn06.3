@@ -18,7 +18,7 @@ const ModalRiwayat = (props) => {
   const biaya_barang = () => {
     let totalBiayaBarang = 0;
     props.data.barang.forEach((x, i) => {
-      totalBiayaBarang = totalBiayaBarang + x.total;
+      totalBiayaBarang = totalBiayaBarang + parseInt(x.total);
     });
 
     return totalBiayaBarang;

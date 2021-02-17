@@ -3,6 +3,8 @@ import KelasInfo from './KelasInfo';
 import ModalEditFasilitas from './ModalEditFasilitas';
 import ModalTambahFasilitas from './ModalTambahFasilitas';
 import ItemKamar from './ItemKamar';
+import ModalTambahKamar from './ModalTambahKamar';
+import ModalEditKamar from './ModalEditKamar';
 
 export {
   ItemKelas,
@@ -10,4 +12,6 @@ export {
   ModalEditFasilitas,
   ModalTambahFasilitas,
   ItemKamar,
+  ModalTambahKamar,
+  ModalEditKamar,
 };

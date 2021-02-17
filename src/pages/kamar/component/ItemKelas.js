@@ -112,7 +112,7 @@ const ItemKelas = (props) => {
                 fontSize: 12,
                 fontFamily: 'OpenSans-Bold',
               }}>
-              {props.data.banyak}
+              {props.data.count_kamar}
             </Text>
           </View>
           <View
@@ -129,7 +129,7 @@ const ItemKelas = (props) => {
                 fontSize: 12,
                 fontFamily: 'OpenSans-Bold',
               }}>
-              {props.data.penghuni}
+              {props.data.count_penghuni}
             </Text>
           </View>
         </View>
