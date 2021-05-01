@@ -1,4 +1,13 @@
 # kostku-rn06.3
+<p align="center">
+  
+  <a href="https://www.npmjs.org/package/react-native">
+    <img src="https://img.shields.io/npm/v/react-native?color=brightgreen&label=npm%20package" alt="Current npm package version." />
+  </a>
+  
+</p>
+
+
 Mobile application to help the owner of boarding house to manage their boarding house. Frontend : React Native, backend: Laravel PHP Framework, backend for notification : Whatsapp-web-JS
 
 # Preview App
