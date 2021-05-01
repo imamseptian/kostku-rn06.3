@@ -1,5 +1,5 @@
 # kostku-rn06.3
-App to help the owner of boarding house to manage their boarding house. Frontend : React Native, backend: Laravel PHP Framework, backend for notification : Whatsapp-web-JS
+Mobile application to help the owner of boarding house to manage their boarding house. Frontend : React Native, backend: Laravel PHP Framework, backend for notification : Whatsapp-web-JS
 
 # Preview App
 <p align="center">
