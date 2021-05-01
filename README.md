@@ -44,3 +44,10 @@ Mobile application to help the owner of boarding house to manage their boarding 
 <p align="center">
 <img src="https://raw.githubusercontent.com/imamseptian/kostku-rn06.3/main/src/preview/daftar_pengeluaran.png" width="300" height="600" />
 </p>
+
+<p align="center">
+<b>Monthly Report</b>
+</p>
+<p align="center">
+<img src="https://raw.githubusercontent.com/imamseptian/kostku-rn06.3/main/src/preview/laporan.png" width="300" height="600" />
+</p>
